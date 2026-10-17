@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 date: 2026-10-16
 ---
 # Open a notebook and fold its headings
