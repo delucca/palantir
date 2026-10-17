@@ -1,4 +1,4 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.4
 
 import PackageDescription
 
@@ -11,7 +11,7 @@ let upcomingFeatures: [SwiftSetting] = [
 
 let package = Package(
   name: "palantir",
-  platforms: [.macOS(.v26)],
+  platforms: [.macOS(.v27)],
   products: [
     .executable(name: "palantir", targets: ["Palantir"])
   ],
