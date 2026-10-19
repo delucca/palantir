@@ -15,15 +15,29 @@ let package = Package(
   products: [
     .executable(name: "palantir", targets: ["Palantir"])
   ],
+  dependencies: [
+    .package(url: "https://github.com/swiftlang/swift-markdown.git", exact: "0.9.0")
+  ],
   targets: [
+    .target(
+      name: "PalantirCore",
+      dependencies: [.product(name: "Markdown", package: "swift-markdown")],
+      swiftSettings: upcomingFeatures
+    ),
     .executableTarget(
       name: "Palantir",
+      dependencies: ["PalantirCore"],
       exclude: ["Info.plist"],
       swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
     ),
     .testTarget(
+      name: "PalantirCoreTests",
+      dependencies: ["PalantirCore"],
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
       name: "PalantirTests",
-      dependencies: ["Palantir"],
+      dependencies: ["Palantir", "PalantirCore"],
       swiftSettings: upcomingFeatures
     ),
   ]

@@ -28,6 +28,12 @@ enum MainMenu {
       ])
 
     menu.addSubmenu(
+      "File",
+      [
+        item("Open…", #selector(AppDelegate.openDocument(_:)), "o")
+      ])
+
+    menu.addSubmenu(
       "Edit",
       [
         item("Undo", Selector(("undo:")), "z"),
@@ -37,6 +43,15 @@ enum MainMenu {
         item("Copy", #selector(NSText.copy(_:)), "c"),
         item("Paste", #selector(NSText.paste(_:)), "v"),
         item("Select All", #selector(NSText.selectAll(_:)), "a"),
+      ])
+
+    menu.addSubmenu(
+      "View",
+      [
+        item("Fold Heading", #selector(NotebookTextView.foldHeading(_:))),
+        item("Unfold Heading", #selector(NotebookTextView.unfoldHeading(_:))),
+        item("Fold All", #selector(NotebookTextView.foldAll(_:))),
+        item("Unfold All", #selector(NotebookTextView.unfoldAll(_:))),
       ])
 
     menu.addSubmenu(
