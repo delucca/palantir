@@ -1,4 +1,5 @@
 import AppKit
+import Foundation
 import PalantirNotebook
 
 final class NotebookTextView: NSTextView {
@@ -8,7 +9,7 @@ final class NotebookTextView: NSTextView {
   private let folding = FoldedParagraphs()
   private(set) var folds = Folds(outline: Outline(parsing: ""))
   private(set) var foldedMarkers: [Int: NSImageView] = [:]
-  private var laidOut: [NSTextLayoutFragment] = []
+  private(set) var laidOut: [NSTextLayoutFragment] = []
   private var foldedHeadingEndingAt: [Int: Int] = [:]
   private(set) var foldedTop: CGFloat?
 
@@ -76,9 +77,14 @@ final class NotebookTextView: NSTextView {
   }
 
   override func setFrameSize(_ newSize: NSSize) {
-    guard newSize.width != frame.width, foldedTop != nil, let layout = textLayoutManager,
-      let storage = textContentStorage, let scroll = enclosingScrollView
+    guard newSize.width != frame.width,
+      foldedTop != nil,
+      let layout = textLayoutManager,
+      let storage = textContentStorage,
+      let scroll = enclosingScrollView
     else { return super.setFrameSize(newSize) }
+    // After a scroll, the viewport may not be laid out yet; display would do it.
+    layout.textViewportLayoutController.layoutViewport()
     let anchor = topLine(layout, storage)
     super.setFrameSize(newSize)
     // The new width leaves every paragraph without layout; lay out up to the top line.
@@ -94,14 +100,26 @@ final class NotebookTextView: NSTextView {
     // A paragraph that the new width shortens can end above the window at its old screen y.
     let screenY = paragraph.height + anchor.screenY > 0 ? anchor.screenY : 0
     let top = max(0, paragraph.minY + textContainerOrigin.y - screenY)
-    foldedTop = top
-    minSize.height = top + scroll.contentSize.height
+    // Lay out a window below the top line: enough to tell whether the floor still binds.
+    let windowBottom = top + scroll.contentSize.height
+    layout.enumerateTextLayoutFragments(from: location, options: [.ensuresLayout]) {
+      $0.layoutFragmentFrame.maxY + textContainerOrigin.y < windowBottom
+    }
+    let textBottom = layout.usageBoundsForTextContainer.maxY + textContainerOrigin.y
+    foldedTop = top > 0 && windowBottom > textBottom ? top : nil
+    // Without a floor the frame follows the text, which has layout only down to the window.
+    if foldedTop == nil { layout.ensureLayout(for: layout.documentRange) }
+    minSize.height = (foldedTop ?? 0) + scroll.contentSize.height
     scroll.contentView.scroll(to: NSPoint(x: scroll.contentView.bounds.minX, y: top))
     scroll.reflectScrolledClipView(scroll.contentView)
+    // The frame takes the new text height only in a viewport layout; until then a resize can pull
+    // the clip view up to the old height.
+    layout.textViewportLayoutController.layoutViewport()
   }
 
   private func setFolded(_ change: (inout Folds) -> Void) {
-    guard let layout = textLayoutManager, let storage = textContentStorage,
+    guard let layout = textLayoutManager,
+      let storage = textContentStorage,
       let scroll = enclosingScrollView
     else { return }
     // After a width change or a scroll, the viewport may not be laid out yet; display would do it.
@@ -130,7 +148,8 @@ final class NotebookTextView: NSTextView {
       layout.invalidateLayout(for: range)
     }
     // A width change drops the layout of every paragraph outside the viewport; lay them out after
-    // finding the top line on screen, or it shifts.
+    // finding the top line on screen, or it shifts. Every command pays for this in time linear in
+    // the text, on the main actor.
     layout.ensureLayout(for: layout.documentRange)
     // The clip view keeps its pixel offset, so put the top line back at its screen y.
     var top = scroll.contentView.bounds.minY
@@ -214,8 +233,10 @@ final class NotebookTextView: NSTextView {
       let side = bounds.height
       let x = textContainerOrigin.x + frame.minX + bounds.maxX + Self.markerGap
       marker.frame = NSRect(
-        x: min(x, self.bounds.maxX - side), y: textContainerOrigin.y + frame.minY + bounds.minY,
-        width: side, height: side)
+        x: min(x, self.bounds.maxX - side),
+        y: textContainerOrigin.y + frame.minY + bounds.minY,
+        width: side,
+        height: side)
     }
     for (offset, marker) in foldedMarkers where !shown.contains(offset) {
       marker.removeFromSuperview()
@@ -224,6 +245,7 @@ final class NotebookTextView: NSTextView {
   }
 
   private func makeMarker(_ offset: Int) -> NSImageView {
+    // "ellipsis" is an SF Symbol in every macOS release that has them, so the image exists.
     let marker = NSImageView(
       image: NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "Folded")!)
     marker.contentTintColor = .secondaryLabelColor

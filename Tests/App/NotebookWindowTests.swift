@@ -1,8 +1,9 @@
 import AppKit
+import PalantirNotebook
 import Testing
+import UniformTypeIdentifiers
 
 @testable import Palantir
-@testable import PalantirNotebook
 @testable import PalantirNotebookUI
 
 @MainActor
@@ -13,15 +14,19 @@ struct NotebookWindowTests {
       "# Tâsks 🎉\r\nNaïve 👩‍👩‍👧 line.\n```\n# code\n```\nEnd without newline\n"
       + longNotebook(before: 60, owned: 40, after: 5)
     let second = "# Short\nOnly a line.\n"
-    let notebooks = [try temporaryNotebook(first), try temporaryNotebook(second)]
+    let notebooks = [try writeTemporaryNotebook(first), try writeTemporaryNotebook(second)]
     defer { for url in notebooks { removeTemporaryNotebook(url) } }
     var urls = notebooks
     let delegate = AppDelegate()
-    var presented: [NotebookWindowController] = []
-    var errors: [any Error] = []
-    delegate.chooseNotebook = { urls.isEmpty ? nil : urls.removeFirst() }
-    delegate.presentNotebook = { presented.append($0) }
-    delegate.presentError = { errors.append($0) }
+    var panels: [NSOpenPanel] = []
+    var alerts: [NSAlert] = []
+    delegate.notebook.runOpenPanel = { panel in
+      panels.append(panel)
+      return urls.isEmpty ? nil : urls.removeFirst()
+    }
+    delegate.notebook.runAlert = { alerts.append($0) }
+    let window = try delegate.notebook.transparentWindow()
+    defer { window.orderOut(nil) }
     let (open, action) = try openMenuItem()
     let app = NSApplication.shared
     let previous = app.delegate
@@ -36,11 +41,12 @@ struct NotebookWindowTests {
     #expect(try view.visibleText() == first)
     #expect(view.window === delegate.notebook.window)
     #expect(view.textLayoutManager != nil)
-    #expect(presented.count == 1 && presented[0] === delegate.notebook)
+    #expect(window.isVisible)
+    window.orderOut(nil)
 
-    let heading = try #require(view.outline.headings.first { $0.lines.lowerBound == 68 })
+    let heading = try view.heading(startingWith: "## Fix the reaper")
     try view.scrollToTop(offset: heading.range.location)
-    #expect(try choose("Fold Heading", at: heading.range.location + 1, in: delegate.notebook))
+    try #require(try choose("Fold Heading", at: heading.range.location + 1, in: delegate.notebook))
     let content = try #require(view.enclosingScrollView?.contentSize.height)
     #expect(view.minSize.height > content)
     #expect(view.foldedMarkers.count == 1)
@@ -50,19 +56,44 @@ struct NotebookWindowTests {
     #expect(view.foldedMarkers.isEmpty && view.foldedHeadingStarts.isEmpty)
     #expect(view.markerViews().isEmpty)
     #expect(view.minSize.height == content && view.frame.height == content)
-    #expect(presented.count == 2 && presented.allSatisfy { $0 === delegate.notebook })
-    #expect(errors.isEmpty)
+    #expect(window.isVisible)
+    #expect(panels.count == 2 && panels.allSatisfy { $0.allowedContentTypes == [.markdown] })
+    #expect(alerts.isEmpty)
+  }
+
+  // [utest->req~notebook-window.open~1]
+  @Test func fileOpenInTheNotebookWindowGoesToItsController() throws {
+    let text = "# Tasks\nIt leaks.\n"
+    let url = try writeTemporaryNotebook(text)
+    defer { removeTemporaryNotebook(url) }
+    let controller = NotebookWindowController()
+    var panels: [NSOpenPanel] = []
+    controller.runOpenPanel = { panel in
+      panels.append(panel)
+      return url
+    }
+    let window = try controller.transparentWindow()
+    defer { window.orderOut(nil) }
+    let (open, action) = try openMenuItem()
+    let responder = try #require(window.firstResponder)
+    let target = sequence(first: responder, next: \.nextResponder).first { $0.responds(to: action) }
+    #expect(target === controller)
+
+    #expect(responder.tryToPerform(action, with: open))
+    #expect(try controller.textView.visibleText() == text)
+    #expect(window.isVisible)
+    #expect(panels.map(\.allowedContentTypes) == [[.markdown]])
   }
 
   // [utest->req~notebook-window.open~1]
   @Test func reopeningAFoldedNotebookShowsItAll() throws {
     let text = "# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n"
-    let url = try temporaryNotebook(text)
+    let url = try writeTemporaryNotebook(text)
     defer { removeTemporaryNotebook(url) }
     let controller = NotebookWindowController()
     try controller.open(url)
     let view = controller.textView
-    #expect(try choose("Fold Heading", at: 10, in: controller))
+    try #require(try choose("Fold Heading", at: 10, in: controller))
     #expect(try view.visibleText() != text)
     try controller.open(url)
     #expect(try view.visibleText() == text)
@@ -75,7 +106,7 @@ struct NotebookWindowTests {
     let view = controller.textView
     try view.scroll(toY: 6000)
     try #require(view.visibleRect.minY == 6000)
-    let next = try temporaryNotebook(longNotebook(before: 300, owned: 10, after: 300))
+    let next = try writeTemporaryNotebook(longNotebook(before: 300, owned: 10, after: 300))
     defer { removeTemporaryNotebook(next) }
     try controller.open(next)
     #expect(view.visibleRect.minY == 0)
@@ -87,17 +118,17 @@ struct NotebookWindowTests {
   @Test func anUnreadableNotebookShowsAnErrorAndKeepsTheText() throws {
     let text = "# Tasks\nIt leaks.\n"
     let notebooks = [
-      try temporaryNotebook(text),
-      try temporaryNotebook(Data([0x23, 0x20, 0x54, 0xE2, 0x63, 0x68, 0x65, 0x0A])),
+      try writeTemporaryNotebook(text),
+      try writeTemporaryNotebook(Data([0x23, 0x20, 0x54, 0xE2, 0x63, 0x68, 0x65, 0x0A])),
     ]
     defer { for url in notebooks { removeTemporaryNotebook(url) } }
     var urls = notebooks
     let delegate = AppDelegate()
-    var presented = 0
-    var errors: [any Error] = []
-    delegate.chooseNotebook = { urls.isEmpty ? nil : urls.removeFirst() }
-    delegate.presentNotebook = { _ in presented += 1 }
-    delegate.presentError = { errors.append($0) }
+    var alerts: [NSAlert] = []
+    delegate.notebook.runOpenPanel = { _ in urls.isEmpty ? nil : urls.removeFirst() }
+    delegate.notebook.runAlert = { alerts.append($0) }
+    let window = try delegate.notebook.transparentWindow()
+    defer { window.orderOut(nil) }
     let (open, action) = try openMenuItem()
     let app = NSApplication.shared
     let previous = app.delegate
@@ -106,24 +137,26 @@ struct NotebookWindowTests {
     try #require(app.target(forAction: action, to: nil, from: open) as AnyObject? === delegate)
 
     #expect(app.sendAction(action, to: nil, from: open))
+    #expect(window.isVisible)
+    window.orderOut(nil)
     #expect(app.sendAction(action, to: nil, from: open))
-    #expect(errors.count == 1)
-    #expect(presented == 1)
+    #expect(alerts.map(\.messageText) == [CocoaError(.fileReadCorruptFile).localizedDescription])
+    #expect(!window.isVisible)
     #expect(delegate.notebook.textView.string == text)
     #expect(try delegate.notebook.textView.visibleText() == text)
   }
 
   @Test func cancellingFileOpenKeepsTheNotebookAndShowsNoError() throws {
     let text = "# Tasks\nIt leaks.\n"
-    let url = try temporaryNotebook(text)
+    let url = try writeTemporaryNotebook(text)
     defer { removeTemporaryNotebook(url) }
     var urls = [url]
     let delegate = AppDelegate()
-    var presented = 0
-    var errors: [any Error] = []
-    delegate.chooseNotebook = { urls.isEmpty ? nil : urls.removeFirst() }
-    delegate.presentNotebook = { _ in presented += 1 }
-    delegate.presentError = { errors.append($0) }
+    var alerts: [NSAlert] = []
+    delegate.notebook.runOpenPanel = { _ in urls.isEmpty ? nil : urls.removeFirst() }
+    delegate.notebook.runAlert = { alerts.append($0) }
+    let window = try delegate.notebook.transparentWindow()
+    defer { window.orderOut(nil) }
     let (open, action) = try openMenuItem()
     let app = NSApplication.shared
     let previous = app.delegate
@@ -132,10 +165,24 @@ struct NotebookWindowTests {
     try #require(app.target(forAction: action, to: nil, from: open) as AnyObject? === delegate)
 
     #expect(app.sendAction(action, to: nil, from: open))
+    #expect(window.isVisible)
+    window.orderOut(nil)
     #expect(app.sendAction(action, to: nil, from: open))
-    #expect(presented == 1)
-    #expect(errors.isEmpty)
+    #expect(!window.isVisible)
+    #expect(alerts.isEmpty)
     #expect(try delegate.notebook.textView.visibleText() == text)
+  }
+
+  @Test func launchingShowsTheNotebookWindowCentered() throws {
+    let delegate = AppDelegate()
+    let window = try delegate.notebook.transparentWindow()
+    defer { window.orderOut(nil) }
+    let centered = try #require(NotebookWindowController().window)
+    centered.center()
+    delegate.applicationDidFinishLaunching(
+      Notification(name: NSApplication.didFinishLaunchingNotification))
+    #expect(window.isVisible)
+    #expect(window.frame == centered.frame)
   }
 
   // [utest->req~notebook-window.read-only~1]

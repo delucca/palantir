@@ -41,7 +41,13 @@ let package = Package(
     .testTarget(
       name: "PalantirNotebookTests",
       dependencies: ["PalantirNotebook"],
-      path: "Tests/Notebook",
+      path: "Tests/Notebook/Model",
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
+      name: "PalantirNotebookUITests",
+      dependencies: ["PalantirNotebookUI"],
+      path: "Tests/Notebook/UI",
       swiftSettings: upcomingFeatures
     ),
     .testTarget(

@@ -1,7 +1,7 @@
 import AppKit
+import PalantirNotebook
 import Testing
 
-@testable import PalantirNotebook
 @testable import PalantirNotebookUI
 
 extension NSTextView {
@@ -74,6 +74,57 @@ extension NSTextView {
     try scroll(toY: try fragmentFrame(at: offset).minY)
   }
 
+  func screenY(offset: Int) throws -> CGFloat {
+    let clip = try #require(enclosingScrollView?.contentView)
+    return try fragmentFrame(at: offset).minY - clip.bounds.minY
+  }
+
+  func isNoTallerThanTextPlusOneWindow() throws -> Bool {
+    let clip = try #require(enclosingScrollView?.contentView)
+    return frame.height <= (try textHeight()) + clip.bounds.height
+  }
+}
+
+extension NSView {
+  func markerViews() -> [NSImageView] {
+    subviews.compactMap { $0 as? NSImageView }
+  }
+}
+
+extension NotebookTextView {
+  var foldedHeadingStarts: Set<Int> { Set(folds.foldedHeadings.map(\.range.location)) }
+
+  /// The heading whose first line starts with `line`.
+  func heading(startingWith line: String) throws -> OutlineHeading {
+    let start = (string as NSString).range(of: line).location
+    try #require(start != NSNotFound, "no \(line)")
+    let heading = try #require(folds.innermostHeading(at: start), "no heading at \(line)")
+    try #require(heading.range.location == start, "\(line) does not start a heading")
+    return heading
+  }
+
+  /// The paragraphs the last viewport layout drew in the window, from the drawn top line down.
+  func drawnParagraphs() throws -> [(offset: Int, frame: CGRect)] {
+    let storage = try #require(textContentStorage)
+    let visible = visibleRect
+    return
+      laidOut
+      .filter { $0.state == .layoutAvailable }
+      .map {
+        (
+          storage.offset(from: storage.documentRange.location, to: $0.rangeInElement.location),
+          $0.layoutFragmentFrame.offsetBy(dx: 0, dy: textContainerOrigin.y)
+        )
+      }
+      .filter { $0.1.maxY > visible.minY && $0.1.minY < visible.maxY }
+      .sorted { $0.1.minY < $1.1.minY }
+  }
+
+  func drawnTopLine() throws -> (offset: Int, screenY: CGFloat) {
+    let top = try #require(try drawnParagraphs().first, "no paragraph drawn in the window")
+    return (top.offset, top.frame.minY - visibleRect.minY)
+  }
+
   /// Scrolls, laying out as display would, until the paragraph at `offset` is the drawn top line,
   /// 5 points above the top edge. A width change leaves paragraphs away from the window with empty
   /// frames, so it first bisects on the drawn top line.
@@ -88,74 +139,6 @@ extension NSTextView {
       if drawn < offset { low = middle } else { high = middle }
     }
     try scroll(toY: try fragmentFrame(at: offset).minY + 5)
-  }
-
-  func screenY(offset: Int) throws -> CGFloat {
-    let clip = try #require(enclosingScrollView?.contentView)
-    return try fragmentFrame(at: offset).minY - clip.bounds.minY
-  }
-
-  func isNoTallerThanTextPlusOneWindow() throws -> Bool {
-    let clip = try #require(enclosingScrollView?.contentView)
-    return frame.height <= (try textHeight()) + clip.bounds.height
-  }
-
-  /// The laid-out paragraphs in the window, from the drawn top line down.
-  func drawnParagraphs() throws -> [(offset: Int, frame: CGRect)] {
-    let layout = try #require(textLayoutManager)
-    let storage = try #require(textContentStorage)
-    let viewport = try #require(layout.textViewportLayoutController.viewportRange)
-    let visible = visibleRect
-    var rows: [(Int, CGRect)] = []
-    layout.enumerateTextLayoutFragments(from: viewport.location, options: []) {
-      let frame = $0.layoutFragmentFrame.offsetBy(dx: 0, dy: textContainerOrigin.y)
-      guard frame.minY < visible.maxY, $0.state == .layoutAvailable else { return false }
-      if frame.maxY > visible.minY {
-        rows.append(
-          (
-            storage.offset(from: storage.documentRange.location, to: $0.rangeInElement.location),
-            frame
-          ))
-      }
-      return true
-    }
-    return rows
-  }
-
-  func drawnTopLine() throws -> (offset: Int, screenY: CGFloat) {
-    let layout = try #require(textLayoutManager)
-    let storage = try #require(textContentStorage)
-    let viewport = try #require(layout.textViewportLayoutController.viewportRange)
-    let top = visibleRect.minY
-    var found: (Int, CGFloat)?
-    layout.enumerateTextLayoutFragments(from: viewport.location, options: []) {
-      let frame = $0.layoutFragmentFrame.offsetBy(dx: 0, dy: textContainerOrigin.y)
-      guard frame.maxY > top else { return true }
-      found = (
-        storage.offset(from: storage.documentRange.location, to: $0.rangeInElement.location),
-        frame.minY - top
-      )
-      return false
-    }
-    return try #require(found)
-  }
-}
-
-extension NSView {
-  func markerViews() -> [NSImageView] {
-    subviews.compactMap { $0 as? NSImageView }
-  }
-}
-
-extension NotebookTextView {
-  var outline: Outline { folds.outline }
-
-  var foldedHeadingStarts: Set<Int> { folds.headingStarts }
-
-  func heading(_ index: Int) throws -> OutlineHeading {
-    let headings = outline.headings
-    try #require(headings.indices.contains(index), "\(headings.count) headings, no index \(index)")
-    return headings[index]
   }
 
   func markerIsShown(heading: OutlineHeading) throws -> Bool {

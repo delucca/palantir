@@ -1,8 +1,9 @@
 import Foundation
-import PalantirNotebookUI
+
+@testable import PalantirNotebookUI
 
 @MainActor
-func temporaryNotebook(_ data: Data) throws -> URL {
+func writeTemporaryNotebook(_ data: Data) throws -> URL {
   let directory = FileManager.default.temporaryDirectory.appending(
     path: UUID().uuidString, directoryHint: .isDirectory)
   try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -12,8 +13,8 @@ func temporaryNotebook(_ data: Data) throws -> URL {
 }
 
 @MainActor
-func temporaryNotebook(_ text: String) throws -> URL {
-  try temporaryNotebook(Data(text.utf8))
+func writeTemporaryNotebook(_ text: String) throws -> URL {
+  try writeTemporaryNotebook(Data(text.utf8))
 }
 
 @MainActor
@@ -24,7 +25,7 @@ func removeTemporaryNotebook(_ url: URL) {
 @MainActor
 func openNotebook(_ text: String) throws -> NotebookWindowController {
   let controller = NotebookWindowController()
-  let url = try temporaryNotebook(text)
+  let url = try writeTemporaryNotebook(text)
   defer { removeTemporaryNotebook(url) }
   try controller.open(url)
   return controller

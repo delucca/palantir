@@ -1,4 +1,5 @@
 import AppKit
+import Foundation
 
 final class FoldedParagraphs: NSObject, NSTextContentStorageDelegate {
   var hiddenRanges: [NSRange] = [] {
@@ -16,7 +17,8 @@ final class FoldedParagraphs: NSObject, NSTextContentStorageDelegate {
   }
 
   func textContentManager(
-    _ textContentManager: NSTextContentManager, shouldEnumerate textElement: NSTextElement,
+    _ textContentManager: NSTextContentManager,
+    shouldEnumerate textElement: NSTextElement,
     options: NSTextContentManager.EnumerationOptions
   ) -> Bool {
     guard let storage = textContentManager as? NSTextContentStorage,

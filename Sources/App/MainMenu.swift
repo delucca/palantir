@@ -1,4 +1,5 @@
 import AppKit
+import Foundation
 import PalantirNotebookUI
 
 /// The menu bar, in the order the macOS HIG requires.
@@ -21,18 +22,16 @@ enum MainMenu {
         .separator(),
         item("Hide \(name)", #selector(NSApplication.hide(_:)), "h"),
         item(
-          "Hide Others", #selector(NSApplication.hideOtherApplications(_:)), "h",
+          "Hide Others",
+          #selector(NSApplication.hideOtherApplications(_:)),
+          "h",
           [.command, .option]),
         item("Show All", #selector(NSApplication.unhideAllApplications(_:))),
         .separator(),
         item("Quit \(name)", #selector(NSApplication.terminate(_:)), "q"),
       ])
 
-    menu.addSubmenu(
-      "File",
-      [
-        item("Open…", #selector(AppDelegate.openDocument(_:)), "o")
-      ])
+    menu.addSubmenu("File", NotebookWindowController.makeFileMenuItems())
 
     menu.addSubmenu(
       "Edit",
@@ -63,7 +62,9 @@ enum MainMenu {
   }
 
   private static func item(
-    _ title: String, _ action: Selector, _ key: String = "",
+    _ title: String,
+    _ action: Selector,
+    _ key: String = "",
     _ modifiers: NSEvent.ModifierFlags = .command
   ) -> NSMenuItem {
     let item = NSMenuItem(title: title, action: action, keyEquivalent: key)

@@ -143,7 +143,6 @@ struct FoldsTests {
     #expect(folds.caret(for: NSRange(location: 28, length: 0), since: previous) == 8)
   }
 
-  // [utest->req~heading-folding.fold~1]
   @Test func aSelectionReachingIntoNewlyFoldedTextShrinksToItsHeading() throws {
     var folds = unfolded(tasksAndNotes)
     let previous = folds
@@ -153,7 +152,6 @@ struct FoldsTests {
     #expect(folds.caret(for: NSRange(location: 11, length: 15), since: previous) == nil)
   }
 
-  // [utest->req~heading-folding.unfold~1]
   @Test func aSelectionReachingIntoAnEarlierFoldStays() throws {
     let text = "# Tasks\nIt leaks.\n# Notes\nDone.\n"
     var folds = unfolded(text)
@@ -168,7 +166,6 @@ struct FoldsTests {
     #expect(folds.caret(for: all, since: unfolded(text)) == notes.range.location)
   }
 
-  // [utest->req~heading-folding.fold~1]
   @Test func aCaretAtTheEndOfTheTextIsOnItsLastCharacter() throws {
     let text = "# Tasks\nIt leaks.\n# Notes\nDone."
     var folds = unfolded(text)

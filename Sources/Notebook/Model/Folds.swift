@@ -10,10 +10,12 @@ package struct Folds: Equatable, Sendable {
     self.outline = outline
   }
 
+  /// The folded headings, in document order. O(n) in the headings.
   package var foldedHeadings: [OutlineHeading] {
     outline.headings.filter { headingStarts.contains($0.range.location) }
   }
 
+  /// The owned text of each folded heading that owns any, in document order. O(n) in the headings.
   package var hiddenRanges: [NSRange] {
     foldedHeadings.map(\.ownedRange).filter { $0.length > 0 }
   }

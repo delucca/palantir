@@ -31,11 +31,19 @@ func openMenuItem() throws -> (NSMenuItem, Selector) {
   let item = try #require(
     MainMenu.make().item(withTitle: "File")?.submenu?.item(withTitle: "Open…"))
   let action = try #require(item.action)
-  try #require(action == #selector(AppDelegate.openDocument(_:)))
+  try #require(action == #selector(NotebookWindowController.openDocument(_:)))
   return (item, action)
 }
 
 extension NotebookWindowController {
+  /// The window, made transparent so that a test can let the code order it front without drawing
+  /// it on the screen.
+  func transparentWindow() throws -> NSWindow {
+    let window = try #require(window)
+    window.alphaValue = 0
+    return window
+  }
+
   /// The View menu with each item aimed where AppKit sends it from the key window: the first
   /// responder up the chain that answers the action. A test process has no key window, so AppKit's
   /// own search finds no target and disables every item.

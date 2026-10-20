@@ -12,6 +12,22 @@ struct MainMenuTests {
     #expect(titles.dropFirst() == ["File", "Edit", "View", "Window", "Help"])
   }
 
+  // [utest->req~main-menu.hig-order~1]
+  @Test func launchingInstallsTheMenuBar() throws {
+    let app = NSApplication.shared
+    let (menu, windows, help) = (app.mainMenu, app.windowsMenu, app.helpMenu)
+    defer {
+      app.mainMenu = menu
+      app.windowsMenu = windows
+      app.helpMenu = help
+    }
+    MainMenu.install(in: app)
+    let installed = try #require(app.mainMenu)
+    #expect(installed.items.map(\.title).dropFirst() == ["File", "Edit", "View", "Window", "Help"])
+    #expect(app.windowsMenu === installed.item(withTitle: "Window")?.submenu)
+    #expect(app.helpMenu === installed.item(withTitle: "Help")?.submenu)
+  }
+
   // [utest->req~main-menu.view-fold-commands~1]
   @Test func viewMenuHoldsTheFoldCommandsWithoutKeyEquivalents() throws {
     let view = try #require(MainMenu.make().item(withTitle: "View")?.submenu)
