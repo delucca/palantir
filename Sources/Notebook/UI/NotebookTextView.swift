@@ -1,39 +1,12 @@
 import AppKit
-import PalantirCore
-
-final class FoldedParagraphs: NSObject, NSTextContentStorageDelegate {
-  var hiddenRanges: [NSRange] = [] {
-    didSet {
-      hiddenOffsets = hiddenRanges.compactMap { Range($0) }.reduce(into: IndexSet()) {
-        $0.insert(integersIn: $1)
-      }
-    }
-  }
-  private var hiddenOffsets = IndexSet()
-
-  // TextKit asks about every hidden paragraph it passes, thousands of times a layout.
-  func hides(_ offset: Int) -> Bool {
-    hiddenOffsets.contains(offset)
-  }
-
-  func textContentManager(
-    _ textContentManager: NSTextContentManager, shouldEnumerate textElement: NSTextElement,
-    options: NSTextContentManager.EnumerationOptions
-  ) -> Bool {
-    guard let storage = textContentManager as? NSTextContentStorage,
-      let start = textElement.elementRange?.location
-    else { return true }
-    return !hides(storage.offset(from: storage.documentRange.location, to: start))
-  }
-}
+import PalantirNotebook
 
 final class NotebookTextView: NSTextView {
   static let markerGap: CGFloat = 4
   static let markerInset = NSSize(width: markerGap + 16, height: 0)
 
   private let folding = FoldedParagraphs()
-  private(set) var outline = Outline(parsing: "")
-  private(set) var foldedHeadingStarts: Set<Int> = []
+  private(set) var folds = Folds(outline: Outline(parsing: ""))
   private(set) var foldedMarkers: [Int: NSImageView] = [:]
   private var laidOut: [NSTextLayoutFragment] = []
   private var foldedHeadingEndingAt: [Int: Int] = [:]
@@ -42,12 +15,11 @@ final class NotebookTextView: NSTextView {
   func show(_ text: String) {
     textContentStorage?.delegate = folding
     folding.hiddenRanges = []
-    foldedHeadingStarts = []
     foldedHeadingEndingAt = [:]
     foldedTop = nil
     if let scroll = enclosingScrollView { minSize.height = scroll.contentSize.height }
     string = text
-    outline = Outline(parsing: text)
+    folds = Folds(outline: Outline(parsing: text))
     setSelectedRange(NSRange(location: 0, length: 0))
     guard let layout = textLayoutManager else { return }
     layout.ensureLayout(for: layout.documentRange)
@@ -60,20 +32,20 @@ final class NotebookTextView: NSTextView {
 
   @objc func foldHeading(_ sender: Any?) {
     guard let heading = headingAtSelection else { return }
-    setFolded(foldedHeadingStarts.union([heading.range.location]))
+    setFolded { $0.fold(heading) }
   }
 
   @objc func unfoldHeading(_ sender: Any?) {
     guard let heading = headingAtSelection else { return }
-    setFolded(foldedHeadingStarts.subtracting([heading.range.location]))
+    setFolded { $0.unfold(heading) }
   }
 
   @objc func foldAll(_ sender: Any?) {
-    setFolded(foldedHeadingStarts.union(outline.topLevelHeadings.map(\.range.location)))
+    setFolded { $0.foldAll() }
   }
 
   @objc func unfoldAll(_ sender: Any?) {
-    setFolded([])
+    setFolded { $0.unfoldAll() }
   }
 
   override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -81,14 +53,14 @@ final class NotebookTextView: NSTextView {
     case #selector(foldHeading(_:)), #selector(unfoldHeading(_:)):
       headingAtSelection != nil
     case #selector(foldAll(_:)), #selector(unfoldAll(_:)):
-      !outline.headings.isEmpty
+      folds.hasHeadings
     default:
       super.validateMenuItem(menuItem)
     }
   }
 
   private var headingAtSelection: OutlineHeading? {
-    outline.innermostHeading(at: selectedRange().location)
+    folds.innermostHeading(at: selectedRange().location)
   }
 
   override var minSize: NSSize {
@@ -128,35 +100,28 @@ final class NotebookTextView: NSTextView {
     scroll.reflectScrolledClipView(scroll.contentView)
   }
 
-  private func setFolded(_ headingStarts: Set<Int>) {
+  private func setFolded(_ change: (inout Folds) -> Void) {
     guard let layout = textLayoutManager, let storage = textContentStorage,
       let scroll = enclosingScrollView
     else { return }
-    let before = Set(folding.hiddenRanges.map(\.location))
     // After a width change or a scroll, the viewport may not be laid out yet; display would do it.
     layout.textViewportLayoutController.layoutViewport()
     let anchor = topLine(layout, storage)
-    let newlyFolded = headingStarts.subtracting(foldedHeadingStarts)
-    foldedHeadingStarts = headingStarts
-    let folded = outline.headings.filter { headingStarts.contains($0.range.location) }
+    let previous = folds
+    change(&folds)
     // Markers move on every viewport layout; find the paragraph each one sits on once, here.
     let text = string as NSString
     foldedHeadingEndingAt = [:]
-    for heading in folded {
+    for heading in folds.foldedHeadings {
       let last = NSRange(location: NSMaxRange(heading.range) - 1, length: 0)
       foldedHeadingEndingAt[text.paragraphRange(for: last).location] = heading.range.location
     }
-    folding.hiddenRanges = folded.map(\.ownedRange).filter { $0.length > 0 }
-    let selection = selectedRange()
-    let caret = outline.clampedOffset(selection.location)
-    if let hiding = folded.first(where: {
-      NSLocationInRange(caret, $0.ownedRange)
-        || newlyFolded.contains($0.range.location)
-          && NSIntersectionRange(selection, $0.ownedRange).length > 0
-    }) {
-      setSelectedRange(NSRange(location: hiding.range.location, length: 0))
+    folding.hiddenRanges = folds.hiddenRanges
+    if let caret = folds.caret(for: selectedRange(), since: previous) {
+      setSelectedRange(NSRange(location: caret, length: 0))
     }
-    let changed = before.symmetricDifference(folding.hiddenRanges.map(\.location))
+    let changed = Set(previous.hiddenRanges.map(\.location))
+      .symmetricDifference(folding.hiddenRanges.map(\.location))
     if let first = changed.min(),
       let start = storage.location(storage.documentRange.location, offsetBy: first),
       let range = NSTextRange(location: start, end: storage.documentRange.endLocation)
@@ -170,7 +135,7 @@ final class NotebookTextView: NSTextView {
     // The clip view keeps its pixel offset, so put the top line back at its screen y.
     var top = scroll.contentView.bounds.minY
     if let anchor {
-      let hiding = folded.first { NSLocationInRange(anchor.offset, $0.ownedRange) }
+      let hiding = folds.heading(hiding: anchor.offset)
       let screenY = hiding == nil ? anchor.screenY : max(0, anchor.screenY)
       if let y = minY(of: hiding?.range.location ?? anchor.offset, layout, storage) {
         top = max(0, y - screenY)

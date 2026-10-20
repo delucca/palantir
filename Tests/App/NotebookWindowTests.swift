@@ -1,8 +1,9 @@
 import AppKit
-import PalantirCore
 import Testing
 
 @testable import Palantir
+@testable import PalantirNotebook
+@testable import PalantirNotebookUI
 
 @MainActor
 struct NotebookWindowTests {

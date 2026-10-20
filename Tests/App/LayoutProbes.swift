@@ -1,119 +1,8 @@
 import AppKit
-import PalantirCore
 import Testing
 
-@testable import Palantir
-
-@MainActor
-func temporaryNotebook(_ data: Data) throws -> URL {
-  let directory = FileManager.default.temporaryDirectory.appending(
-    path: UUID().uuidString, directoryHint: .isDirectory)
-  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  let url = directory.appending(path: "notebook.md")
-  try data.write(to: url)
-  return url
-}
-
-@MainActor
-func temporaryNotebook(_ text: String) throws -> URL {
-  try temporaryNotebook(Data(text.utf8))
-}
-
-@MainActor
-func removeTemporaryNotebook(_ url: URL) {
-  try? FileManager.default.removeItem(at: url.deletingLastPathComponent())
-}
-
-@MainActor
-func openNotebook(_ text: String) throws -> NotebookWindowController {
-  let controller = NotebookWindowController()
-  let url = try temporaryNotebook(text)
-  defer { removeTemporaryNotebook(url) }
-  try controller.open(url)
-  return controller
-}
-
-@MainActor
-func longNotebook(before: Int, owned: Int, after: Int) -> String {
-  (1...before).map { "Filler line \($0).\n" }.joined() + "# Tasks\n## Fix the reaper\n"
-    + (1...owned).map { "It leaks, line \($0).\n" }.joined() + "# Notes\n"
-    + (1...after).map { "Filler line \($0).\n" }.joined()
-}
-
-@MainActor
-func sectionsNotebook() -> String {
-  "Intro.\n"
-    + (1...10).map { section in
-      "# Section \(section)\n" + (1...100).map { "Body \(section).\($0)\n" }.joined()
-    }.joined()
-}
-
-@MainActor
-func wrappingSectionsNotebook() -> String {
-  let words = String(repeating: "word ", count: 30)
-  return "Intro.\n"
-    + (1...10).map { section in
-      "# Section \(section)\n" + (1...60).map { "Body \(section).\($0) \(words)\n" }.joined()
-    }.joined()
-}
-
-@MainActor
-func wrappingPartsNotebook() -> String {
-  let words = String(repeating: "word ", count: 30)
-  return "Intro.\n"
-    + (1...12).map { part in
-      "# Part \(part)\n"
-        + (1...4).map { item in
-          "## Item \(part).\(item)\n"
-            + (1...6).map { "Body \(part).\(item).\($0) \(words)\n" }.joined()
-        }.joined()
-    }.joined()
-}
-
-extension String {
-  /// The text with each range removed; a range inside another goes with it.
-  func removing(_ ranges: [NSRange]) -> String {
-    let result = NSMutableString(string: self)
-    let outer = ranges.filter { range in
-      !ranges.contains { $0 != range && NSLocationInRange(range.location, $0) }
-    }
-    for range in outer.sorted(by: { $0.location > $1.location }) {
-      result.deleteCharacters(in: range)
-    }
-    return result as String
-  }
-}
-
-@MainActor
-func viewMenuItem(_ title: String) throws -> NSMenuItem {
-  try #require(MainMenu.make().item(withTitle: "View")?.submenu?.item(withTitle: title))
-}
-
-@MainActor
-func choose(_ title: String, in controller: NotebookWindowController) throws -> Bool {
-  let item = try viewMenuItem(title)
-  guard controller.textView.validateMenuItem(item) else { return false }
-  let action = try #require(item.action)
-  let responder = try #require(controller.window?.firstResponder)
-  return responder.tryToPerform(action, with: item)
-}
-
-@MainActor
-func choose(
-  _ title: String, at offset: Int, in controller: NotebookWindowController
-) throws -> Bool {
-  controller.textView.setSelectedRange(NSRange(location: offset, length: 0))
-  return try choose(title, in: controller)
-}
-
-@MainActor
-func openMenuItem() throws -> (NSMenuItem, Selector) {
-  let item = try #require(
-    MainMenu.make().item(withTitle: "File")?.submenu?.item(withTitle: "Open…"))
-  let action = try #require(item.action)
-  try #require(action == #selector(AppDelegate.openDocument(_:)))
-  return (item, action)
-}
+@testable import PalantirNotebook
+@testable import PalantirNotebookUI
 
 extension NSTextView {
   private func laidOutParagraphs() throws -> [(string: String, frame: CGRect)] {
@@ -259,6 +148,10 @@ extension NSView {
 }
 
 extension NotebookTextView {
+  var outline: Outline { folds.outline }
+
+  var foldedHeadingStarts: Set<Int> { folds.headingStarts }
+
   func heading(_ index: Int) throws -> OutlineHeading {
     let headings = outline.headings
     try #require(headings.indices.contains(index), "\(headings.count) headings, no index \(index)")
@@ -281,24 +174,5 @@ extension NotebookTextView {
       && bounds.contains(marker.frame) && marker.frame.minX >= lineFrame.maxX
       && abs(marker.frame.minX - x) <= 0.5
       && lineFrame.minY <= marker.frame.midY && marker.frame.midY <= lineFrame.maxY
-  }
-}
-
-extension NotebookWindowController {
-  /// The View menu with each item aimed where AppKit sends it from the key window: the first
-  /// responder up the chain that answers the action. A test process has no key window, so AppKit's
-  /// own search finds no target and disables every item.
-  func viewMenuAimedAtTheResponderChain() throws -> NSMenu {
-    let menu = try #require(MainMenu.make().item(withTitle: "View")?.submenu)
-    let responder = try #require(window?.firstResponder)
-    for item in menu.items {
-      try #require(item.target == nil, "\(item.title) has a target")
-      let action = try #require(item.action)
-      let target: NSResponder = try #require(
-        sequence(first: responder, next: \.nextResponder).first { $0.responds(to: action) },
-        "no responder answers \(item.title)")
-      item.target = target
-    }
-    return menu
   }
 }

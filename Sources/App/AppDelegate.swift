@@ -1,17 +1,5 @@
 import AppKit
-import UniformTypeIdentifiers
-
-@main
-enum App {
-  static func main() {
-    let app = NSApplication.shared
-    let delegate = AppDelegate()
-    app.delegate = delegate
-    app.setActivationPolicy(.regular)
-    MainMenu.install(in: app)
-    withExtendedLifetime(delegate) { app.run() }
-  }
-}
+import PalantirNotebookUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
   private(set) lazy var notebook = NotebookWindowController()
@@ -41,7 +29,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
   private static func runOpenPanel() -> URL? {
     let panel = NSOpenPanel()
-    panel.allowedContentTypes = [.markdown]
+    panel.allowedContentTypes = NotebookWindowController.readableContentTypes
     return panel.runModal() == .OK ? panel.url : nil
   }
 }

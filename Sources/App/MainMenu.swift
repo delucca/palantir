@@ -1,4 +1,5 @@
 import AppKit
+import PalantirNotebookUI
 
 /// The menu bar, in the order the macOS HIG requires.
 enum MainMenu {
@@ -45,14 +46,7 @@ enum MainMenu {
         item("Select All", #selector(NSText.selectAll(_:)), "a"),
       ])
 
-    menu.addSubmenu(
-      "View",
-      [
-        item("Fold Heading", #selector(NotebookTextView.foldHeading(_:))),
-        item("Unfold Heading", #selector(NotebookTextView.unfoldHeading(_:))),
-        item("Fold All", #selector(NotebookTextView.foldAll(_:))),
-        item("Unfold All", #selector(NotebookTextView.unfoldAll(_:))),
-      ])
+    menu.addSubmenu("View", NotebookWindowController.makeViewMenuItems())
 
     menu.addSubmenu(
       "Window",

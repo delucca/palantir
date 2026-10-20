@@ -1,9 +1,21 @@
-import AppKit
+package import AppKit
+package import UniformTypeIdentifiers
 
-final class NotebookWindowController: NSWindowController {
+package final class NotebookWindowController: NSWindowController {
+  package static let readableContentTypes: [UTType] = [.markdown]
+
   let textView: NotebookTextView
 
-  init() {
+  package static func makeViewMenuItems() -> [NSMenuItem] {
+    [
+      ("Fold Heading", #selector(NotebookTextView.foldHeading(_:))),
+      ("Unfold Heading", #selector(NotebookTextView.unfoldHeading(_:))),
+      ("Fold All", #selector(NotebookTextView.foldAll(_:))),
+      ("Unfold All", #selector(NotebookTextView.unfoldAll(_:))),
+    ].map { NSMenuItem(title: $0, action: $1, keyEquivalent: "") }
+  }
+
+  package init() {
     let window = NSWindow(
       contentRect: NSRect(x: 0, y: 0, width: 960, height: 600),
       styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered,
@@ -34,7 +46,7 @@ final class NotebookWindowController: NSWindowController {
   @available(*, unavailable)
   required init?(coder: NSCoder) { fatalError("init(coder:) is not supported") }
 
-  func open(_ url: URL) throws {
+  package func open(_ url: URL) throws {
     textView.show(try String(contentsOf: url, encoding: .utf8))
   }
 }

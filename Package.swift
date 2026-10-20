@@ -20,24 +20,34 @@ let package = Package(
   ],
   targets: [
     .target(
-      name: "PalantirCore",
+      name: "PalantirNotebook",
       dependencies: [.product(name: "Markdown", package: "swift-markdown")],
+      path: "Sources/Notebook/Model",
       swiftSettings: upcomingFeatures
+    ),
+    .target(
+      name: "PalantirNotebookUI",
+      dependencies: ["PalantirNotebook"],
+      path: "Sources/Notebook/UI",
+      swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
     ),
     .executableTarget(
       name: "Palantir",
-      dependencies: ["PalantirCore"],
+      dependencies: ["PalantirNotebookUI"],
+      path: "Sources/App",
       exclude: ["Info.plist"],
       swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
     ),
     .testTarget(
-      name: "PalantirCoreTests",
-      dependencies: ["PalantirCore"],
+      name: "PalantirNotebookTests",
+      dependencies: ["PalantirNotebook"],
+      path: "Tests/Notebook",
       swiftSettings: upcomingFeatures
     ),
     .testTarget(
       name: "PalantirTests",
-      dependencies: ["Palantir", "PalantirCore"],
+      dependencies: ["Palantir", "PalantirNotebook", "PalantirNotebookUI"],
+      path: "Tests/App",
       swiftSettings: upcomingFeatures
     ),
   ]

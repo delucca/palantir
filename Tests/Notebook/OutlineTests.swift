@@ -1,6 +1,7 @@
 import Foundation
-import PalantirCore
 import Testing
+
+@testable import PalantirNotebook
 
 struct OutlineTests {
   private let introTasksNotes = "Intro.\n# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\nDone."

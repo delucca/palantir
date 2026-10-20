@@ -2,6 +2,7 @@ import AppKit
 import Testing
 
 @testable import Palantir
+@testable import PalantirNotebookUI
 
 @MainActor
 struct MainMenuTests {

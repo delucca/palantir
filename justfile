@@ -20,7 +20,7 @@ bundle config="debug":
     rm -rf {{app}}
     mkdir -p {{app}}/Contents/MacOS
     cp "$(swift build -c {{config}} --show-bin-path)/palantir" {{app}}/Contents/MacOS/
-    cp Sources/Palantir/Info.plist {{app}}/Contents/
+    cp Sources/App/Info.plist {{app}}/Contents/
     codesign --force --sign - {{app}}
 
 run: bundle
