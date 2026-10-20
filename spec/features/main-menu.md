@@ -20,3 +20,13 @@ From: one-pagers/2026-10-16-open-notebook-fold-headings
 * When palantir launches
 * Then the View menu holds Fold Heading, Unfold Heading, Fold All and Unfold All
 * And none of them has a key equivalent
+
+## Rule: Every menu bar item shall show in the accessibility tree with its title and a press action
+`req~main-menu.drivable~1`
+Needs: utest
+From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
+Decided in: decisions/2026-10-20-test-the-running-app-gray-box
+
+### Example: a fresh launch
+* When palantir launches
+* Then every menu bar item except separators shows in the accessibility tree with its title and a press action
