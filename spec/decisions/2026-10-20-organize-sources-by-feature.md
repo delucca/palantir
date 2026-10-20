@@ -1,9 +1,9 @@
 ---
-status: accepted
+status: superseded
 date: 2026-10-20
 from:
 supersedes:
-superseded-by:
+superseded-by: decisions/2026-10-20-organize-sources-and-tests-by-feature
 ---
 # Organize the code by feature, with a model target and a UI target per feature
 
