@@ -33,7 +33,7 @@ palantir starts with one feature, notebooks, and will add a terminal, agent sess
 
 ## Consequences
 
-- Deleting a feature means deleting its folder and its lines in `Package.swift`.
+- Deleting a feature means deleting its folders under `Sources/` and `Tests/`, its lines in `Package.swift`, and its wiring and tests in `App`.
 - What `App` uses from a UI target is marked `package`, such as `NotebookWindowController`'s `init()`, `makeFileMenuItems()`, `makeViewMenuItems()` and `openDocument(_:)`.
 - `App`'s delegate keeps a one-line `openDocument(_:)` forward to the notebook controller. AppKit's responder chain reaches the controller only while its window is key or main, so without the forward File > Open is disabled when the window is minimized.
 - The package has more targets and `package` declarations than one app target would need.
