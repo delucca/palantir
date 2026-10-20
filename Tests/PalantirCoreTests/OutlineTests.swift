@@ -75,6 +75,15 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[0].ownedRange) == "body\n")
   }
 
+  // [utest->req~heading-outline.owned-range~1]
+  @Test func setextHeadingAfterLinkDefinitionsStartsAtItsText() throws {
+    let notebook = "# Tasks\nBody.\n\n[ref]: /url\nTitle\n===\n"
+    let outline = Outline(parsing: notebook)
+    try #require(outline.headings.map(\.lines) == [1...1, 5...6])
+    #expect(outline.headings.map(\.ownedLines) == [2..<5, 7..<7])
+    #expect(text(notebook, outline.headings[0].ownedRange) == "Body.\n\n[ref]: /url\n")
+  }
+
   // [utest->req~heading-outline.fenced-code~1]
   @Test func hashLinesInFencedCodeAreNotHeadings() throws {
     let notebook = "# Setup\n```sh\n# install deps\n```\n## Run\n"

@@ -12,10 +12,10 @@ struct HeadingFoldingTests {
   @Test func foldHeadingHidesTheTextItOwnsAndMarksIt() throws {
     let controller = try openNotebook(tasksAndNotes)
     let view = controller.textView
-    let heading = try heading(1, of: view)
+    let heading = try view.heading(1)
     #expect(try choose("Fold Heading", at: heading.range.location + 1, in: controller))
-    #expect(try visibleParagraphs(view) == ["# Tasks", "## Fix the reaper", "# Notes"])
-    #expect(try markerIsShown(view, heading: heading))
+    #expect(try view.visibleParagraphs() == ["# Tasks", "## Fix the reaper", "# Notes"])
+    #expect(try view.markerIsShown(heading: heading))
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -23,9 +23,9 @@ struct HeadingFoldingTests {
     let title = "## " + String(repeating: "Fix the reaper again and again ", count: 12)
     let controller = try openNotebook("# Tasks\n\(title)\nIt leaks.\n# Notes\n")
     let view = controller.textView
-    let heading = try heading(1, of: view)
+    let heading = try view.heading(1)
     #expect(try choose("Fold Heading", at: heading.range.location + 1, in: controller))
-    #expect(try markerIsShown(view, heading: heading))
+    #expect(try view.markerIsShown(heading: heading))
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -35,7 +35,7 @@ struct HeadingFoldingTests {
       "## " + String(repeating: "x", count: length) + "\nIt leaks.\n")
     let view = controller.textView
     #expect(try choose("Fold Heading", at: 1, in: controller))
-    #expect(try markerIsShown(view, heading: try heading(0, of: view)))
+    #expect(try view.markerIsShown(heading: try view.heading(0)))
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -45,9 +45,9 @@ struct HeadingFoldingTests {
   func markerSitsOnTheLastHeadingsTextNotOnTheEmptyLineAfterIt(title: String) throws {
     let controller = try openNotebook("# Tasks\nIt leaks.\n\(title)\n")
     let view = controller.textView
-    let last = try heading(1, of: view)
+    let last = try view.heading(1)
     #expect(try choose("Fold Heading", at: last.range.location + 1, in: controller))
-    #expect(try markerIsShown(view, heading: last))
+    #expect(try view.markerIsShown(heading: last))
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -55,10 +55,10 @@ struct HeadingFoldingTests {
   func markerSitsAfterASetextHeadingsUnderline(underline: String) throws {
     let controller = try openNotebook("Tasks\n\(underline)\nIt leaks.\n# Notes\n")
     let view = controller.textView
-    let tasks = try heading(0, of: view)
+    let tasks = try view.heading(0)
     #expect(try choose("Fold Heading", at: 1, in: controller))
-    #expect(try visibleParagraphs(view) == ["Tasks", underline, "# Notes"])
-    #expect(try markerIsShown(view, heading: tasks))
+    #expect(try view.visibleParagraphs() == ["Tasks", underline, "# Notes"])
+    #expect(try view.markerIsShown(heading: tasks))
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -67,21 +67,21 @@ struct HeadingFoldingTests {
     let controller = try openNotebook(text)
     let view = controller.textView
     #expect(try choose("Fold Heading", at: (text as NSString).length, in: controller))
-    #expect(view.foldedHeadings == [18])
+    #expect(view.foldedHeadingStarts == [18])
     #expect(view.selectedRange() == NSRange(location: 18, length: 0))
-    #expect(try visibleParagraphs(view) == ["# Tasks", "It leaks.", "# Notes"])
+    #expect(try view.visibleParagraphs() == ["# Tasks", "It leaks.", "# Notes"])
   }
 
   // [utest->req~heading-folding.fold~1]
   @Test func headingThatOwnsNothingGetsAMarkerAndLosesIt() throws {
     let controller = try openNotebook("# Tasks\n## Ship bilbo\n# Notes\n")
     let view = controller.textView
-    let heading = try heading(1, of: view)
+    let heading = try view.heading(1)
     #expect(try choose("Fold Heading", at: heading.range.location + 1, in: controller))
-    #expect(try visibleParagraphs(view) == ["# Tasks", "## Ship bilbo", "# Notes"])
-    #expect(try markerIsShown(view, heading: heading))
+    #expect(try view.visibleParagraphs() == ["# Tasks", "## Ship bilbo", "# Notes"])
+    #expect(try view.markerIsShown(heading: heading))
     #expect(try choose("Unfold Heading", in: controller))
-    #expect(view.foldedMarkers.isEmpty && markerViews(view).isEmpty)
+    #expect(view.foldedMarkers.isEmpty && view.markerViews().isEmpty)
   }
 
   // [utest->req~heading-folding.fold~1]
@@ -95,9 +95,9 @@ struct HeadingFoldingTests {
     ] as [[Range<Int>]])
   func hiddenParagraphsAreTheOffsetsInAFoldedRange(ranges: [Range<Int>]) {
     let folding = FoldedParagraphs()
-    folding.hidden = ranges.map { NSRange($0) }
+    folding.hiddenRanges = ranges.map { NSRange($0) }
     for offset in 0...70 {
-      let linear = folding.hidden.contains { NSLocationInRange(offset, $0) }
+      let linear = folding.hiddenRanges.contains { NSLocationInRange(offset, $0) }
       #expect(folding.hides(offset) == linear, "offset \(offset)")
     }
   }
@@ -111,18 +111,41 @@ struct HeadingFoldingTests {
     #expect(view.selectedRange() == NSRange(location: 0, length: 0))
   }
 
+  // [utest->req~heading-folding.fold~1]
+  @Test func aSelectionReachingIntoFoldedTextShrinksToTheHeading() throws {
+    let controller = try openNotebook(tasksAndNotes)
+    let view = controller.textView
+    view.setSelectedRange(NSRange(location: 11, length: 20))
+    #expect(try choose("Fold Heading", in: controller))
+    #expect(view.foldedHeadingStarts == [8])
+    #expect(view.selectedRange() == NSRange(location: 8, length: 0))
+  }
+
+  // [utest->req~heading-folding.fold~1]
+  @Test func hidesAnswersWithoutScanningEveryRange() {
+    let folding = FoldedParagraphs()
+    folding.hiddenRanges = (0..<40_000).map { NSRange(location: $0 * 4, length: 2) }
+    let clock = ContinuousClock()
+    var hidden = 0
+    let elapsed = clock.measure {
+      for offset in 0..<160_000 where folding.hides(offset) { hidden += 1 }
+    }
+    #expect(hidden == 80_000)
+    #expect(elapsed < .seconds(1))
+  }
+
   // [utest->req~heading-folding.unfold~1]
   @Test func unfoldHeadingShowsTheSameTextAndClearsTheMarker() throws {
     let controller = try openNotebook(tasksAndNotes)
     let view = controller.textView
-    let before = try visibleParagraphs(view)
-    let heading = try heading(1, of: view)
+    let before = try view.visibleParagraphs()
+    let heading = try view.heading(1)
     #expect(try choose("Fold Heading", at: heading.range.location + 1, in: controller))
-    #expect(markerViews(view).count == 1)
+    #expect(view.markerViews().count == 1)
     #expect(try choose("Unfold Heading", in: controller))
-    #expect(try visibleParagraphs(view) == before)
+    #expect(try view.visibleParagraphs() == before)
     #expect(view.foldedMarkers[8] == nil)
-    #expect(markerViews(view).isEmpty)
+    #expect(view.markerViews().isEmpty)
   }
 
   // [utest->req~heading-folding.unfold~1]
@@ -134,11 +157,11 @@ struct HeadingFoldingTests {
     #expect(try choose("Fold Heading", at: 1, in: controller))
     #expect(try choose("Unfold Heading", in: controller))
     #expect(
-      try visibleParagraphs(view) == ["# Tasks", "## Fix the reaper", "## Ship bilbo", "# Notes"])
-    #expect(view.foldedHeadings == [8])
+      try view.visibleParagraphs() == ["# Tasks", "## Fix the reaper", "## Ship bilbo", "# Notes"])
+    #expect(view.foldedHeadingStarts == [8])
     #expect(view.foldedMarkers.keys.sorted() == [8])
-    #expect(markerViews(view).count == 1)
-    #expect(try markerIsShown(view, heading: try heading(1, of: view)))
+    #expect(view.markerViews().count == 1)
+    #expect(try view.markerIsShown(heading: try view.heading(1)))
   }
 
   // [utest->req~heading-folding.no-gap~1]
@@ -156,20 +179,20 @@ struct HeadingFoldingTests {
     let notes = try #require(
       view.outline.headings.first { $0.lines.lowerBound == before + 3 + owned })
     let total = text.components(separatedBy: "\n").count - 1
-    try scrollToTop(view, offset: heading.range.location)
+    try view.scrollToTop(offset: heading.range.location)
     view.setSelectedRange(NSRange(location: heading.range.location + 1, length: 0))
-    #expect(try screenY(view, offset: heading.range.location) == 0)
+    try #require(try view.screenY(offset: heading.range.location) == 0)
 
     #expect(try choose("Fold Heading", in: controller))
     try expectInPlace(view, heading)
     #expect(
-      try fragmentFrame(view, at: notes.range.location).minY
-        == fragmentFrame(view, at: heading.range.location).maxY)
-    #expect(try visibleParagraphs(view).count == total - owned)
+      try view.fragmentFrame(at: notes.range.location).minY
+        == view.fragmentFrame(at: heading.range.location).maxY)
+    #expect(try view.visibleParagraphs().count == total - owned)
 
     #expect(try choose("Unfold Heading", in: controller))
     try expectInPlace(view, heading)
-    #expect(try visibleParagraphs(view).count == total)
+    #expect(try view.visibleParagraphs().count == total)
     #expect(switches == 0)
     #expect(view.textLayoutManager != nil)
   }
@@ -181,10 +204,10 @@ struct HeadingFoldingTests {
   private func expectInPlace(
     _ view: NotebookTextView, _ heading: OutlineHeading, at y: CGFloat = 0
   ) throws {
-    let screen = try screenY(view, offset: heading.range.location)
-    let breaks = try layoutBreaks(view)
-    let fits = try isNoTallerThanTextPlusOneWindow(view)
-    let textHeight = try textHeight(view)
+    let screen = try view.screenY(offset: heading.range.location)
+    let breaks = try view.layoutBreaks()
+    let fits = try view.isNoTallerThanTextPlusOneWindow()
+    let textHeight = try view.textHeight()
     #expect(screen == y)
     #expect(breaks.isEmpty)
     #expect(fits)
@@ -196,10 +219,10 @@ struct HeadingFoldingTests {
     let controller = try openNotebook(sectionsNotebook())
     let view = controller.textView
     let five = try section(5, in: view)
-    try scrollToTop(view, offset: five.range.location)
+    try view.scrollToTop(offset: five.range.location)
     #expect(try choose("Fold All", in: controller))
     try expectInPlace(view, five)
-    #expect(try visibleParagraphs(view).count == 11)
+    #expect(try view.visibleParagraphs().count == 11)
   }
 
   // [utest->req~heading-folding.no-gap~1]
@@ -213,11 +236,11 @@ struct HeadingFoldingTests {
           "Fold Heading", at: try section(number, in: view).range.location, in: controller))
     }
     let five = try section(5, in: view)
-    try scrollToTop(view, offset: five.range.location)
-    #expect(try screenY(view, offset: five.range.location) == 0)
+    try view.scrollToTop(offset: five.range.location)
+    try #require(try view.screenY(offset: five.range.location) == 0)
     #expect(try choose("Unfold All", in: controller))
     try expectInPlace(view, five)
-    #expect(try visibleText(view) == text)
+    #expect(try view.visibleText() == text)
   }
 
   // [utest->req~heading-folding.no-gap~1]
@@ -226,8 +249,8 @@ struct HeadingFoldingTests {
     let controller = try openNotebook(sectionsNotebook())
     let view = controller.textView
     let five = try section(5, in: view)
-    try scroll(view, toY: try fragmentFrame(view, at: five.range.location).minY + partly)
-    #expect(try screenY(view, offset: five.range.location) == -partly)
+    try view.scroll(toY: try view.fragmentFrame(at: five.range.location).minY + partly)
+    try #require(try view.screenY(offset: five.range.location) == -partly)
     #expect(
       try choose("Fold Heading", at: try section(1, in: view).range.location, in: controller))
     try expectInPlace(view, five, at: -partly)
@@ -241,9 +264,9 @@ struct HeadingFoldingTests {
     let view = controller.textView
     let five = try section(5, in: view)
     view.setSelectedRange(NSRange(location: try section(7, in: view).range.location, length: 0))
-    try scrollToTop(view, offset: try section(9, in: view).range.location)
-    try scroll(view, toY: try fragmentFrame(view, at: five.range.location).minY, layingOut: false)
-    #expect(try screenY(view, offset: five.range.location) == 0)
+    try view.scrollToTop(offset: try section(9, in: view).range.location)
+    try view.scroll(toY: try view.fragmentFrame(at: five.range.location).minY, layingOut: false)
+    try #require(try view.screenY(offset: five.range.location) == 0)
     #expect(try choose("Fold Heading", in: controller))
     try expectInPlace(view, five)
   }
@@ -255,8 +278,8 @@ struct HeadingFoldingTests {
     let view = controller.textView
     let five = try section(5, in: view)
     let body = (view.string as NSString).range(of: "Body 5.10\n").location
-    try scroll(view, toY: try fragmentFrame(view, at: body).minY + partly)
-    #expect(try screenY(view, offset: body) == -partly)
+    try view.scroll(toY: try view.fragmentFrame(at: body).minY + partly)
+    try #require(try view.screenY(offset: body) == -partly)
     #expect(try choose("Fold Heading", at: five.range.location + 1, in: controller))
     try expectInPlace(view, five)
   }
@@ -274,7 +297,7 @@ struct HeadingFoldingTests {
       for number in folds {
         #expect(try choose("Fold Heading", at: section(number), in: controller))
       }
-      try scrollToTop(controller.textView, offset: section(8))
+      try controller.textView.scrollToTop(offset: section(8))
       try #require(controller.window).setContentSize(NSSize(width: change.width, height: 600))
       return controller
     }
@@ -283,8 +306,8 @@ struct HeadingFoldingTests {
     }
     // The twin lays out its viewport, as display would: its top line is the one on screen.
     let twin = try resized()
-    try scroll(twin.textView, toY: shifted(twin.textView))
-    let top = try drawnTopLine(twin.textView)
+    try twin.textView.scroll(toY: shifted(twin.textView))
+    let top = try twin.textView.drawnTopLine()
     let owner = try #require(twin.textView.outline.innermostHeading(at: top.offset))
     try #require(owner.range.location > section(2))
 
@@ -292,7 +315,7 @@ struct HeadingFoldingTests {
     let view = controller.textView
     // A scroll without layout leaves the window over text the width change left unlaid. At 1400
     // points the last shift ends where the viewport draws its first line below the top edge.
-    try scroll(view, toY: shifted(view), layingOut: false)
+    try view.scroll(toY: shifted(view), layingOut: false)
     switch change.command {
     case "above":
       #expect(try choose("Fold Heading", at: section(2) + 1, in: controller))
@@ -321,13 +344,13 @@ struct HeadingFoldingTests {
     let controller = try openNotebook(text)
     let view = controller.textView
     let body = (text as NSString).range(of: "Body 6.2.3 ").location
-    try scrollToTop(view, offset: body)
+    try view.scrollToTop(offset: body)
     try #require(controller.window).setContentSize(NSSize(width: width, height: 600))
-    try scrollDrawnTopLine(view, to: body)
+    try view.scrollDrawnTopLine(to: body)
     let parent = try #require(
       view.outline.innermostHeading(at: (text as NSString).range(of: "# Part 6\n").location))
     let child = try #require(view.outline.innermostHeading(at: body))
-    var top = try drawnTopLine(view)
+    var top = try view.drawnTopLine()
     // The line setFolded anchors on lies in the text the child hides.
     try #require(NSLocationInRange(top.offset, child.ownedRange))
 
@@ -335,40 +358,80 @@ struct HeadingFoldingTests {
     try expectAfterACommand(
       view, text, folded: [child.range.location],
       line: (child.range.location, max(0, top.screenY)), marked: child)
-    top = try drawnTopLine(view)
+    top = try view.drawnTopLine()
     #expect(try choose("Fold Heading", at: parent.range.location + 1, in: controller))
     try expectAfterACommand(
       view, text, folded: [child.range.location, parent.range.location],
       line: (parent.range.location, max(0, top.screenY)), marked: parent)
-    top = try drawnTopLine(view)
+    top = try view.drawnTopLine()
     #expect(try choose("Unfold Heading", at: parent.range.location + 1, in: controller))
     try expectAfterACommand(view, text, folded: [child.range.location], line: top)
   }
 
-  /// Checks the folds, the text, the line that must not move, the markers and the height bounds.
   private func expectAfterACommand(
     _ view: NotebookTextView, _ text: String, folded: Set<Int>,
     line: (offset: Int, screenY: CGFloat), marked: OutlineHeading? = nil, clamped: Bool = false
   ) throws {
-    #expect(view.foldedHeadings == folded)
+    #expect(view.foldedHeadingStarts == folded)
     let headings = view.outline.headings.filter { folded.contains($0.range.location) }
-    #expect(try visibleText(view) == removing(headings.map(\.ownedRange), from: text))
-    if folded.isEmpty { #expect(view.foldedMarkers.isEmpty && markerViews(view).isEmpty) }
-    let y = try screenY(view, offset: line.offset)
+    #expect(try view.visibleText() == text.removing(headings.map(\.ownedRange)))
+    if folded.isEmpty { #expect(view.foldedMarkers.isEmpty && view.markerViews().isEmpty) }
+    let y = try view.screenY(offset: line.offset)
     // Fold All can leave less text above the heading than its screen y.
     #expect(
       abs(y - line.screenY) < 0.01 || (clamped && view.visibleRect.minY == 0 && y < line.screenY))
     for heading in headings
     where !headings.contains(where: { NSLocationInRange(heading.range.location, $0.ownedRange) }) {
-      if view.visibleRect.intersects(try fragmentFrame(view, at: heading.range.location)) {
-        #expect(try markerIsShown(view, heading: heading))
+      if view.visibleRect.intersects(try view.fragmentFrame(at: heading.range.location)) {
+        #expect(try view.markerIsShown(heading: heading))
       }
     }
-    if let marked { #expect(try markerIsShown(view, heading: marked)) }
-    let textHeight = try textHeight(view)
-    #expect(try layoutBreaks(view).isEmpty)
-    #expect(try isNoTallerThanTextPlusOneWindow(view))
+    if let marked { #expect(try view.markerIsShown(heading: marked)) }
+    let textHeight = try view.textHeight()
+    #expect(try view.layoutBreaks().isEmpty)
+    #expect(try view.isNoTallerThanTextPlusOneWindow())
     #expect(view.frame.height >= textHeight)
+  }
+
+  // [utest->req~heading-folding.no-gap~1]
+  @Test(arguments: [600, 1400] as [CGFloat])
+  func aFoldedNotebookStaysFoldedWhenTheWindowChangesWidth(width: CGFloat) throws {
+    let text = wrappingSectionsNotebook() as NSString
+    let controller = try openNotebook(text as String)
+    let view = controller.textView
+    let five = text.range(of: "# Section 5\n").location
+    #expect(try choose("Fold Heading", at: five + 1, in: controller))
+    let heading = try #require(view.outline.innermostHeading(at: five))
+    try #require(controller.window).setContentSize(NSSize(width: width, height: 600))
+    try view.scrollDrawnTopLine(to: five)
+
+    let drawn = try view.drawnParagraphs()
+    try #require(drawn.first?.offset == five)
+    #expect(drawn.dropFirst().first?.offset == text.range(of: "# Section 6\n").location)
+    #expect(!drawn.contains { NSLocationInRange($0.offset, heading.ownedRange) })
+    #expect(zip(drawn, drawn.dropFirst()).allSatisfy { $1.frame.minY == $0.frame.maxY })
+    #expect(try view.markerIsShown(heading: heading))
+  }
+
+  // [utest->req~heading-folding.no-gap~1]
+  @Test func wideningTheWindowAfterAFoldLeavesNoBlankBelowTheText() throws {
+    let text = wrappingSectionsNotebook() as NSString
+    let controller = try openNotebook(text as String)
+    let view = controller.textView
+    let ten = text.range(of: "# Section 10\n").location
+    try view.scrollToTop(offset: ten)
+    #expect(try choose("Fold Heading", at: ten + 1, in: controller))
+    let scroll = try #require(view.enclosingScrollView)
+    try #require(view.minSize.height > scroll.contentSize.height)
+
+    try #require(controller.window).setContentSize(NSSize(width: 1400, height: 600))
+    let layout = try #require(view.textLayoutManager)
+    layout.ensureLayout(for: layout.documentRange)
+    let textHeight = try view.textHeight()
+    // Display lays out the viewport, which sizes the view to the text.
+    layout.textViewportLayoutController.layoutViewport()
+    #expect(view.minSize.height <= scroll.contentSize.height)
+    #expect(view.frame.height <= textHeight + scroll.contentSize.height)
   }
 
   // [utest->req~heading-folding.fold-all~1]
@@ -376,13 +439,13 @@ struct HeadingFoldingTests {
     let controller = try openNotebook(
       "Intro.\n# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\nDone.")
     let view = controller.textView
-    #expect(view.foldedHeadings.isEmpty)
+    #expect(view.foldedHeadingStarts.isEmpty)
     #expect(try choose("Fold All", in: controller))
-    #expect(try visibleParagraphs(view) == ["Intro.", "# Tasks", "# Notes"])
-    #expect(view.foldedHeadings == [7, 43])
+    #expect(try view.visibleParagraphs() == ["Intro.", "# Tasks", "# Notes"])
+    #expect(view.foldedHeadingStarts == [7, 43])
     #expect(try choose("Unfold Heading", at: 8, in: controller))
     #expect(
-      try visibleParagraphs(view) == [
+      try view.visibleParagraphs() == [
         "Intro.", "# Tasks", "## Fix the reaper", "It leaks.", "# Notes",
       ])
   }
@@ -395,12 +458,12 @@ struct HeadingFoldingTests {
     for heading in view.outline.headings.reversed() {
       #expect(try choose("Fold Heading", at: heading.range.location, in: controller))
     }
-    #expect(view.foldedHeadings.count == 4)
-    #expect(!markerViews(view).isEmpty)
+    #expect(view.foldedHeadingStarts.count == 4)
+    #expect(!view.markerViews().isEmpty)
     #expect(try choose("Unfold All", in: controller))
-    #expect(try visibleText(view) == text)
+    #expect(try view.visibleText() == text)
     #expect(view.foldedMarkers.isEmpty)
-    #expect(markerViews(view).isEmpty)
+    #expect(view.markerViews().isEmpty)
   }
 
   // [utest->req~heading-folding.disabled-without-heading~1]
@@ -421,7 +484,7 @@ struct HeadingFoldingTests {
   @Test func appKitMenuValidationDisablesTheFoldCommandsWithoutAHeading() throws {
     let controller = try openNotebook("Intro.\n# Tasks\n")
     let view = controller.textView
-    let menu = try viewMenuAimedAtTheResponderChain(controller)
+    let menu = try controller.aimedAtTheResponderChain("View")
     view.setSelectedRange(NSRange(location: 2, length: 0))
     menu.update()
     #expect(menu.items.map(\.isEnabled) == [false, false, true, true])
@@ -432,7 +495,7 @@ struct HeadingFoldingTests {
 
   @Test func everyViewItemIsDisabledInANotebookWithNoHeading() throws {
     let controller = try openNotebook("Intro.\nNo heading here.\n")
-    let menu = try viewMenuAimedAtTheResponderChain(controller)
+    let menu = try controller.aimedAtTheResponderChain("View")
     menu.update()
     #expect(menu.items.map(\.isEnabled) == [false, false, false, false])
   }
@@ -440,6 +503,7 @@ struct HeadingFoldingTests {
   // [utest->req~heading-folding.file-untouched~1]
   @Test func foldingNeverWritesTheFile() throws {
     let url = try temporaryNotebook(tasksAndNotes)
+    defer { removeTemporaryNotebook(url) }
     let controller = NotebookWindowController()
     try controller.open(url)
     let view = controller.textView

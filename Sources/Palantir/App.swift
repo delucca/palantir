@@ -41,7 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
   private static func runOpenPanel() -> URL? {
     let panel = NSOpenPanel()
-    if let markdown = UTType(filenameExtension: "md") { panel.allowedContentTypes = [markdown] }
+    panel.allowedContentTypes = [.markdown]
     return panel.runModal() == .OK ? panel.url : nil
   }
 }

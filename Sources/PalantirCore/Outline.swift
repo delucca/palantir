@@ -1,18 +1,27 @@
 package import Foundation
 import Markdown
 
+/// A document-level Markdown heading and the text it owns.
 package struct OutlineHeading: Equatable, Sendable {
+  /// 1 to 6; a setext heading underlined with `=` is 1, with `-` is 2.
   package let level: Int
+  /// The heading's own lines, 1-based; a setext heading ends at its underline.
   package let lines: ClosedRange<Int>
+  /// The lines after it, up to the next heading of the same or a higher level.
   package let ownedLines: Range<Int>
+  /// UTF-16 offsets of `lines` in the text, line endings included.
   package let range: NSRange
+  /// UTF-16 offsets of `ownedLines` in the text; empty when the heading owns nothing.
   package let ownedRange: NSRange
 }
 
+/// The document-level headings of a Markdown text.
 package struct Outline: Equatable, Sendable {
+  /// In document order.
   package let headings: [OutlineHeading]
   private let length: Int
 
+  /// Headings inside code blocks, quotes and lists do not count.
   package init(parsing text: String) {
     let lineStarts = Self.lineStarts(of: text)
     let length = text.utf16.count
@@ -36,7 +45,13 @@ package struct Outline: Equatable, Sendable {
         stride(from: first + 1, through: lineStarts.count, by: 1).first {
           Self.isSetextUnderline(line($0))
         } ?? first
-      return (heading.level, first...underline)
+      // cmark starts a setext heading at the link reference definitions that open its paragraph;
+      // they are the longest run of its lines that parses to nothing.
+      let title =
+        stride(from: underline - 1, to: first, by: -1).first {
+          Document(parsing: (first..<$0).map(line).joined(separator: "\n")).childCount == 0
+        } ?? first
+      return (heading.level, title...underline)
     }
     headings = parsed.enumerated().map { index, heading in
       let stop =
@@ -78,10 +93,12 @@ package struct Outline: Equatable, Sendable {
     return starts
   }
 
+  /// `offset` moved back onto the last character, so the end of the text counts as inside it.
   package func clampedOffset(_ offset: Int) -> Int {
     min(offset, max(length - 1, 0))
   }
 
+  /// The deepest heading whose own or owned text holds `offset`; nil before the first heading.
   package func innermostHeading(at offset: Int) -> OutlineHeading? {
     let offset = clampedOffset(offset)
     return headings.last {
@@ -89,6 +106,7 @@ package struct Outline: Equatable, Sendable {
     }
   }
 
+  /// The headings no other heading owns, the ones Fold All folds. O(n) in the headings.
   package var topLevelHeadings: [OutlineHeading] {
     var sectionEnd = 0
     var topLevel: [OutlineHeading] = []
