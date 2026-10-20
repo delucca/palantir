@@ -216,12 +216,12 @@ extension NSTextView {
     let layout = try #require(textLayoutManager)
     let storage = try #require(textContentStorage)
     let viewport = try #require(layout.textViewportLayoutController.viewportRange)
-    let window = visibleRect
+    let visible = visibleRect
     var rows: [(Int, CGRect)] = []
     layout.enumerateTextLayoutFragments(from: viewport.location, options: []) {
       let frame = $0.layoutFragmentFrame.offsetBy(dx: 0, dy: textContainerOrigin.y)
-      guard frame.minY < window.maxY, $0.state == .layoutAvailable else { return false }
-      if frame.maxY > window.minY {
+      guard frame.minY < visible.maxY, $0.state == .layoutAvailable else { return false }
+      if frame.maxY > visible.minY {
         rows.append(
           (
             storage.offset(from: storage.documentRange.location, to: $0.rangeInElement.location),
@@ -285,13 +285,13 @@ extension NotebookTextView {
 }
 
 extension NotebookWindowController {
-  /// A menu with each item aimed where AppKit sends it from the key window: the first responder
-  /// up the chain that answers the action. A test process has no key window, so AppKit's own
-  /// search finds no target and disables every item.
-  func aimedAtTheResponderChain(_ menuTitle: String) throws -> NSMenu {
-    let menu = try #require(MainMenu.make().item(withTitle: menuTitle)?.submenu)
+  /// The View menu with each item aimed where AppKit sends it from the key window: the first
+  /// responder up the chain that answers the action. A test process has no key window, so AppKit's
+  /// own search finds no target and disables every item.
+  func viewMenuAimedAtTheResponderChain() throws -> NSMenu {
+    let menu = try #require(MainMenu.make().item(withTitle: "View")?.submenu)
     let responder = try #require(window?.firstResponder)
-    for item in menu.items where item.action != nil {
+    for item in menu.items {
       try #require(item.target == nil, "\(item.title) has a target")
       let action = try #require(item.action)
       let target: NSResponder = try #require(

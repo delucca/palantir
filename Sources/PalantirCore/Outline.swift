@@ -47,6 +47,9 @@ package struct Outline: Equatable, Sendable {
         } ?? first
       // cmark starts a setext heading at the link reference definitions that open its paragraph;
       // they are the longest run of its lines that parses to nothing.
+      guard Self.mayOpenLinkReferenceDefinition(line(first)) else {
+        return (heading.level, first...underline)
+      }
       let title =
         stride(from: underline - 1, to: first, by: -1).first {
           Document(parsing: (first..<$0).map(line).joined(separator: "\n")).childCount == 0
@@ -76,6 +79,10 @@ package struct Outline: Equatable, Sendable {
     line.wholeMatch(of: #/ {0,3}(?:=+|-+)[ \t]*/#) != nil
   }
 
+  private static func mayOpenLinkReferenceDefinition(_ line: String) -> Bool {
+    line.prefixMatch(of: #/ {0,3}\[/#) != nil
+  }
+
   private static func lineStarts(of text: String) -> [Int] {
     var starts = [0]
     let units = Array(text.utf16)
@@ -93,7 +100,7 @@ package struct Outline: Equatable, Sendable {
     return starts
   }
 
-  /// `offset` moved back onto the last character, so the end of the text counts as inside it.
+  /// An offset at or past the end of the text becomes its last character's offset, or 0 if empty.
   package func clampedOffset(_ offset: Int) -> Int {
     min(offset, max(length - 1, 0))
   }

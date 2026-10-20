@@ -76,12 +76,25 @@ struct OutlineTests {
   }
 
   // [utest->req~heading-outline.owned-range~1]
-  @Test func setextHeadingAfterLinkDefinitionsStartsAtItsText() throws {
-    let notebook = "# Tasks\nBody.\n\n[ref]: /url\nTitle\n===\n"
+  @Test(arguments: ["", "   "])
+  func setextHeadingAfterLinkDefinitionsStartsAtItsText(indent: String) throws {
+    let notebook = "# Tasks\nBody.\n\n\(indent)[ref]: /url\nTitle\n===\n"
     let outline = Outline(parsing: notebook)
     try #require(outline.headings.map(\.lines) == [1...1, 5...6])
     #expect(outline.headings.map(\.ownedLines) == [2..<5, 7..<7])
-    #expect(text(notebook, outline.headings[0].ownedRange) == "Body.\n\n[ref]: /url\n")
+    #expect(text(notebook, outline.headings[0].ownedRange) == "Body.\n\n\(indent)[ref]: /url\n")
+  }
+
+  // [utest->req~heading-outline.owned-range~1]
+  @Test func aLongSetextHeadingIsParsedOnce() {
+    let title = String(repeating: "Fix the reaper\n", count: 2_000)
+    let notebook = "# Tasks\nBody.\n\n" + title + "===\nbody\n"
+    let clock = ContinuousClock()
+    var outline = Outline(parsing: "")
+    let elapsed = clock.measure { outline = Outline(parsing: notebook) }
+    #expect(outline.headings.map(\.lines) == [1...1, 4...2_004])
+    #expect(outline.headings.map(\.ownedLines) == [2..<4, 2_005..<2_006])
+    #expect(elapsed < .seconds(1))
   }
 
   // [utest->req~heading-outline.fenced-code~1]

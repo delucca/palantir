@@ -121,6 +121,23 @@ struct HeadingFoldingTests {
     #expect(view.selectedRange() == NSRange(location: 8, length: 0))
   }
 
+  // [utest->req~heading-folding.unfold~1]
+  @Test func unfoldingKeepsASelectionThatReachesIntoAnotherFold() throws {
+    let text = "# Tasks\nIt leaks.\n# Notes\nDone.\n"
+    let controller = try openNotebook(text)
+    let view = controller.textView
+    let notes = try view.heading(1)
+    #expect(try choose("Fold Heading", at: 1, in: controller))
+    #expect(try choose("Fold Heading", at: notes.range.location + 1, in: controller))
+    view.selectAll(nil)
+    let all = NSRange(location: 0, length: (text as NSString).length)
+    try #require(view.selectedRange() == all)
+    #expect(try choose("Unfold Heading", in: controller))
+    #expect(view.foldedHeadingStarts == [notes.range.location])
+    #expect(try view.visibleText() == text.removing([notes.ownedRange]))
+    #expect(view.selectedRange() == all)
+  }
+
   // [utest->req~heading-folding.fold~1]
   @Test func hidesAnswersWithoutScanningEveryRange() {
     let folding = FoldedParagraphs()
@@ -414,24 +431,57 @@ struct HeadingFoldingTests {
   }
 
   // [utest->req~heading-folding.no-gap~1]
-  @Test func wideningTheWindowAfterAFoldLeavesNoBlankBelowTheText() throws {
-    let text = wrappingSectionsNotebook() as NSString
+  @Test(arguments: ResizeAfterAFold.all)
+  func aResizeAfterFoldingTheLastSectionKeepsTheTopLineInPlace(resize: ResizeAfterAFold) throws {
+    let text = (resize.wraps ? wrappingSectionsNotebook() : sectionsNotebook()) as NSString
     let controller = try openNotebook(text as String)
     let view = controller.textView
     let ten = text.range(of: "# Section 10\n").location
+    let heading = try #require(view.outline.innermostHeading(at: ten))
     try view.scrollToTop(offset: ten)
     #expect(try choose("Fold Heading", at: ten + 1, in: controller))
-    let scroll = try #require(view.enclosingScrollView)
-    try #require(view.minSize.height > scroll.contentSize.height)
+    // Less text than a window is left below the top edge.
+    try #require(try view.textHeight() < view.visibleRect.maxY)
+    if resize.partly { try view.scroll(toY: view.visibleRect.minY - 5) }
+    let before = try view.drawnTopLine()
+    try #require(resize.partly == (before.screenY < -16))
 
-    try #require(controller.window).setContentSize(NSSize(width: 1400, height: 600))
+    try #require(controller.window).setContentSize(
+      NSSize(width: resize.width, height: resize.height))
     let layout = try #require(view.textLayoutManager)
-    layout.ensureLayout(for: layout.documentRange)
-    let textHeight = try view.textHeight()
-    // Display lays out the viewport, which sizes the view to the text.
     layout.textViewportLayoutController.layoutViewport()
-    #expect(view.minSize.height <= scroll.contentSize.height)
-    #expect(view.frame.height <= textHeight + scroll.contentSize.height)
+    let after = try view.drawnTopLine()
+    #expect(after.offset == before.offset)
+    #expect(after.screenY == (resize.toTheEdge ? 0 : before.screenY))
+    #expect(try view.markerIsShown(heading: heading))
+    // The next command lays out the whole text: the line stays, and the view fits the text.
+    layout.ensureLayout(for: layout.documentRange)
+    layout.textViewportLayoutController.layoutViewport()
+    let textHeight = try view.textHeight()
+    #expect(try view.screenY(offset: after.offset) == after.screenY)
+    #expect(try view.layoutBreaks().isEmpty)
+    #expect(try view.isNoTallerThanTextPlusOneWindow())
+    #expect(view.frame.height >= textHeight)
+  }
+
+  // [utest->req~heading-folding.no-gap~1]
+  @Test(arguments: [600, 1400] as [CGFloat])
+  func aFoldThatLeavesAWindowOfTextBelowSetsNoFloor(width: CGFloat) throws {
+    let text = wrappingSectionsNotebook() as NSString
+    let controller = try openNotebook(text as String)
+    let view = controller.textView
+    let scroll = try #require(view.enclosingScrollView)
+    let five = text.range(of: "# Section 5\n").location
+    try view.scrollToTop(offset: five)
+    #expect(try choose("Fold Heading", at: five + 1, in: controller))
+    try #require(try view.textHeight() > view.visibleRect.maxY)
+    #expect(view.foldedTop == nil)
+    #expect(view.minSize.height == scroll.contentSize.height)
+    let clipY = scroll.contentView.bounds.minY
+    try #require(controller.window).setContentSize(NSSize(width: width, height: 600))
+    // Without a floor, a width change is a plain resize: the clip view keeps its offset.
+    #expect(scroll.contentView.bounds.minY == clipY)
+    #expect(view.foldedTop == nil)
   }
 
   // [utest->req~heading-folding.fold-all~1]
@@ -484,7 +534,7 @@ struct HeadingFoldingTests {
   @Test func appKitMenuValidationDisablesTheFoldCommandsWithoutAHeading() throws {
     let controller = try openNotebook("Intro.\n# Tasks\n")
     let view = controller.textView
-    let menu = try controller.aimedAtTheResponderChain("View")
+    let menu = try controller.viewMenuAimedAtTheResponderChain()
     view.setSelectedRange(NSRange(location: 2, length: 0))
     menu.update()
     #expect(menu.items.map(\.isEnabled) == [false, false, true, true])
@@ -495,7 +545,7 @@ struct HeadingFoldingTests {
 
   @Test func everyViewItemIsDisabledInANotebookWithNoHeading() throws {
     let controller = try openNotebook("Intro.\nNo heading here.\n")
-    let menu = try controller.aimedAtTheResponderChain("View")
+    let menu = try controller.viewMenuAimedAtTheResponderChain()
     menu.update()
     #expect(menu.items.map(\.isEnabled) == [false, false, false, false])
   }
@@ -521,6 +571,32 @@ struct HeadingFoldingTests {
       try FileManager.default.attributesOfItem(atPath: url.path)[.modificationDate] as? Date)
     #expect(after == modified)
   }
+}
+
+/// One case of a resize after folding the last section: whether the notebook's lines wrap, the new
+/// window size, and whether the top line is the paragraph above the heading, partly above the window.
+struct ResizeAfterAFold: Codable, Sendable, CustomTestStringConvertible {
+  let wraps: Bool
+  let width: CGFloat
+  let height: CGFloat
+  let partly: Bool
+  /// The new width shortens the top line so that, at its old screen y, it ends above the window.
+  let toTheEdge: Bool
+
+  var testDescription: String {
+    "\(wraps ? "wrapping" : "short") lines at \(Int(width))x\(Int(height))"
+      + (partly ? ", top line partly above" : "")
+  }
+
+  static let all: [ResizeAfterAFold] =
+    [true, false].flatMap { wraps in
+      [(600, 600), (961, 600), (1400, 600), (960, 500), (960, 700)].map {
+        ResizeAfterAFold(wraps: wraps, width: $0, height: $1, partly: false, toTheEdge: false)
+      }
+    } + [
+      ResizeAfterAFold(wraps: true, width: 600, height: 600, partly: true, toTheEdge: false),
+      ResizeAfterAFold(wraps: true, width: 1400, height: 600, partly: true, toTheEdge: true),
+    ]
 }
 
 /// One case of the resize test: the new window width, the command, and the scroll without layout

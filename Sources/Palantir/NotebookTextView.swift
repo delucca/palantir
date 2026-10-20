@@ -37,12 +37,14 @@ final class NotebookTextView: NSTextView {
   private(set) var foldedMarkers: [Int: NSImageView] = [:]
   private var laidOut: [NSTextLayoutFragment] = []
   private var foldedHeadingEndingAt: [Int: Int] = [:]
+  private(set) var foldedTop: CGFloat?
 
   func show(_ text: String) {
     textContentStorage?.delegate = folding
     folding.hiddenRanges = []
     foldedHeadingStarts = []
     foldedHeadingEndingAt = [:]
+    foldedTop = nil
     if let scroll = enclosingScrollView { minSize.height = scroll.contentSize.height }
     string = text
     outline = Outline(parsing: text)
@@ -89,12 +91,41 @@ final class NotebookTextView: NSTextView {
     outline.innermostHeading(at: selectedRange().location)
   }
 
-  override func setFrameSize(_ newSize: NSSize) {
-    // A fold's floor holds the top line of the old wrap; at a new width it only leaves blank space.
-    if newSize.width != frame.width, let scroll = enclosingScrollView {
-      minSize.height = scroll.contentSize.height
+  override var minSize: NSSize {
+    get { super.minSize }
+    // NSTextView resets minSize to the clip view's height on every resize, dropping a fold's floor.
+    set {
+      var size = newValue
+      if let foldedTop, let scroll = enclosingScrollView {
+        size.height = max(size.height, foldedTop + scroll.contentSize.height)
+      }
+      super.minSize = size
     }
+  }
+
+  override func setFrameSize(_ newSize: NSSize) {
+    guard newSize.width != frame.width, foldedTop != nil, let layout = textLayoutManager,
+      let storage = textContentStorage, let scroll = enclosingScrollView
+    else { return super.setFrameSize(newSize) }
+    let anchor = topLine(layout, storage)
     super.setFrameSize(newSize)
+    // The new width leaves every paragraph without layout; lay out up to the top line.
+    guard let anchor,
+      let location = storage.location(storage.documentRange.location, offsetBy: anchor.offset),
+      let range = NSTextRange(
+        location: storage.documentRange.location,
+        end: storage.location(location, offsetBy: 1) ?? location)
+    else { return }
+    layout.ensureLayout(for: range)
+    guard let fragment = layout.textLayoutFragment(for: location) else { return }
+    let paragraph = fragment.layoutFragmentFrame
+    // A paragraph that the new width shortens can end above the window at its old screen y.
+    let screenY = paragraph.height + anchor.screenY > 0 ? anchor.screenY : 0
+    let top = max(0, paragraph.minY + textContainerOrigin.y - screenY)
+    foldedTop = top
+    minSize.height = top + scroll.contentSize.height
+    scroll.contentView.scroll(to: NSPoint(x: scroll.contentView.bounds.minX, y: top))
+    scroll.reflectScrolledClipView(scroll.contentView)
   }
 
   private func setFolded(_ headingStarts: Set<Int>) {
@@ -105,6 +136,7 @@ final class NotebookTextView: NSTextView {
     // After a width change or a scroll, the viewport may not be laid out yet; display would do it.
     layout.textViewportLayoutController.layoutViewport()
     let anchor = topLine(layout, storage)
+    let newlyFolded = headingStarts.subtracting(foldedHeadingStarts)
     foldedHeadingStarts = headingStarts
     let folded = outline.headings.filter { headingStarts.contains($0.range.location) }
     // Markers move on every viewport layout; find the paragraph each one sits on once, here.
@@ -119,7 +151,8 @@ final class NotebookTextView: NSTextView {
     let caret = outline.clampedOffset(selection.location)
     if let hiding = folded.first(where: {
       NSLocationInRange(caret, $0.ownedRange)
-        || NSIntersectionRange(selection, $0.ownedRange).length > 0
+        || newlyFolded.contains($0.range.location)
+          && NSIntersectionRange(selection, $0.ownedRange).length > 0
     }) {
       setSelectedRange(NSRange(location: hiding.range.location, length: 0))
     }
@@ -144,7 +177,9 @@ final class NotebookTextView: NSTextView {
       }
     }
     // Room below the last line, or a fold near the end lets the clip view scroll the text down.
-    minSize.height = max(scroll.contentSize.height, top + scroll.contentSize.height)
+    let textBottom = layout.usageBoundsForTextContainer.maxY + textContainerOrigin.y
+    foldedTop = top > 0 && top + scroll.contentSize.height > textBottom ? top : nil
+    minSize.height = (foldedTop ?? 0) + scroll.contentSize.height
     scroll.contentView.scroll(to: NSPoint(x: scroll.contentView.bounds.minX, y: top))
     scroll.reflectScrolledClipView(scroll.contentView)
     layout.textViewportLayoutController.layoutViewport()
