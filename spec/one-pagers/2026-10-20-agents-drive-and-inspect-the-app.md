@@ -1,5 +1,5 @@
 ---
-status: draft
+status: approved
 date: 2026-10-20
 ---
 # Let AI agents drive and inspect the running app
@@ -12,7 +12,7 @@ Claude Code's computer use sees only downscaled screenshots and takes over the d
 
 ## Solution sketch
 
-Gray-box testing, as in EarlGrey and Detox: an outside driver uses palantir with real system input, and a debug-only inspector inside it reports what the app shows.
+Gray-box testing, stricter than EarlGrey and Detox, which inject input inside the app: an outside driver uses palantir with real system input, and a debug-only inspector inside it reports what the app shows.
 
 The driver is an accessibility-tree tool on the visible window; Peekaboo is the suggestion. Hiding the window is worth trying, not required. Every command lives in the menu bar, so a new command needs no driver work.
 
