@@ -13,7 +13,9 @@ let package = Package(
   name: "palantir",
   platforms: [.macOS(.v27)],
   products: [
-    .executable(name: "palantir", targets: ["Palantir"])
+    .executable(name: "palantir", targets: ["Palantir"]),
+    .executable(name: "palantir-inspect", targets: ["PalantirInspectorCLI"]),
+    .executable(name: "palantir-drive", targets: ["PalantirDriver"]),
   ],
   dependencies: [
     .package(url: "https://github.com/swiftlang/swift-markdown.git", exact: "0.9.0")
@@ -31,9 +33,32 @@ let package = Package(
       path: "Sources/Notebook/UI",
       swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
     ),
+    .target(
+      name: "PalantirNotebookInspector",
+      dependencies: ["PalantirInspector", "PalantirNotebook", "PalantirNotebookUI"],
+      path: "Sources/Notebook/Inspector",
+      swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
+    ),
+    .target(
+      name: "PalantirInspector",
+      path: "Sources/Inspector",
+      exclude: ["CLI"],
+      swiftSettings: upcomingFeatures
+    ),
+    .executableTarget(
+      name: "PalantirInspectorCLI",
+      dependencies: ["PalantirInspector"],
+      path: "Sources/Inspector/CLI",
+      swiftSettings: upcomingFeatures
+    ),
+    .executableTarget(
+      name: "PalantirDriver",
+      path: "Sources/Driver",
+      swiftSettings: upcomingFeatures
+    ),
     .executableTarget(
       name: "Palantir",
-      dependencies: ["PalantirNotebookUI"],
+      dependencies: ["PalantirInspector", "PalantirNotebookInspector", "PalantirNotebookUI"],
       path: "Sources/App",
       exclude: ["Info.plist"],
       swiftSettings: upcomingFeatures + [.defaultIsolation(MainActor.self)]
@@ -51,8 +76,38 @@ let package = Package(
       swiftSettings: upcomingFeatures
     ),
     .testTarget(
+      name: "PalantirNotebookInspectorTests",
+      dependencies: [
+        "PalantirInspector", "PalantirNotebook", "PalantirNotebookInspector", "PalantirNotebookUI",
+      ],
+      path: "Tests/Notebook/Inspector",
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
+      name: "PalantirInspectorTests",
+      dependencies: ["PalantirInspector"],
+      path: "Tests/Inspector",
+      exclude: ["CLI"],
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
+      name: "PalantirInspectorCLITests",
+      dependencies: ["PalantirInspector", "PalantirInspectorCLI"],
+      path: "Tests/Inspector/CLI",
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
+      name: "PalantirDriverTests",
+      dependencies: ["PalantirDriver"],
+      path: "Tests/Driver",
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
       name: "PalantirTests",
-      dependencies: ["Palantir", "PalantirNotebook", "PalantirNotebookUI"],
+      dependencies: [
+        "Palantir", "PalantirDriver", "PalantirInspector", "PalantirNotebook",
+        "PalantirNotebookInspector", "PalantirNotebookUI",
+      ],
       path: "Tests/App",
       swiftSettings: upcomingFeatures
     ),

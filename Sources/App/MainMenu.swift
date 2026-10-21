@@ -11,8 +11,7 @@ enum MainMenu {
     app.helpMenu = menu.item(withTitle: "Help")?.submenu
   }
 
-  static func make() -> NSMenu {
-    let name = ProcessInfo.processInfo.processName
+  static func make(name: String = ProcessInfo.processInfo.processName) -> NSMenu {
     let menu = NSMenu()
 
     menu.addSubmenu(

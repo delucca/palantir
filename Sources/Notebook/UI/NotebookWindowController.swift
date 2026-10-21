@@ -4,7 +4,7 @@ import UniformTypeIdentifiers
 
 /// The window that shows a Markdown notebook, read-only, with its headings folded on command.
 package final class NotebookWindowController: NSWindowController {
-  let textView: NotebookTextView
+  package let textView: NotebookTextView
   // The two modal loops of File > Open, which tests stand in for.
   var runOpenPanel: @MainActor (NSOpenPanel) -> URL? = { $0.runModal() == .OK ? $0.url : nil }
   var runAlert: @MainActor (NSAlert) -> Void = { _ = $0.runModal() }
@@ -48,6 +48,7 @@ package final class NotebookWindowController: NSWindowController {
     textView.isSelectable = true
     textView.isRichText = false
     textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+    textView.setAccessibilityLabel("Notebook")
     scroll.documentView = textView
     window.contentView = scroll
     super.init(window: window)

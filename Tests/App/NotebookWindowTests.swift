@@ -1,5 +1,6 @@
 import AppKit
 import PalantirNotebook
+import PalantirNotebookInspector
 import Testing
 import UniformTypeIdentifiers
 

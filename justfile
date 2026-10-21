@@ -8,6 +8,11 @@ build:
 test:
     swift test
 
+# Also run the tests that launch palantir. Each puts a palantir window behind the person's for
+# about a second, so run them only when the desktop is free.
+test-desktop:
+    PALANTIR_DESKTOP_TESTS=1 swift test
+
 fmt:
     swift format --in-place --recursive --parallel Package.swift Sources Tests
 
@@ -25,3 +30,53 @@ bundle config="debug":
 
 run: bundle
     {{app}}/Contents/MacOS/palantir
+
+# Launch a debug palantir.app in the background with the inspector listening, and print its pid
+# once it answers. It does not take focus: palantir-drive borrows it for each input.
+inspect:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    {{just_executable()}} bundle >&2
+    bin="$(swift build --show-bin-path)"
+    inspect="$bin/palantir-inspect"
+    front_pid() { lsappinfo info -only pid "$(lsappinfo front)" | sed -n 's/.*pid = \([0-9]*\).*/\1/p'; }
+    palantirs() { ps -axo pid=,comm= | awk '$2 ~ /\/palantir$/ { print $1 }'; }
+    before="$("$inspect" list | cut -f1 | sort)"
+    front="$(front_pid)"
+    running="$(palantirs)"
+    pid=""
+    # open -g still lets a launch take the front now and then. On every exit, a launch that never
+    # answered included, the palantir it started gives the front back if it holds it: the one
+    # listening, or else one in front that was not running before.
+    give_back() {
+      local now
+      now="$(front_pid)"
+      [ -n "$front" ] && [ -n "$now" ] && [ "$now" != "$front" ] || return 0
+      if [ "$now" = "$pid" ] || { ! grep -qx "$now" <<< "$running" && grep -qx "$now" <<< "$(palantirs)"; }; then
+        "$bin/palantir-drive" --pid "$now" restore --to "$front"
+      fi
+    }
+    trap 'status=$?; give_back || { echo "the front did not go back to pid $front" >&2; status=1; }; exit $status' EXIT
+    open -g -n {{app}} --args --inspector
+    for _ in $(seq 1 100); do
+      pid="$(comm -13 <(echo "$before") <("$inspect" list | cut -f1 | sort) | head -1)"
+      [ -n "$pid" ] && break
+      sleep 0.1
+    done
+    [ -n "$pid" ] || { echo "no new palantir is listening" >&2; exit 1; }
+    if ! "$inspect" --pid "$pid" wait --timeout 10 >/dev/null; then
+      echo "$pid"
+      echo "palantir $pid did not settle; terminating it" >&2
+      kill "$pid"
+      for _ in $(seq 1 30); do kill -0 "$pid" 2>/dev/null || break; sleep 0.1; done
+      exit 1
+    fi
+    echo "$pid"
+
+# Check that a release palantir.app holds no inspector code: no inspector symbol or string, and no
+# import of the calls a listener needs. That its launch with the flag opens no socket is checked
+# by `just test-desktop`.
+release-check: (bundle "release")
+    symbols="$(nm {{app}}/Contents/MacOS/palantir)"; [ -n "$symbols" ]; ! grep -E 'PalantirInspector|NotebookInspector' <<< "$symbols"
+    text="$(strings -a {{app}}/Contents/MacOS/palantir)"; ! grep -E 'PalantirInspector|NotebookInspector|--inspector|jsonrpc|palantir-inspector' <<< "$text"
+    imports="$(nm -u {{app}}/Contents/MacOS/palantir)"; ! grep -xE '_(socket|bind|listen|accept)' <<< "$imports"

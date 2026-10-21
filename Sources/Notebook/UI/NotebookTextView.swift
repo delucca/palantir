@@ -1,15 +1,15 @@
-import AppKit
+package import AppKit
 import Foundation
-import PalantirNotebook
+package import PalantirNotebook
 
-final class NotebookTextView: NSTextView {
-  static let markerGap: CGFloat = 4
+package final class NotebookTextView: NSTextView {
+  package static let markerGap: CGFloat = 4
   static let markerInset = NSSize(width: markerGap + 16, height: 0)
 
   private let folding = FoldedParagraphs()
-  private(set) var folds = Folds(outline: Outline(parsing: ""))
-  private(set) var foldedMarkers: [Int: NSImageView] = [:]
-  private(set) var laidOut: [NSTextLayoutFragment] = []
+  package private(set) var folds = Folds(outline: Outline(parsing: ""))
+  package private(set) var foldedMarkers: [Int: NSImageView] = [:]
+  package private(set) var laidOut: [NSTextLayoutFragment] = []
   private var foldedHeadingEndingAt: [Int: Int] = [:]
   private(set) var foldedTop: CGFloat?
 
@@ -49,7 +49,7 @@ final class NotebookTextView: NSTextView {
     setFolded { $0.unfoldAll() }
   }
 
-  override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+  package override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
     switch menuItem.action {
     case #selector(foldHeading(_:)), #selector(unfoldHeading(_:)):
       headingAtSelection != nil
@@ -64,7 +64,7 @@ final class NotebookTextView: NSTextView {
     folds.innermostHeading(at: selectedRange().location)
   }
 
-  override var minSize: NSSize {
+  package override var minSize: NSSize {
     get { super.minSize }
     // NSTextView resets minSize to the clip view's height on every resize, dropping a fold's floor.
     set {
@@ -76,7 +76,7 @@ final class NotebookTextView: NSTextView {
     }
   }
 
-  override func setFrameSize(_ newSize: NSSize) {
+  package override func setFrameSize(_ newSize: NSSize) {
     guard newSize.width != frame.width,
       foldedTop != nil,
       let layout = textLayoutManager,
@@ -196,13 +196,14 @@ final class NotebookTextView: NSTextView {
     return fragment.layoutFragmentFrame.minY + textContainerOrigin.y
   }
 
-  override func textViewportLayoutControllerWillLayout(_ controller: NSTextViewportLayoutController)
-  {
+  package override func textViewportLayoutControllerWillLayout(
+    _ controller: NSTextViewportLayoutController
+  ) {
     super.textViewportLayoutControllerWillLayout(controller)
     laidOut = []
   }
 
-  override func textViewportLayoutController(
+  package override func textViewportLayoutController(
     _ controller: NSTextViewportLayoutController,
     configureRenderingSurfaceFor textLayoutFragment: NSTextLayoutFragment
   ) {
@@ -210,8 +211,9 @@ final class NotebookTextView: NSTextView {
     laidOut.append(textLayoutFragment)
   }
 
-  override func textViewportLayoutControllerDidLayout(_ controller: NSTextViewportLayoutController)
-  {
+  package override func textViewportLayoutControllerDidLayout(
+    _ controller: NSTextViewportLayoutController
+  ) {
     super.textViewportLayoutControllerDidLayout(controller)
     updateMarkers()
   }
@@ -244,11 +246,18 @@ final class NotebookTextView: NSTextView {
     }
   }
 
+  // A text view's accessibility children are its text's attachments and links, not its subviews.
+  package override func accessibilityChildren() -> [Any]? {
+    (super.accessibilityChildren() ?? []) + foldedMarkers.sorted { $0.key < $1.key }.map(\.value)
+  }
+
   private func makeMarker(_ offset: Int) -> NSImageView {
     // "ellipsis" is an SF Symbol in every macOS release that has them, so the image exists.
     let marker = NSImageView(
       image: NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "Folded")!)
     marker.contentTintColor = .secondaryLabelColor
+    marker.setAccessibilityRole(.image)
+    marker.setAccessibilityChildren([])
     addSubview(marker)
     foldedMarkers[offset] = marker
     return marker
