@@ -1,0 +1,224 @@
+{
+  "app" : "/Users/admin/acceptance/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/admin/acceptance/work/1/check.json",
+  "checkSha256" : "0c5a88b18cb83a0c524b8d15128010ed72ed79edf31c54c781e23a47a44c9767",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.unfold~1",
+  "seconds" : 9.591440916061401,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.4434850215911865
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.7675440311431885,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/admin/acceptance/work/1/rec/files/tasks.md"
+          ],
+          "exit" : 0,
+          "seconds" : 6.849318027496338,
+          "stderr" : "palantir-drive: chose /Users/admin/acceptance/work/1/rec/files/tasks.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06740593910217285,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.007915973663330078,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "93",
+            "40"
+          ],
+          "exit" : 0,
+          "seconds" : 0.36584699153900146,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06089591979980469,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "before",
+          "seconds" : 0.007876038551330566,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.26424407958984375,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06291592121124268,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "folded",
+          "seconds" : 0.009567975997924805,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.before.json.sections.notebook.drawn[] | select(.text == \"## Fix the reaper\") | .offset) as $h | any(.folded.json.sections.notebook.folded[]; .offset == $h and .line == \"## Fix the reaper\")",
+          "value" : "true"
+        },
+        {
+          "that" : "(.before.json.sections.notebook.drawn[] | select(.text == \"## Fix the reaper\") | .offset) as $h | any(.folded.json.sections.notebook.markers[]; .heading == $h)",
+          "value" : "true"
+        },
+        {
+          "that" : "[.folded.json.sections.notebook.drawn[] | {offset, text}] != [.before.json.sections.notebook.drawn[] | {offset, text}]",
+          "value" : "true"
+        },
+        {
+          "that" : "(.before.json.sections.notebook.drawn[] | select(.text == \"## Fix the reaper\") | .offset) as $h | .folded.json.sections.notebook.selection | .location >= $h and .location + .length <= $h + (\"## Fix the reaper\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given \"## Fix the reaper\" is folded and the selection is in it",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.2804340124130249,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06010997295379639,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "unfolded",
+          "seconds" : 0.008759021759033203,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses View > Unfold Heading",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "[.unfolded.json.sections.notebook.drawn[] | {offset, text}] == [.before.json.sections.notebook.drawn[] | {offset, text}]",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then the view shows the same text as before the fold",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "(.before.json.sections.notebook.drawn[] | select(.text == \"## Fix the reaper\") | .offset) as $h | .unfolded.json.sections.notebook | any(.drawn[]; .offset == $h and .text == \"## Fix the reaper\") and all(.markers[]; .heading != $h)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And \"## Fix the reaper\" shows no folded marker",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/Users/admin/acceptance/bin/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

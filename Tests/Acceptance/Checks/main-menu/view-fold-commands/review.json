@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "975c072aad2543e53837595590680dd0d2e6a0a2dee98dbf069286081646762a",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* When palantir launches",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the View menu holds Fold Heading, Unfold Heading, Fold All and Unfold All",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And none of them has a key equivalent",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~main-menu.view-fold-commands~1",
+  "summary" : "The check launches palantir, verifies all four exact View menu paths, and requires every matching item to have no key equivalent. It adds no unrelated requirements or machine-dependent assumptions.",
+  "verdict" : "faithful"
+}

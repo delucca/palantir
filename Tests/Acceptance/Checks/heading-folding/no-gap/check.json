@@ -1,0 +1,202 @@
+{
+  "format": 1,
+  "rule": "req~heading-folding.no-gap~1",
+  "example": "folding in a long notebook",
+  "files": {
+    "reaper.md": "# Ops notebook\nNotes from the on-call week.\n## Rotate the keys\n- Generate the new key pair\n- Upload the public key\n- Retire the old key\n## Fix the reaper\n- The reaper skips jobs that finish during a restart\n- Reproduce it with a restart in the middle of a sweep\n- Patch the cursor so it resumes from the last job\n- Add a test for the restart case\n## Sweep the logs\n- Find the logs older than a week\n- Compress them into the archive\n- Delete the originals\n## Day 1\n- Check item 1 of day 1\n- Check item 2 of day 1\n- Check item 3 of day 1\n- Check item 4 of day 1\n- Check item 5 of day 1\n- Check item 6 of day 1\n- Check item 7 of day 1\n## Day 2\n- Check item 1 of day 2\n- Check item 2 of day 2\n- Check item 3 of day 2\n- Check item 4 of day 2\n- Check item 5 of day 2\n- Check item 6 of day 2\n- Check item 7 of day 2\n## Day 3\n- Check item 1 of day 3\n- Check item 2 of day 3\n- Check item 3 of day 3\n- Check item 4 of day 3\n- Check item 5 of day 3\n- Check item 6 of day 3\n- Check item 7 of day 3\n## Day 4\n- Check item 1 of day 4\n- Check item 2 of day 4\n- Check item 3 of day 4\n- Check item 4 of day 4\n- Check item 5 of day 4\n- Check item 6 of day 4\n- Check item 7 of day 4\n## Day 5\n- Check item 1 of day 5\n- Check item 2 of day 5\n- Check item 3 of day 5\n- Check item 4 of day 5\n- Check item 5 of day 5\n- Check item 6 of day 5\n- Check item 7 of day 5\n## Day 6\n- Check item 1 of day 6\n- Check item 2 of day 6\n- Check item 3 of day 6\n- Check item 4 of day 6\n- Check item 5 of day 6\n- Check item 6 of day 6\n- Check item 7 of day 6\n## Day 7\n- Check item 1 of day 7\n- Check item 2 of day 7\n- Check item 3 of day 7\n- Check item 4 of day 7\n- Check item 5 of day 7\n- Check item 6 of day 7\n- Check item 7 of day 7\n## Day 8\n- Check item 1 of day 8\n- Check item 2 of day 8\n- Check item 3 of day 8\n- Check item 4 of day 8\n- Check item 5 of day 8\n- Check item 6 of day 8\n- Check item 7 of day 8\n## Day 9\n- Check item 1 of day 9\n- Check item 2 of day 9\n- Check item 3 of day 9\n- Check item 4 of day 9\n- Check item 5 of day 9\n- Check item 6 of day 9\n- Check item 7 of day 9\n## Day 10\n- Check item 1 of day 10\n- Check item 2 of day 10\n- Check item 3 of day 10\n- Check item 4 of day 10\n- Check item 5 of day 10\n- Check item 6 of day 10\n- Check item 7 of day 10\n## Day 11\n- Check item 1 of day 11\n- Check item 2 of day 11\n- Check item 3 of day 11\n- Check item 4 of day 11\n- Check item 5 of day 11\n- Check item 6 of day 11\n- Check item 7 of day 11\n## Day 12\n- Check item 1 of day 12\n- Check item 2 of day 12\n- Check item 3 of day 12\n- Check item 4 of day 12\n- Check item 5 of day 12\n- Check item 6 of day 12\n- Check item 7 of day 12\n## Day 13\n- Check item 1 of day 13\n- Check item 2 of day 13\n- Check item 3 of day 13\n- Check item 4 of day 13\n- Check item 5 of day 13\n- Check item 6 of day 13\n- Check item 7 of day 13\n## Day 14\n- Check item 1 of day 14\n- Check item 2 of day 14\n- Check item 3 of day 14\n- Check item 4 of day 14\n- Check item 5 of day 14\n- Check item 6 of day 14\n- Check item 7 of day 14\n## Day 15\n- Check item 1 of day 15\n- Check item 2 of day 15\n- Check item 3 of day 15\n- Check item 4 of day 15\n- Check item 5 of day 15\n- Check item 6 of day 15\n- Check item 7 of day 15\n## Day 16\n- Check item 1 of day 16\n- Check item 2 of day 16\n- Check item 3 of day 16\n- Check item 4 of day 16\n- Check item 5 of day 16\n- Check item 6 of day 16\n- Check item 7 of day 16\n## Day 17\n- Check item 1 of day 17\n- Check item 2 of day 17\n- Check item 3 of day 17\n- Check item 4 of day 17\n- Check item 5 of day 17\n- Check item 6 of day 17\n- Check item 7 of day 17\n## Day 18\n- Check item 1 of day 18\n- Check item 2 of day 18\n- Check item 3 of day 18\n- Check item 4 of day 18\n- Check item 5 of day 18\n- Check item 6 of day 18\n- Check item 7 of day 18\n## Day 19\n- Check item 1 of day 19\n- Check item 2 of day 19\n- Check item 3 of day 19\n- Check item 4 of day 19\n- Check item 5 of day 19\n- Check item 6 of day 19\n- Check item 7 of day 19\n## Day 20\n- Check item 1 of day 20\n- Check item 2 of day 20\n- Check item 3 of day 20\n- Check item 4 of day 20\n- Check item 5 of day 20\n- Check item 6 of day 20\n- Check item 7 of day 20\n## Day 21\n- Check item 1 of day 21\n- Check item 2 of day 21\n- Check item 3 of day 21\n- Check item 4 of day 21\n- Check item 5 of day 21\n- Check item 6 of day 21\n- Check item 7 of day 21\n## Day 22\n- Check item 1 of day 22\n- Check item 2 of day 22\n- Check item 3 of day 22\n- Check item 4 of day 22\n- Check item 5 of day 22\n- Check item 6 of day 22\n- Check item 7 of day 22\n## Day 23\n- Check item 1 of day 23\n- Check item 2 of day 23\n- Check item 3 of day 23\n- Check item 4 of day 23\n- Check item 5 of day 23\n- Check item 6 of day 23\n- Check item 7 of day 23\n## Day 24\n- Check item 1 of day 24\n- Check item 2 of day 24\n- Check item 3 of day 24\n- Check item 4 of day 24\n- Check item 5 of day 24\n- Check item 6 of day 24\n- Check item 7 of day 24\n"
+  },
+  "steps": [
+    {
+      "line": "* Given a notebook taller than the window is open, scrolled so that \"## Fix the reaper\" is the top line",
+      "do": [
+        {
+          "file": "reaper.md",
+          "as": "fixture"
+        },
+        {
+          "launch": {
+            "build": "debug",
+            "inspector": true
+          }
+        },
+        {
+          "drive": [
+            "menu",
+            "File > Open…"
+          ]
+        },
+        {
+          "drive": [
+            "choose",
+            {
+              "file": "reaper.md"
+            }
+          ]
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "opened"
+        },
+        {
+          "repeat": [
+            {
+              "drive": [
+                "scroll",
+                {
+                  "jq": "(.given // .opened).json.sections.notebook as $n | (([$n.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | .offset] | first) // (\"# Ops notebook\\nNotes from the on-call week.\\n## Rotate the keys\\n- Generate the new key pair\\n- Upload the public key\\n- Retire the old key\\n\" | length)) as $h | ([$n.drawn[] | select(.rect.y + .rect.height > 0)] | first) as $top | if $top.offset < $h then 1 else -1 end"
+                }
+              ]
+            },
+            {
+              "inspect": [
+                "wait"
+              ]
+            },
+            {
+              "inspect": [
+                "state"
+              ],
+              "as": "given"
+            }
+          ],
+          "until": "([.given.json.sections.notebook.drawn[]? | select(.rect.y + .rect.height > 0)] | first | .text // \"\" | sub(\"\\n$\"; \"\")) == \"## Fix the reaper\"",
+          "max": 200
+        }
+      ],
+      "expect": [
+        {
+          "that": ".given.json.sections.notebook.length == .fixture.size",
+          "why": "the notebook open is the whole fixture"
+        },
+        {
+          "that": ".given.json.sections.notebook.scroll | .documentHeight > .height",
+          "why": "the notebook is taller than the window"
+        },
+        {
+          "that": "([.given.json.sections.notebook.drawn[] | select(.rect.y + .rect.height > 0)] | first | .text | sub(\"\\n$\"; \"\")) == \"## Fix the reaper\"",
+          "why": "the heading is the first line visible at the window's top"
+        }
+      ]
+    },
+    {
+      "line": "* When the user folds \"## Fix the reaper\"",
+      "do": [
+        {
+          "drive": [
+            "click",
+            {
+              "jq": ".given.json.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | .rect | .x + .width / 2"
+            },
+            {
+              "jq": ".given.json.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | .rect | ((if .y > 0 then .y else 0 end) + .y + .height) / 2"
+            }
+          ]
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "beforeFold"
+        },
+        {
+          "drive": [
+            "menus"
+          ],
+          "as": "menus"
+        },
+        {
+          "drive": [
+            "menu",
+            {
+              "jq": "[.menus.items[] | select(.press == true or .press == \"press\") | .path | select(split(\" > \") | last | ascii_downcase | test(\"\\\\bfold\\\\b\") and (test(\"\\\\b(all|others?|every|level)\\\\b\") | not))] + [.menus.items[] | select(.press == true or .press == \"press\") | .path | select(split(\" > \") | last | ascii_downcase | test(\"\\\\bcollapse\\\\b\") and (test(\"\\\\b(all|others?|every|level)\\\\b\") | not))] | first"
+            }
+          ]
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "folded"
+        }
+      ],
+      "expect": [
+        {
+          "that": "any(.folded.json.sections.notebook.folded[]; .line | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")",
+          "why": "the heading is folded"
+        }
+      ]
+    },
+    {
+      "line": "* Then the next visible line starts right below \"## Fix the reaper\"",
+      "do": [
+        {
+          "sleep": 1
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "below"
+        }
+      ],
+      "expect": [
+        {
+          "that": "all(.folded, .below; .json as $j | $j.sections.notebook.drawn as $d | ([$d[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$d[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and (($n.rect.y - ($h.rect.y + $h.rect.height)) | fabs) < (1 / $j.window.scale))",
+          "why": "right after the fold and again a second later, the next visible line is drawn directly under the heading, within a pixel"
+        },
+        {
+          "that": "all(.folded, .below; .json.sections.notebook as $nb | ([$nb.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$nb.drawn[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and ([$nb.gaps[] | select(.after >= $h.offset and .before <= $n.offset)] | length == 0))",
+          "why": "right after the fold and again a second later, no blank space is left between the heading and the next visible line"
+        }
+      ]
+    },
+    {
+      "line": "* And \"## Fix the reaper\" is still the top line",
+      "do": [
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "still"
+        }
+      ],
+      "expect": [
+        {
+          "that": "([.still.json.sections.notebook.drawn[] | select(.rect.y + .rect.height > 0)] | first | .text | sub(\"\\n$\"; \"\")) == \"## Fix the reaper\"",
+          "why": "the heading is still the first line visible at the window's top"
+        },
+        {
+          "that": "[(.beforeFold, .folded, .below, .still) | .json as $j | $j.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | [$j.window.frame.x + .rect.x, $j.window.frame.y + $j.window.frame.height - $j.window.content.height + .rect.y]] as $p | ($p | length) == 4 and all($p[]; . == $p[0])",
+          "why": "folding did not move the heading on screen: in every state read from before the fold to now, its point on the screen is exactly where it was"
+        }
+      ]
+    }
+  ]
+}

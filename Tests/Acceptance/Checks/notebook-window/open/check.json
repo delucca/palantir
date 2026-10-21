@@ -1,0 +1,141 @@
+{
+  "format": 1,
+  "rule": "req~notebook-window.open~1",
+  "example": "opening a notebook",
+  "files": {
+    "notebook.md": "# Field notes\n\nCafé crème — “quoted” and ‘single’, naïve façade.  \nA hard break above; 🙂 and 日本語 too.\n\n- [ ] étape 1\n  - nested item\twith a tab\n\n```\ncode block\n```\n"
+  },
+  "steps": [
+    {
+      "line": "* Given a file notebook.md on disk",
+      "do": [
+        {
+          "file": "notebook.md",
+          "as": "disk"
+        }
+      ],
+      "expect": [
+        {
+          "that": ".disk.size == (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | utf8bytelength)",
+          "why": "notebook.md is on disk and holds the fixture's text"
+        }
+      ]
+    },
+    {
+      "line": "* When the user chooses notebook.md with File > Open",
+      "do": [
+        {
+          "launch": {
+            "build": "debug",
+            "inspector": true
+          }
+        },
+        {
+          "drive": [
+            "menu",
+            "File > Open…"
+          ]
+        },
+        {
+          "drive": [
+            "choose",
+            {
+              "file": "notebook.md"
+            }
+          ]
+        }
+      ],
+      "expect": []
+    },
+    {
+      "line": "* Then the palantir window shows the text of notebook.md, character for character",
+      "do": [
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "shown"
+        },
+        {
+          "repeat": [
+            {
+              "drive": [
+                "scroll",
+                -1
+              ]
+            },
+            {
+              "inspect": [
+                "wait"
+              ]
+            },
+            {
+              "inspect": [
+                "state"
+              ],
+              "as": "top"
+            }
+          ],
+          "until": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;(good(.top) | not) or (seen(.top) | min) == 0",
+          "max": 200
+        },
+        {
+          "repeat": [
+            {
+              "inspect": [
+                "state"
+              ],
+              "as": "above"
+            },
+            {
+              "drive": [
+                "scroll",
+                1
+              ]
+            },
+            {
+              "inspect": [
+                "wait"
+              ]
+            },
+            {
+              "inspect": [
+                "state"
+              ],
+              "as": "below"
+            }
+          ],
+          "until": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;(good(.above) and good(.below) and linked(.above; .below) | not) or (seen(.below) | max) == (lines | length) - 1",
+          "max": 200
+        }
+      ],
+      "expect": [
+        {
+          "that": ".shown.json.window | .isVisible and (.isMiniaturized | not)",
+          "why": "the palantir window is on screen"
+        },
+        {
+          "that": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; .shown.json.sections.notebook.length == (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | u16)",
+          "why": "the window holds exactly as many UTF-16 units as notebook.md: nothing dropped or added"
+        },
+        {
+          "that": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;good(.shown)",
+          "why": "once notebook.md is open and layout has settled, before any scroll, each paragraph the window draws, blank lines included, is the file's line at that line's offset with its exact characters, within the content's width, with a height, not overlapping the one above"
+        },
+        {
+          "that": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;good(.top) and (seen(.top) | min) == 0",
+          "why": "scrolled to the top, the window shows the first line of notebook.md whole, and each paragraph it draws, blank lines included, is the file's line at that line's offset with its exact characters, within the content's width, with a height, not overlapping the one above"
+        },
+        {
+          "that": "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;good(.above) and good(.below) and linked(.above; .below) and (seen(.below) | max) == (lines | length) - 1",
+          "why": "scrolling down a line at a time from there, every view draws the file's lines that way, no line is skipped between one view and the next, and the last line of notebook.md is shown whole"
+        }
+      ]
+    }
+  ]
+}

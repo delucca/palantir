@@ -1,0 +1,5 @@
+{
+  "rule" : "req~inspector.settled-layout~1",
+  "run" : "inspector.settled-layout-1792570869",
+  "stage" : "mutant-survives"
+}

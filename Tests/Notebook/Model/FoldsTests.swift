@@ -12,7 +12,7 @@ struct FoldsTests {
     Folds(outline: Outline(parsing: text))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func foldHeadingFoldsTheInnermostHeadingAtTheSelection() throws {
     var folds = unfolded(tasksAndNotes)
     #expect(folds.headingStarts.isEmpty)
@@ -24,7 +24,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges == [NSRange(location: 26, length: 10)])
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func foldedTextIsTheOwnedTextOfEachFoldedHeadingInDocumentOrder() throws {
     var folds = unfolded(introTasksNotes)
     for offset in [52, 36, 10] {
@@ -39,7 +39,7 @@ struct FoldsTests {
       ])
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func aHeadingThatOwnsNothingFoldsAndHidesNothing() throws {
     var folds = unfolded("# Tasks\n## Ship bilbo\n# Notes\n")
     let heading = try #require(folds.innermostHeading(at: 9))
@@ -48,7 +48,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges.isEmpty)
   }
 
-  // [utest->req~heading-folding.unfold~1]
+  // req~heading-folding.unfold~1
   @Test func unfoldHeadingShowsExactlyTheTextItsFoldHid() throws {
     let before = unfolded(tasksAndNotes)
     var folds = before
@@ -60,7 +60,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges.isEmpty)
   }
 
-  // [utest->req~heading-folding.unfold~1]
+  // req~heading-folding.unfold~1
   @Test func unfoldingAFoldedParentKeepsItsFoldedChildFolded() throws {
     var folds = unfolded(tasksAndNotes)
     let child = try #require(folds.innermostHeading(at: 10))
@@ -72,7 +72,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges == [child.ownedRange])
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func foldAllFoldsEveryHeadingNoOtherHeadingOwns() {
     var folds = unfolded(introTasksNotes)
     folds.foldAll()
@@ -81,7 +81,7 @@ struct FoldsTests {
       folds.hiddenRanges == [NSRange(location: 15, length: 28), NSRange(location: 51, length: 5)])
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func foldAllKeepsAFoldedChildFolded() throws {
     var folds = unfolded(introTasksNotes)
     let child = try #require(folds.innermostHeading(at: 36))
@@ -93,7 +93,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges == [child.ownedRange, NSRange(location: 51, length: 5)])
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func foldAllFoldsAnUnownedHeadingOfAnyLevel() {
     var folds = unfolded(
       "## Unowned\nText.\n# Top\n### Deeper\n## Still under top\nBody.\n# Next\n")
@@ -101,7 +101,7 @@ struct FoldsTests {
     #expect(folds.headingStarts == [0, 17, 59])
   }
 
-  // [utest->req~heading-folding.unfold-all~1]
+  // req~heading-folding.unfold-all~1
   @Test func unfoldAllUnfoldsEveryHeading() throws {
     let before = unfolded(introTasksNotes)
     var folds = before
@@ -112,7 +112,7 @@ struct FoldsTests {
     #expect(folds.hiddenRanges.isEmpty)
   }
 
-  // [utest->req~heading-folding.disabled-without-heading~1]
+  // req~heading-folding.disabled-without-heading~1
   @Test func foldHeadingAndUnfoldHeadingFindNoHeadingBeforeTheFirstOne() {
     let folds = unfolded("Intro.\n# Tasks\n")
     #expect(folds.innermostHeading(at: 2) == nil)

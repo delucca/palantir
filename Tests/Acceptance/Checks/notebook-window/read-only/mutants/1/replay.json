@@ -1,0 +1,194 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/mutant-1-build/palantir.app",
+  "appSha256" : "3f7c1129522bb6fb41fb42d08d98dab72a6a4a460ec98db01c9b7aa97b4cab7e",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/checks/049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398.json",
+  "checkSha256" : "049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : ".opened.json.sections.notebook.drawn[0] as $l | .typed.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~notebook-window.read-only~1",
+  "seconds" : 9.713441014289856,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.4696080684661865
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5603899955749512,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/mutant-1-replay-0/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.4514089822769165,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/mutant-1-replay-0/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.061431050300598145,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.008029937744140625,
+          "stderr" : ""
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "fixture",
+          "seconds" : 0.0008429288864135742
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.length == .fixture.size",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] | .offset == 0 and .text == \"Alpha line one.\"",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given notebook.md is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "85",
+            "8",
+            "--count",
+            "3"
+          ],
+          "exit" : 0,
+          "seconds" : 0.694985032081604,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06683695316314697,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "selected",
+          "seconds" : 0.01075899600982666,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "type",
+            "x"
+          ],
+          "exit" : 0,
+          "seconds" : 0.14191091060638428,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06102705001831055,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "typed",
+          "seconds" : 0.008012056350708008,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] as $l | .selected.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the user selects its first line and types \"x\"",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] as $l | .typed.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the first line is still selected",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

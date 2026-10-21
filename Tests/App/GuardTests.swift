@@ -7,14 +7,16 @@ import Testing
 @testable import Palantir
 @testable import PalantirNotebookUI
 
-/// The feature folders under `Sources`: every folder but the app's, the inspector's and the
-/// driver's, sorted.
+/// The feature folders under `Sources`: every folder but the app's, the inspector's, the driver's
+/// and the acceptance layer's, sorted.
 func featureFolders() -> [String] {
   let sources = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
     .deletingLastPathComponent().deletingLastPathComponent().appending(path: "Sources")
   let names = (try? FileManager.default.contentsOfDirectory(atPath: sources.path)) ?? []
-  return names.filter { !["App", "Inspector", "Driver"].contains($0) && !$0.hasPrefix(".") }
-    .sorted()
+  return names.filter {
+    !["App", "Inspector", "Driver", "Acceptance"].contains($0) && !$0.hasPrefix(".")
+  }
+  .sorted()
 }
 
 /// The guard every feature passes: each menu command can be driven and each view palantir draws
@@ -33,7 +35,7 @@ struct GuardTests {
 
   // Structural only: what AXPress needs of an item, read in-process, not the tree a launched
   // palantir serves.
-  // [utest->req~main-menu.drivable~1]
+  // req~main-menu.drivable~1
   @MainActor @Test func everyMenuBarItemIsShownWithATitleAndAnActionOrASubmenu() throws {
     let items = Self.items(MainMenu.make(name: "palantir"))
     try #require(items.count > 20)
@@ -83,7 +85,7 @@ struct GuardTests {
     }
   }
 
-  // [utest->req~accessibility.custom-view-labels~1]
+  // req~accessibility.custom-view-labels~1
   @MainActor @Test func everyViewPalantirDrawsHasAnAccessibilityLabel() throws {
     let features = featureFolders()
     try #require(!features.isEmpty)

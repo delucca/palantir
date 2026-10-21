@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookWindowController.swift b/Sources/Notebook/UI/NotebookWindowController.swift
+index 05c35a1..275a67b 100644
+--- a/Sources/Notebook/UI/NotebookWindowController.swift
++++ b/Sources/Notebook/UI/NotebookWindowController.swift
+@@ -73,6 +73,7 @@ package final class NotebookWindowController: NSWindowController {
+   }
+ 
+   func open(_ url: URL) throws {
+-    textView.show(try String(contentsOf: url, encoding: .utf8))
++    let text = try String(contentsOf: url, encoding: .utf8)
++    textView.show(String(text.dropLast()))
+   }
+ }

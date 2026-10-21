@@ -31,7 +31,7 @@ struct NotebookStateTests {
     return controller
   }
 
-  // [utest->req~inspector.notebook-state~1]
+  // req~inspector.notebook-state~1
   @Test func stateListsTheFoldedHeadingAndTheDrawnLinesAsTheProbesMeasureThem() async throws {
     let controller = open("# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n")
     let view = controller.textView
@@ -63,7 +63,7 @@ struct NotebookStateTests {
       ])
   }
 
-  // [utest->req~inspector.notebook-state~1]
+  // req~inspector.notebook-state~1
   @Test func aGapIsTheSpaceBetweenTwoDrawnParagraphsAndAnOverlapIsNegative() {
     let drawn = [
       (offset: 0, frame: CGRect(x: 25, y: 0, width: 50, height: 16)),
@@ -75,7 +75,7 @@ struct NotebookStateTests {
     #expect(gaps == [[8, 20, 8], [20, 30, -6]])
   }
 
-  // [utest->req~inspector.notebook-state~1]
+  // req~inspector.notebook-state~1
   @Test func drawnLinesInAScrolledNotebookAreTheOnesInTheWindow() async throws {
     let text = (1...200).map { "Line \($0).\n" }.joined()
     let controller = open(text)

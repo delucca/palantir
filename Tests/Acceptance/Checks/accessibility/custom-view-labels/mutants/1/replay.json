@@ -1,0 +1,177 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/accessibility.custom-view-labels-1792573400/mutant-1-build/palantir.app",
+  "appSha256" : "07feb4914e70bf9d078aeda465b536dbb7893d332eae32c7935bd95884abff20",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/accessibility.custom-view-labels-1792573400/checks/7023dab5011422907a9e73a26a4da4c4ea55aeb7080dc46a34038a7deb040cbd.json",
+  "checkSha256" : "7023dab5011422907a9e73a26a4da4c4ea55aeb7080dc46a34038a7deb040cbd",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | [.shown.json.sections.notebook.markers[] | select(.heading == $h) | .label] == [\"Folded\"]",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~accessibility.custom-view-labels~1",
+  "seconds" : 9.409804940223694,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.5622439384460449
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5614950656890869,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/accessibility.custom-view-labels-1792573400/mutant-1-replay-0/files/reaper.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.700769066810608,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/accessibility.custom-view-labels-1792573400/mutant-1-replay-0/files/reaper.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06474804878234863,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.1287308931350708,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06536102294921875,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "folded",
+          "seconds" : 0.010724067687988281,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".folded.json.sections.notebook.folded | map(.line) == [\"## Fix the reaper\"]",
+          "value" : "true"
+        },
+        {
+          "that" : "(.folded.json.sections.notebook.folded[0].offset) as $h | .folded.json.sections.notebook.drawn | any(.offset == $h and (.text | startswith(\"## Fix the reaper\")))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with \"## Fix the reaper\" folded is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06698393821716309,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "shown",
+          "seconds" : 0.00899207592010498,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "tree"
+          ],
+          "exit" : 0,
+          "name" : "tree",
+          "seconds" : 0.03913402557373047,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".tree.elements | length > 0",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the window's accessibility tree is read",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | [.shown.json.sections.notebook.markers[] | select(.heading == $h)] | length == 1",
+          "value" : "true"
+        },
+        {
+          "that" : "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | [.shown.json.sections.notebook.markers[] | select(.heading == $h) | .label] == [\"Folded\"]",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the folded marker of \"## Fix the reaper\" has the label \"Folded\"",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

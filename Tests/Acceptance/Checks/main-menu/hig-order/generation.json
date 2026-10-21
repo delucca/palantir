@@ -1,0 +1,78 @@
+{
+  "blockSha256" : "2efab16ea1371b88f4ee9e0a06a54704a4c1b85117bc2fe8e0878323a0efa226",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "cdedc597b9a49b2b14d94c05bbbdbf5ebb43385f1cae7affd4bf5e1136fb3407",
+  "ended" : "2026-10-21T07:33:22Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.27998379999999995,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "2efab16ea1371b88f4ee9e0a06a54704a4c1b85117bc2fe8e0878323a0efa226"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.hig-order-1792567847/logs/draft.jsonl",
+      "logSha256" : "96392289a87c540e71485fc86edd769f6a52656f5b20f208a94928c4a74ef56e",
+      "seconds" : 90.71838307380676,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat cli.md",
+        "Bash: cat format.md",
+        "Bash: cat prompt.md; ls -la tmp bin; file bin/*",
+        "Bash: which jq; jq --version",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.hig-order-1792567847/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"\nE2=$(jq -r '.steps[1].expect[1].that' work/check.json); E1=$(jq -r '.steps[1].expect[0].that' work/check.json)\nmk() { jq -nc --argjson p \"$1\" '{pid: 1, launched: {pid: 1}, menus: {items: [$p[] | {path: ., enabled: \"enabled\", press: \"press\", key: \"-\"}]}}'; }\nfor case in \\\n '[\"Apple\",\"Apple > About This Mac\",\"palantir\",\"palantir > Quit palantir\",\"File\",\"File > Open…\",\"Edit\",\"Edit > Copy\",\"View\",\"View > Fold All\",\"Window\",\"Window > Minimize\",\"Help\",\"Help > palantir Help\"]' \\\n '[\"palantir > Quit palantir\",\"File > Open…\",\"Edit > Copy\",\"View > Fold All\",\"Window > Minimize\",\"Help > palantir Help\"]' \\\n '[\"palantir\",\"File\",\"Edit\",\"View\",\"Window\",\"Help\",\"palantir > Quit palantir\",\"File > Open…\"]' \\\n '[\"palantir\",\"File\",\"View\",\"Edit\",\"Window\",\"Help\"]' \\\n '[\"palantir\",\"File\",\"Edit\",\"Format\",\"View\",\"Window\",\"Help\"]' \\\n '[\"palantir\",\"File\",\"Edit\",\"View\",\"Window\"]' \\\n '[\"File\",\"Edit\",\"View\",\"Window\",\"Help\"]' ; do\n  echo \"$(mk \"$case\" | jq \"$E1\") $(mk \"$case\" | jq \"$E2\")  <- $case\"\ndone\nmk '[]' | jq '(.launched.pid | type) == \"number\" and .launched.pid == .pid'"
+      ],
+      "turns" : 8
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "cdedc597b9a49b2b14d94c05bbbdbf5ebb43385f1cae7affd4bf5e1136fb3407",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "2efab16ea1371b88f4ee9e0a06a54704a4c1b85117bc2fe8e0878323a0efa226",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "dacfc8fd5c8c14c57408f66b5500bf293a4a3fd54cfc2dc4f1a29bcfdda78bf5",
+      "seconds" : 30.923692107200623,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "9b2d639fb807cc7e430f7b123335b3a7ab88473f2ee0312b421cb0e5c72b75a4",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.hig-order-1792567847/mutant-1-replay-0",
+      "seconds" : 0.9051300287246704,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.hig-order-1792567847/replays/base-1"
+  },
+  "rule" : "req~main-menu.hig-order~1",
+  "started" : "2026-10-21T07:30:47Z"
+}

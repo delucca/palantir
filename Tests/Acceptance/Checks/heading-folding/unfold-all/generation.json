@@ -1,0 +1,109 @@
+{
+  "blockSha256" : "62af8366396c3d39330ea905a58e2b168736b61270e80f5c8d1a4fa51456dbe3",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "53dc311d6c0ac7f9bbac47904753fa7d3384ace44bdede0066e50af64aee1da7",
+  "ended" : "2026-10-21T10:19:48Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.6350432,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "62af8366396c3d39330ea905a58e2b168736b61270e80f5c8d1a4fa51456dbe3"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/logs/draft.jsonl",
+      "logSha256" : "8093584369b78e74a700c5cb41dcfdb95e654c46f3e1606cf99f20bb109b3b5b",
+      "seconds" : 181.18193197250366,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; echo ---; cat rule.md",
+        "Bash: cat cli.md",
+        "Bash: cat format.md",
+        "Bash: cat prompt.md; echo ---; ls -laR tmp bin",
+        "Bash: python3 -I - <<'EOF'\nimport json\n\ntext = (\"# One\\nAlpha line.\\n## Two\\nBeta line.\\n### Three\\nGamma line.\\n\"\n        \"# Four\\nDelta line.\\n## Five\\nEpsilon line.\\n\")\nassert text.isascii()  # file size in bytes == length in UTF-16 units\n\n# The file's lines with their offsets, computed in jq from the fixture's text.\nlines = (\"def lines: \" + json.dumps(text) +\n         ' | split(\"\\\\n\") | .[:-1]'\n         ' | reduce .[] as $l ({o: 0, ls: []};'\n         ' .ls += [{offset: .o, text: $l}] | .o += (($l | length) + 1))'\n         ' | .ls; ')\n\ncheck = {\n  \"format\": 1,\n  \"rule\": \"req~heading-folding.unfold-all~1\",\n  \"example\": \"unfolding a whole notebook\",\n  \"files\": {\"notebook.md\": text},\n  \"steps\": [\n    {\"line\": \"* Given a notebook is open with every heading folded\",\n     \"do\": [{\"file\": \"notebook.md\", \"as\": \"source\"},\n            {\"launch\": {\"build\": \"debug\", \"inspector\": True}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"notebook.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menu\", \"View > Fold All\"]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"folded\"}],\n     \"expect\": [\n       {\"that\": \".folded.json.sections.notebook.length == .source.size\",\n        \"why\": \"the notebook's whole text is open in the window\"},\n       {\"that\": lines + '(lines | map(select(.text | startswith(\"#\")) | {offset, line: .text}))'\n                ' == (.folded.json.sections.notebook.folded | map({offset, line}) | sort_by(.offset))',\n        \"why\": \"every heading of the notebook, nested ones included, is folded\"},\n       {\"that\": lines + '(lines | map(select(.text | startswith(\"#\") | not) | .offset)) as $body'\n                ' | [.folded.json.sections.notebook.drawn[].offset | select(IN($body[]))] == []',\n        \"why\": \"the folded headings hide the text under them\"}]},\n    {\"line\": \"* When the user chooses View > Unfold All\",\n     \"do\": [{\"drive\": [\"menu\", \"View > Unfold All\"]},\n            {\"inspect\": [\"wait\"]}],\n     \"expect\": []},\n    {\"line\": \"* Then the view shows the whole text of the file\",\n     \"do\": [{\"inspect\": [\"state\"], \"as\": \"unfolded\"}],\n     \"expect\": [\n       {\"that\": \".unfolded.json.sections.notebook.folded == []\",\n        \"why\": \"no heading is left folded\"},\n       {\"that\": \".unfolded.json.sections.notebook.length == .source.size\",\n        \"why\": \"the view holds the file's whole text\"},\n       {\"that\": lines + 'lines as $lines | .unfolded.json.sections.notebook'\n                ' | .length as $n | [.drawn[] | {offset, text}] as $d'\n                ' | $d == $lines or $d == $lines + [{offset: $n, text: \"\"}]',\n        \"why\": \"the window draws every line of the file, in order, at its offset\"},\n       {\"that\": '.unfolded.json.sections.notebook'\n                ' | all(.drawn[]; .rect.height > 0) and all(.gaps[]; .height >= 0)',\n        \"why\": \"every line takes room on screen and none is drawn over another\"}]}\n  ]\n}\n\nwith open(\"work/check.json\", \"w\") as f:\n    json.dump(check, f, indent=2, ensure_ascii=False)\n    f.write(\"\\n\")\nEOF\nbin/palantir-accept lint work/check.json rule.md",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; command -v jq",
+        "Bash: C=work/check.json\n# Mock records: folded state with all headings folded, a good unfold, and a bad unfold (nested \"## Two\" left folded)\nLINES=$(jq -c -n \"$(jq -r '.steps[2].expect[2].that | sub(\"; lines as.*$\"; \"; lines\")' $C)\")\necho \"$LINES\"\ngood=$(jq -c -n --argjson L \"$LINES\" '{\n  source: {size: 99},\n  folded: {json: {sections: {notebook: {length: 99,\n    folded: [$L[] | select(.text|startswith(\"#\")) | {offset, line: .text}] | reverse,\n    drawn: [{offset:0,text:\"# One\",rect:{height:16}},{offset:58,text:\"# Four\",rect:{height:16}}], gaps: []}}}},\n  unfolded: {json: {sections: {notebook: {length: 99, folded: [],\n    drawn: ([$L[] | . + {rect:{height:16}}] + [{offset:99,text:\"\",rect:{height:16}}]), gaps: []}}}}}')\nbad=$(jq -c -n --argjson L \"$LINES\" '{\n  source: {size: 99},\n  folded: {json: {sections: {notebook: {length: 99, folded: [{offset:0,line:\"# One\"}],\n    drawn: [$L[] | . + {rect:{height:16}}], gaps: []}}}},\n  unfolded: {json: {sections: {notebook: {length: 99, folded: [{offset:18,line:\"## Two\"}],\n    drawn: [$L[] | select(.offset < 25 or .offset >= 58) | . + {rect:{height:16}}], gaps: [{after:18,before:58,height:-3}]}}}}}')\nfor name in good bad; do\n  rec=${(P)name}\n  echo \"== $name\"\n  jq -r '.steps[] | .expect[] | .that' $C | while IFS= read -r e; do\n    printf '%s\\t%s\\n' \"$(jq -n --argjson r \"$rec\" \"\\$r | $e\")\" \"${e:0:70}\"\n  done\ndone",
+        "Bash: C=work/check.json\nLINES=$(jq -c -n \"$(jq -r '.steps[2].expect[2].that | sub(\"; lines as.*$\"; \"; lines\")' $C)\")\ngood=$(jq -c -n --argjson L \"$LINES\" '{\n  source: {size: 99},\n  folded: {json: {sections: {notebook: {length: 99,\n    folded: [$L[] | select(.text|startswith(\"#\")) | {offset, line: .text}] | reverse,\n    drawn: [{offset:0,text:\"# One\",rect:{height:16}},{offset:58,text:\"# Four\",rect:{height:16}}], gaps: []}}}},\n  unfolded: {json: {sections: {notebook: {length: 99, folded: [],\n    drawn: ([$L[] | . + {rect:{height:16}}] + [{offset:99,text:\"\",rect:{height:16}}]), gaps: []}}}}}')\nbad=$(jq -c -n --argjson L \"$LINES\" '{\n  source: {size: 99},\n  folded: {json: {sections: {notebook: {length: 99, folded: [{offset:0,line:\"# One\"}],\n    drawn: [$L[] | . + {rect:{height:16}}], gaps: []}}}},\n  unfolded: {json: {sections: {notebook: {length: 99, folded: [{offset:18,line:\"## Two\"}],\n    drawn: [$L[] | select(.offset < 25 or .offset >= 58) | . + {rect:{height:16}}], gaps: [{after:18,before:58,height:-3}]}}}}}')\nfor name in good bad; do\n  rec=${!name}\n  echo \"== $name\"\n  jq -r '.steps[] | .expect[] | .that' $C | while IFS= read -r e; do\n    printf '%s\\t%s\\n' \"$(printf '%s' \"$rec\" | jq \"$e\")\" \"${e:0:70}\"\n  done\ndone\nprintf '%s' \"$(jq -r '.files[\"notebook.md\"]' $C)\" | wc -c",
+        "Bash: jq '.files[\"notebook.md\"] as $f | [.steps[].expect[].that | select(startswith(\"def lines\")) | capture(\"^def lines: (?<lit>\\\"[^\\\"]*\\\")\").lit | fromjson == $f] | {count: length, allMatch: all}' work/check.json && bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 11
+    },
+    {
+      "costUSD" : 0.6298621999999999,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "93e5117a81b5c4033d16bb3c0fe939bab60064ed5f563646390357d92447ebbb",
+        "replay.json" : "41ae217c2c6c645d8cbf0d8547277cc68956c79936c4076ad3138bce2dc832f4",
+        "rule.md" : "62af8366396c3d39330ea905a58e2b168736b61270e80f5c8d1a4fa51456dbe3"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/logs/revise-1.jsonl",
+      "logSha256" : "91c9ec9019f79d263dac17b3a93a34b17b25dc683ff0737f5a34bde83a0486fd",
+      "reason" : "replay",
+      "seconds" : 180.85336697101593,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat prompt.md; echo ----; cat cli.md; echo ----; cat format.md",
+        "Bash: ls -la work tmp tmp/* bin; cat work/check.json; echo ----; cat replay.json; echo ----; cat record.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; strings bin/palantir-accept | grep -iE 'View >|Fold|Unfold|> ' | sort -u | head -50; ls -la tmp/claude-501/*/",
+        "Bash: find tmp -maxdepth 6 | head; grep -aoE '[A-Za-z ]*View > [A-Za-z …]+' bin/palantir-accept | sort -u | head",
+        "Bash: cp work/check.json \"$TMPDIR/check.orig.json\" && jq --arg old '\"# One\\nAlpha line.\\n## Two\\nBeta line.\\n### Three\\nGamma line.\\n# Four\\nDelta line.\\n## Five\\nEpsilon line.\\n\"' --arg new '\"# One\\nAlpha line.\\n# Two\\nBeta line.\\n# Three\\nGamma line.\\n# Four\\nDelta line.\\n# Five\\nEpsilon line.\\n\"' '\n  ($new | fromjson) as $text\n  | .files[\"notebook.md\"] = $text\n  | .steps |= map(.expect |= map(.that |= (split($old | gsub(\"\\n\"; \"\\\\n\")) | join($new | gsub(\"\\n\"; \"\\\\n\")))))\n' \"$TMPDIR/check.orig.json\" > \"$TMPDIR/check.new.json\" && diff <(jq . \"$TMPDIR/check.orig.json\") <(jq . \"$TMPDIR/check.new.json\")",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"\ntext=$(jq -r '.files[\"notebook.md\"]' work/check.json; printf x); text=${text%x}\nlines=$(jq -n --arg t \"$text\" '$t | split(\"\\n\") | .[:-1] | reduce .[] as $l ({o:0, ls:[]}; .ls += [{offset:.o, text:$l}] | .o += (($l|length)+1)) | .ls')\nmk() { # $1 folded offsets json, $2 drawn offsets json\n  jq -n --argjson ls \"$lines\" --argjson f \"$1\" --argjson d \"$2\" --argjson n \"${#text}\" '\n    def st: {json: {sections: {notebook: {length: $n,\n      folded: [$ls[] | select(.offset | IN($f[])) | {offset, line: .text}],\n      drawn: [$ls[] | select(.offset | IN($d[])) | {offset, text, rect: {x:25, y:0, width:40, height:16}}],\n      gaps: []}}}};\n    {source: {size: $n}, folded: st, unfolded: st}'\n}\nheads=$(jq -c '[.[] | select(.text|startswith(\"#\")) | .offset]' <<<\"$lines\")\nall=$(jq -c '[.[].offset]' <<<\"$lines\")\necho \"size ${#text} heads $heads\"\nrun() { echo \"== $1\"; jq -r '.steps[] | select(.line|test(\"Given|Then\")) as $s | $s.expect[] | .that' work/check.json | while IFS= read -r e; do jq -r \"$e\" <<<\"$2\" | tr '\\n' ' '; done; echo; }\nrun \"every heading folded, headings drawn (given: t t t)\" \"$(mk \"$heads\" \"$heads\")\"\nrun \"only # One folded (given 2nd false)\" \"$(mk '[0]' \"$heads\")\"\nrun \"unfolded: nothing folded, all drawn (then: t t t t)\" \"$(mk '[]' \"$all\")\"\nrun \"unfolded: # Four still folded, its body missing (then false)\" \"$(mk '[55]' \"$(jq -c 'map(select(. != 62))' <<<\"$all\")\")\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/draft\ntext=$(jq -j '.files[\"notebook.md\"]' work/check.json; printf x); text=${text%x}\nlines=$(jq -n --arg t \"$text\" '$t | split(\"\\n\") | .[:-1] | reduce .[] as $l ({o:0, ls:[]}; .ls += [{offset:.o, text:$l}] | .o += (($l|length)+1)) | .ls')\nmk() { # $1 folded offsets, $2 drawn offsets, $3 extra trailing empty paragraph (true/false)\n  jq -n --argjson ls \"$lines\" --argjson f \"$1\" --argjson d \"$2\" --argjson n \"${#text}\" --argjson x \"${3:-false}\" '\n    def st: {json: {sections: {notebook: {length: $n,\n      folded: [$ls[] | select(.offset | IN($f[])) | {offset, line: .text}],\n      drawn: ([$ls[] | select(.offset | IN($d[])) | {offset, text, rect: {x:25, y:0, width:40, height:16}}]\n              + (if $x then [{offset: $n, text: \"\", rect: {x:25, y:0, width:0, height:16}}] else [] end)),\n      gaps: []}}}};\n    {source: {size: $n}, folded: st, unfolded: st}'\n}\nheads=$(jq -c '[.[] | select(.text|startswith(\"#\")) | .offset]' <<<\"$lines\")\nall=$(jq -c '[.[].offset]' <<<\"$lines\")\necho \"size ${#text} heads $heads\"\nrun() { printf '%-62s' \"$1\"; jq -r '.steps[] | .expect[] | .that' work/check.json | while IFS= read -r e; do jq -r \"$e\" <<<\"$2\" | tr '\\n' ' '; done; echo; }\necho \"columns: given1 given2 given3 | then1 then2 then3 then4\"\nrun \"all headings folded, only headings drawn\" \"$(mk \"$heads\" \"$heads\")\"\nrun \"only # One folded\" \"$(mk '[0]' \"$(jq -c 'map(select(. != 6))' <<<\"$all\")\")\"\nrun \"nothing folded, every line drawn\" \"$(mk '[]' \"$all\")\"\nrun \"nothing folded, every line drawn + trailing empty paragraph\" \"$(mk '[]' \"$all\" true)\"\nrun \"# Four still folded, its body not drawn\" \"$(mk '[55]' \"$(jq -c 'map(select(. != 62))' <<<\"$all\")\")\"\nrun \"nothing folded but # Five's body not drawn\" \"$(mk '[]' \"$(jq -c 'map(select(. != 81))' <<<\"$all\")\")\""
+      ],
+      "turns" : 10
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+    "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "e69d24db2970a7126ca2aba42bf33b9629176574616b2cde8e435d40f89e68db"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "53dc311d6c0ac7f9bbac47904753fa7d3384ace44bdede0066e50af64aee1da7",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "62af8366396c3d39330ea905a58e2b168736b61270e80f5c8d1a4fa51456dbe3",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "11f5b4df47f9ad0f49b7256fdb9edf2b5fac6ac4166e04753f49420fa7e095da",
+      "seconds" : 61.9699729681015,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "27fc9b349285d64d0bb28c210bf8f6930036fcf7a8ebd57e4e7aa1ea572cd17c",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/mutant-1-replay-0",
+      "seconds" : 8.956769108772278,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/replays/base-2"
+  },
+  "rule" : "req~heading-folding.unfold-all~1",
+  "started" : "2026-10-21T10:11:32Z"
+}

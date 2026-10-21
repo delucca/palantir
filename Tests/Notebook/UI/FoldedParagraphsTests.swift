@@ -6,7 +6,7 @@ import Testing
 @MainActor
 @Suite(.layer(.unit))
 struct FoldedParagraphsTests {
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test(
     arguments: [
       [10..<60, 20..<30, 25..<27, 40..<55],
@@ -24,7 +24,7 @@ struct FoldedParagraphsTests {
     }
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func hidesAnswersWithoutScanningEveryRange() {
     let folding = FoldedParagraphs()
     folding.hiddenRanges = (0..<40_000).map { NSRange(location: $0 * 4, length: 2) }

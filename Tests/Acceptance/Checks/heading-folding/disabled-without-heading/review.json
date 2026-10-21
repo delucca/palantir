@@ -1,0 +1,36 @@
+{
+  "checkSha256" : "5e01ae88d57566a195df4e852a4db2f92b405e3c5299b08ff98a6dcea0dd2d7e",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook with the lines \"Intro.\" and \"# Tasks\" is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And the selection is in \"Intro.\"",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user opens the View menu",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then Fold Heading and Unfold Heading are disabled",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.disabled-without-heading~1",
+  "summary" : "The check faithfully sets up the notebook and selection, opens View, and verifies both commands are disabled while palantir remains in front. Coordinates derive from observed layout; no machine-specific assumptions or unrelated requirements are imposed.",
+  "verdict" : "faithful"
+}

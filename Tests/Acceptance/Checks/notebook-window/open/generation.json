@@ -1,0 +1,204 @@
+{
+  "blockSha256" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "7d12973bcc5f025c33728d1a0f902d73fecf8ccd67cbce04fac4ef8bafdccaa1",
+  "ended" : "2026-10-21T10:33:20Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.5659474,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/logs/draft.jsonl",
+      "logSha256" : "3b4e9816b7f44ba9363363159880b80efa6de6898d64848cddf8bb2acf02adc0",
+      "seconds" : 168.71051800251007,
+      "toolCalls" : [
+        "Bash: ls -la . work bin 2>/dev/null; cat rule.md; echo ----; cat format.md",
+        "Bash: cat cli.md; echo ----; cat prompt.md; ls -la bin tmp; file bin/*",
+        "Bash: which python3 jq; jq --version; ls -la /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/claude-501",
+        "Bash: G=tmp/gen && mkdir -p $G && printf '# Field notes\\n\\nCafé crème — “quoted” and ‘single’, naïve façade.  \\nA hard break above; 🙂 and 日本語 too.\\n\\n- [ ] étape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n' > $G/notebook.md && cat -A $G/notebook.md 2>/dev/null || od -c $G/notebook.md | head -30",
+        "Bash: jq -Rs '.' tmp/gen/notebook.md; jq -Rs 'utf8bytelength, length, ([explode[] | if . > 65535 then 2 else 1 end] | add)' tmp/gen/notebook.md; wc -c tmp/gen/notebook.md",
+        "Bash: cat > tmp/gen/gen.jq <<'EOF'\n($t | tojson) as $T\n| \"def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; \" as $u16\n| {\n  format: 1,\n  rule: \"req~notebook-window.open~1\",\n  example: \"opening a notebook\",\n  files: {\"notebook.md\": $t},\n  steps: [\n    {line: \"* Given a file notebook.md on disk\",\n     do: [{file: \"notebook.md\", as: \"disk\"}],\n     expect: [{that: \".disk.size == (\\($T) | utf8bytelength)\",\n               why: \"notebook.md is on disk and holds the fixture's text\"}]},\n    {line: \"* When the user chooses notebook.md with File > Open\",\n     do: [{launch: {build: \"debug\", inspector: true}},\n          {drive: [\"menu\", \"File > Open…\"]},\n          {drive: [\"choose\", {file: \"notebook.md\"}]}],\n     expect: []},\n    {line: \"* Then the palantir window shows the text of notebook.md, character for character\",\n     do: [{inspect: [\"wait\"]},\n          {inspect: [\"state\"], as: \"shown\"}],\n     expect: [\n       {that: \".shown.json.window | .isVisible and (.isMiniaturized | not)\",\n        why: \"the palantir window is on screen\"},\n       {that: \"\\($u16).shown.json.sections.notebook.length == (\\($T) | u16)\",\n        why: \"the window holds exactly as many UTF-16 units as notebook.md: nothing dropped or added\"},\n       {that: \"\\($u16)(\\($T) | split(\\\"\\\\n\\\")) as $l | [range(0; $l | length) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]} | select(.text != \\\"\\\")] == [.shown.json.sections.notebook.drawn[] | {offset, text: (.text | rtrimstr(\\\"\\\\n\\\"))} | select(.text != \\\"\\\")]\",\n        why: \"every line of notebook.md is drawn at its own offset with its exact characters, and no other line is drawn\"},\n       {that: \".shown.json as $s | all($s.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) != \\\"\\\") | .rect; .width > 0 and .height > 0 and .x < $s.window.content.width and .x + .width > 0 and .y < $s.window.content.height and .y + .height > 0)\",\n        why: \"each drawn line lies in the window's content, where the user sees it\"}\n     ]}\n  ]\n}\nEOF\njq -n --rawfile t tmp/gen/notebook.md -f tmp/gen/gen.jq > work/check.json && cat work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cat > tmp/gen/mock.jq <<'EOF'\ndef u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0;\ndef rec($s; $nl):\n  ($s | split(\"\\n\")) as $l\n  | {disk: {size: ($t | utf8bytelength)},\n     shown: {json: {window: {isVisible: true, isMiniaturized: false, content: {width: 960, height: 600}},\n       sections: {notebook: {length: ($s | u16),\n         drawn: [range(0; $l | length) as $i\n                 | select($i < ($l | length) - 1 or $l[$i] != \"\")\n                 | {offset: ([$l[:$i][] | u16 + 1] | add // 0),\n                    text: ($l[$i] + (if $nl and $i < ($l|length)-1 then \"\\n\" else \"\" end)),\n                    rect: {x: 25, y: ($i * 20), width: 100, height: 20}}]}}}}};\n($t | sub(\"🙂\"; \"?\")) as $bad1\n| ($t | rtrimstr(\"\\n\")) as $bad2\n| ($t | sub(\"naïve\"; \"naive\")) as $bad3\n| ($t | sub(\"  \\nA\"; \"\\nA\")) as $bad4\n| ($t | sub(\"\\t\"; \"    \")) as $bad5\n| {good: rec($t; false), good_nl: rec($t; true), emoji: rec($bad1; false), no_trailing_nl: rec($bad2; false),\n   accent: rec($bad3; false), trailing_spaces: rec($bad4; false), tab: rec($bad5; false),\n   offscreen: (rec($t; false) | .shown.json.sections.notebook.drawn[3].rect.y = 700),\n   hidden: (rec($t; false) | .shown.json.window.isVisible = false)}\nEOF\njq -n --rawfile t tmp/gen/notebook.md -f tmp/gen/mock.jq > tmp/gen/mocks.json\nfor k in $(jq -r 'keys_unsorted[]' tmp/gen/mocks.json); do\n  printf '%-16s' \"$k\"\n  jq -c --arg k \"$k\" '.' tmp/gen/mocks.json >/dev/null\n  for e in $(jq -r '[.steps[].expect[].that] | to_entries[] | .key' work/check.json); do\n    expr=$(jq -r --argjson e \"$e\" '[.steps[].expect[].that][$e]' work/check.json)\n    v=$(jq --arg k \"$k\" '.[$k]' tmp/gen/mocks.json | jq \"$expr\")\n    printf ' %s' \"$v\"\n  done; echo\ndone",
+        "Bash: rm -r tmp/gen && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 10
+    },
+    {
+      "costUSD" : 0.7100955999999999,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "a4ca40576dc929f286f0335117f2856d9b84375bf10b9d8bfb25616bf8dd7099",
+        "replay.json" : "692d464261811412ded0e6c81d9d322b9e645a1e8eb858682f771b8923df6ad2",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/logs/revise-1.jsonl",
+      "logSha256" : "16328dab34e2f4e53372263eacdadfda318c77302b726d611bf4a88da1e66e9b",
+      "reason" : "replay",
+      "seconds" : 217.98376595973969,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null && cat rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cat rule.md; echo ----; cat prompt.md; echo ----; ls -la work bin tmp",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cat work/check.json; echo ----; cat replay.json; echo ----; cat record.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cat format.md; echo; echo -----; cat cli.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; which jq; jq --version; jq -r '.files[\"notebook.md\"] | utf8bytelength' work/check.json; jq -j '.files[\"notebook.md\"]' work/check.json | wc -c; jq -j '.files[\"notebook.md\"]' work/check.json | shasum -a 256; jq -j '.files[\"notebook.md\"]' work/check.json | od -c | head -30",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; E=$(jq -r '.steps[0].expect[0].that' work/check.json); printf '%s\\n' \"$E\"; echo ---; jq \"$E\" record.json; jq \"${E#*== }\" -n; jq '.disk.size' record.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; python3 -I -c '\nimport hashlib,json,sys,unicodedata\nb=open(\"work/check.json\",\"rb\").read()\nprint(\"check sha256\", hashlib.sha256(b).hexdigest())\nc=json.loads(b); r=json.load(open(\"replay.json\"))\nt=c[\"steps\"][0][\"expect\"][0][\"that\"]; rt=r[\"failure\"][\"that\"]\nprint(\"that equal:\", t==rt, len(t), len(rt))\nf=c[\"files\"][\"notebook.md\"].encode()\nprint(\"fixture sha256\", hashlib.sha256(f).hexdigest(), len(f))\nprint(\"NFC same:\", unicodedata.normalize(\"NFC\",c[\"files\"][\"notebook.md\"])==c[\"files\"][\"notebook.md\"])\nprint(\"NFD bytes:\", len(unicodedata.normalize(\"NFD\",c[\"files\"][\"notebook.md\"]).encode()))\n'; ls -la ../checks 2>&1 | head",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; openssl dgst -sha256 work/check.json 2>&1; jq -j '.files[\"notebook.md\"]' work/check.json | openssl dgst -sha256 2>&1; jq -n --slurpfile c work/check.json --slurpfile r replay.json '($c[0].steps[0].expect[0].that) as $a | ($r[0].failure.that) as $b | {equal: ($a==$b), la: ($a|length), lb: ($b|length)}'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; /usr/bin/openssl dgst -sha256 work/check.json 2>&1; jq -j '.files[\"notebook.md\"]' work/check.json | /usr/bin/openssl dgst -sha256 2>&1; ls tmp/gen 2>&1",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/gen; ls -la; for f in gen.jq mock.jq; do echo \"== $f\"; cat $f; done; echo \"== mocks.json\"; head -c 3000 mocks.json; echo; echo \"== notebook.md\"; wc -c notebook.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; command -v jq; bin/palantir-accept --help 2>&1 | head -30; echo ----; grep -a -o -E '(fileSystemRepresentation|decomposedString|precomposed|--argjson|--arg |/usr/bin/jq|jq -[a-z]+|--jsonargs|--args|--from-file|--rawfile|--slurpfile|-e |exit-status)[^[:cntrl:]]{0,60}' bin/palantir-accept | sort | uniq -c | head -40",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; grep -a -o -E '[[:print:]]{0,80}(/usr/bin/jq|--args)[[:print:]]{0,80}' bin/palantir-accept | head; echo ----; grep -a -o -E '[[:print:]]{0,60}(NFC|NFD|normaliz|ecompos|recompos|ascii|ASCII|non-ASCII)[[:print:]]{0,60}' bin/palantir-accept | head -20",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; L=$(jq -a '.files[\"notebook.md\"]' work/check.json); printf '%s\\n' \"$L\"; printf '%s' \"$L\" | LC_ALL=C grep -c '[^ -~]' ; jq -n --slurpfile c work/check.json \"($L) as \\$x | {same: (\\$x == \\$c[0].files[\\\"notebook.md\\\"]), bytes: (\\$x|utf8bytelength), cps: (\\$x|explode|length)}\"; jq -n '\"🙂\" | explode'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; G=tmp/gen; sed '1d' $G/gen.jq > $G/gen-ascii.jq; head -2 $G/gen-ascii.jq; L=$(jq -a '.files[\"notebook.md\"]' work/check.json); jq -n --slurpfile c work/check.json --arg T \"$L\" '$c[0].files[\"notebook.md\"] as $t | ' \"$(cat $G/gen-ascii.jq)\" > $G/check.new.json 2>&1 || cat $G/check.new.json; jq -r '.steps[].expect[].that' $G/check.new.json | LC_ALL=C grep -c '[^ -~]'; jq -n --slurpfile a work/check.json --slurpfile b $G/check.new.json '($a[0] | del(.steps[].expect[].that)) == ($b[0] | del(.steps[].expect[].that))'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; G=tmp/gen; { echo '$c[0].files[\"notebook.md\"] as $t'; sed '1d' $G/gen.jq; } > $G/gen-ascii.jq; L=$(jq -a '.files[\"notebook.md\"]' work/check.json); jq -n --slurpfile c work/check.json --arg T \"$L\" -f $G/gen-ascii.jq > $G/check.new.json && echo generated; echo \"non-ascii lines in thats:\"; jq -r '.steps[].expect[].that' $G/check.new.json | LC_ALL=C grep -c '[^ -~]'; echo \"same apart from thats:\"; jq -n --slurpfile a work/check.json --slurpfile b $G/check.new.json '($a[0] | del(.steps[].expect[].that)) == ($b[0] | del(.steps[].expect[].that))'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; G=tmp/gen; n=$(jq '[.steps[].expect[]] | length' work/check.json); for i in $(seq 0 $((n-1))); do O=$(jq -r \"[.steps[].expect[]][$i].that\" work/check.json); N=$(jq -r \"[.steps[].expect[]][$i].that\" $G/check.new.json); printf 'expect %d: record old=%s new=%s | mocks ' $i \"$(jq \"$O\" record.json 2>/dev/null)\" \"$(jq \"$N\" record.json 2>/dev/null)\"; for m in $(jq -r 'keys[]' $G/mocks.json); do o=$(jq \".[\\\"$m\\\"] | $O\" $G/mocks.json 2>&1); w=$(jq \".[\\\"$m\\\"] | $N\" $G/mocks.json 2>&1); [ \"$o\" = \"$w\" ] && printf '%s=%s ' $m $w || printf '%s=DIFF(%s/%s) ' $m \"$o\" \"$w\"; done; echo; done; echo \"--- NFD simulation of old Given expression:\"; D=$(jq -r '.steps[0].expect[0].that | gsub(\"é\";\"é\") | gsub(\"è\";\"è\") | gsub(\"ï\";\"ï\") | gsub(\"ç\";\"ç\")' work/check.json); jq \"$D\" record.json; jq -n \"${D#*== }\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; G=tmp/gen; n=$(jq '[.steps[].expect[]] | length' work/check.json); for ((i=0;i<n;i++)); do O=$(jq -r \"[.steps[].expect[]][$i].that\" work/check.json); N=$(jq -r \"[.steps[].expect[]][$i].that\" $G/check.new.json); printf 'expect %d: record old=%s new=%s | mocks ' $i \"$(jq \"$O\" record.json 2>/dev/null)\" \"$(jq \"$N\" record.json 2>/dev/null)\"; for m in $(jq -r 'keys[]' $G/mocks.json); do o=$(jq \".[\\\"$m\\\"] | $O\" $G/mocks.json 2>&1); w=$(jq \".[\\\"$m\\\"] | $N\" $G/mocks.json 2>&1); [ \"$o\" = \"$w\" ] && printf '%s=%s ' $m $w || printf '%s=DIFF(%s/%s) ' $m \"$o\" \"$w\"; done; echo; done",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cp tmp/gen/check.new.json work/check.json && jq -r '.steps[].expect[].that' work/check.json; echo ----; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cat tmp/gen/check.new.json > work/check.json; jq -n --slurpfile a work/check.json --slurpfile b tmp/gen/check.new.json '$a == $b'; jq -r '.steps[].expect[].that' work/check.json | LC_ALL=C grep -c '[^ -~]'; jq -r '.steps[0].expect[0].that' work/check.json; echo ----; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\""
+      ],
+      "turns" : 20
+    },
+    {
+      "costUSD" : 1.5416048,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "bd5bace85cd86c93ecd329a4c7329e84b663231fe1d848f9ba90166bae240667",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/logs/revise-2.jsonl",
+      "logSha256" : "63225b491368d00f44a2356eed693fe67ad449c23890be5c46632d8313f1ed58",
+      "reason" : "review",
+      "seconds" : 487.9864549636841,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; echo ---; cat rule.md; echo ---; cat review.json; echo ---; cat work/check.json; echo ---; ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cat cli.md; echo ----; cat format.md; echo ----; cat prompt.md; echo ---; ls -la bin tmp; ",
+        "Bash: find tmp -maxdepth 3 | head -50; bin/palantir-accept lint work/check.json rule.md",
+        "Bash: ls -la tmp/gen tmp/claude-501; which jq; jq --version",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/gen && cat gen.jq; echo ----; cat gen-ascii.jq; echo ----; cat mock.jq; echo ----; head -c 3000 mocks.json; echo; echo ----; diff check.new.json ../../work/check.json && echo same",
+        "Bash: jq -r '.files[\"notebook.md\"]' work/check.json | od -c | head -20; jq -n '[1,2,3] as $e | first(range(0;3) | select($e[.] == 2)) // -1'; jq -n 'false and error(\"x\")'; jq -n '[] | max'",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/gen/defs.jq",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/gen/gen2.jq",
+        "Bash: T=$(jq -a '.files[\"notebook.md\"]' work/check.json) && jq -n --argjson c \"$(cat work/check.json)\" --arg T \"$T\" --rawfile defs tmp/gen/defs.jq -f tmp/gen/gen2.jq > tmp/gen/check.v2.json && bin/palantir-accept lint tmp/gen/check.v2.json rule.md && jq -r '.steps[2].expect[2].that' tmp/gen/check.v2.json | head -c 600; echo; LC_ALL=C grep -c '[^ -~]' <(jq -r '.steps[2].expect[3].that' tmp/gen/check.v2.json)",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/tmp/gen && cat > mock2.jq <<'EOF'\ndef u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0;\n# paragraphs of a buffer, with the extra empty one at its end\ndef paras($t): ($t | split(\"\\n\")) as $l | [range(0; $l | length) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i], nl: ($i < ($l | length) - 1)}];\ndef view($t; $H; $sy; $nl): paras($t) as $p\n  | {json: {window: {isVisible: true, isMiniaturized: false, content: {width: 960, height: $H}},\n     sections: {notebook: {length: ($t | u16), gaps: [],\n       scroll: {y: $sy, height: $H, documentHeight: (($p | length) * 20)},\n       drawn: [$p | to_entries[] | .key as $k | .value\n               | {offset, text: (.text + (if $nl and .nl then \"\\n\" else \"\" end)),\n                  rect: {x: 25, y: ($k * 20 - $sy), width: ((.text | length) * 7), height: 20}}\n               | select(.rect.y + .rect.height > 0 and .rect.y < $H)]}}}};\ndef rec($t; $H; $ty; $ay; $by; $nl): {disk: {size: ($t | utf8bytelength)}, shown: view($t; $H; $ty; $nl), top: view($t; $H; $ty; $nl), above: view($t; $H; $ay; $nl), below: view($t; $H; $by; $nl)};\ndef fix(f): .shown |= f | .top |= f | .above |= f | .below |= f;\ndef nb: .json.sections.notebook;\n{\n  fits: rec($t; 600; 0; 0; 0; false),\n  fits_nl: rec($t; 600; 0; 0; 0; true),\n  fits_no_trailing_para: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn |= .[:-1])),\n  small_last_round: rec($t; 100; 0; 130; 140; false),\n  small_mid_round: rec($t; 100; 0; 40; 50; false),\n  small_skip: rec($t; 100; 0; 0; 120; false),\n  small_opened_mid_not_top: rec($t; 100; 60; 130; 140; false),\n  blanks_omitted: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn |= map(select(.text != \"\" or .offset == 165)))),\n  blanks_zero_height: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn |= map(if .text == \"\" and .offset != 165 then .rect.height = 0 else . end))),\n  overlap_same_y: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn |= map(.rect.y = 0))),\n  overlap_gap_entry: (rec($t; 600; 0; 0; 0; false) | fix(nb.gaps = [{after: 0, before: 14, height: -10}])),\n  off_right: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn[2].rect.x = 950)),\n  off_bottom: (rec($t; 600; 0; 0; 0; false) | fix(nb.drawn[10].rect.y = 700)),\n  emoji: rec($t | sub(\"🙂\"; \"?\"); 600; 0; 0; 0; false),\n  tab: rec($t | sub(\"\\t\"; \"    \"); 600; 0; 0; 0; false),\n  trailing_spaces: rec($t | sub(\"  \\nA\"; \"\\nA\"); 600; 0; 0; 0; false),\n  extra_line: rec($t + \"extra\\n\"; 600; 0; 0; 0; false)\n}\nEOF\ncd ../.. && jq -n --rawfile t <(jq -j '.files[\"notebook.md\"]' work/check.json) -f tmp/gen/mock2.jq > tmp/gen/mocks2.json && C=tmp/gen/check.v2.json && for m in $(jq -r 'keys_unsorted[]' tmp/gen/mocks2.json); do jq \".$m\" tmp/gen/mocks2.json > tmp/gen/rec.json; u1=$(jq \"$(jq -r '.steps[2].do[2].until' $C)\" tmp/gen/rec.json); u2=$(jq \"$(jq -r '.steps[2].do[3].until' $C)\" tmp/gen/rec.json); d=$(jq \"$(jq -r '.steps[0].expect[0].that' $C)\" tmp/gen/rec.json); e=\"\"; for i in 0 1 2 3; do e=\"$e $(jq \"$(jq -r \".steps[2].expect[$i].that\" $C)\" tmp/gen/rec.json)\"; done; printf '%-26s until1=%-5s until2=%-5s disk=%-5s expect=%s\\n' $m $u1 $u2 $d \"$e\"; done",
+        "Bash: cp work/check.json tmp/gen/check.v1.json && cp tmp/gen/check.v2.json work/check.json && bin/palantir-accept lint work/check.json rule.md && jq '.steps[2] | {line, do: [.do[] | if .repeat then (.until |= .[-140:]) else . end], expect: [.expect[] | .that |= .[-110:]]}' work/check.json",
+        "Bash: cat tmp/gen/check.v2.json > work/check.json && bin/palantir-accept lint work/check.json rule.md && jq '.steps[2] | {line, do: [.do[] | if .repeat then (.until |= .[-140:]) else . end], expect: [.expect[] | .that |= .[-110:]]}' work/check.json",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/work/answer.md"
+      ],
+      "turns" : 14
+    },
+    {
+      "costUSD" : 0.3130932,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "9edfe05a433b770d30ac9fe2857d01c1513bcd631d69b692c750dec2d0f8edd1",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/logs/revise-3.jsonl",
+      "logSha256" : "a0c95acb690e0723590629cacc1480fa2de13a1e5b0de0a04b42d620c9cacbd3",
+      "reason" : "review",
+      "seconds" : 70.25460302829742,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; ls bin work tmp; echo ----; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; python3 -I -c '\nimport json,sys\np=sys.argv[1]; s=open(p,encoding=\"utf-8\").read()\nprint(json.dumps(json.loads(s),indent=2,ensure_ascii=False)+\"\\n\"==s, json.dumps(json.loads(s),indent=2,ensure_ascii=False)==s)\n' work/check.json; which jq; jq --version",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; jq --indent 2 . work/check.json | cmp - work/check.json && echo identical",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; a=$(jq --indent 2 . work/check.json); b=$(cat work/check.json); [ \"$a\" = \"$b\" ] && echo identical || echo differs",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; jq --indent 2 '\n  (.steps[2].expect[2].that | sub(\"[^;]*$\"; \"\")) as $defs\n  | .steps[2].expect |= (.[:2] + [{\n      \"that\": ($defs + \"good(.shown)\"),\n      \"why\": \"once notebook.md is open and layout has settled, before any scroll, each paragraph the window draws, blank lines included, is the file'\"'\"'s line at that line'\"'\"'s offset with its exact characters, within the content'\"'\"'s width, with a height, not overlapping the one above\"\n    }] + .[2:])\n' work/check.json > work/check.json.new && mv work/check.json.new work/check.json && jq -r '.steps[2].expect[] | (.that | .[-60:]) + \"  ||  \" + .why' work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; jq -e '.steps[2].expect | length == 5' work/check.json.new && cat work/check.json.new > work/check.json && rm work/check.json.new; ls work; jq -r '.steps[2].expect[] | (.that | .[-60:]) + \"  ||  \" + .why' work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; expr=$(jq -r '.steps[2].expect[2].that' work/check.json); for corrupt in no yes; do jq -n --arg c $corrupt --slurpfile chk work/check.json '\n  $chk[0].files[\"notebook.md\"] as $t\n  | def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0;\n  ($t | split(\"\\n\")) as $l\n  | [range(0; ($l|length)-1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: ($l[$i] + \"\\n\"), rect: {x: 25, y: ($i*16), width: (if $l[$i]==\"\" then 0 else 100 end), height: 16}}] as $d\n  | (if $c == \"yes\" then $d | .[2].text |= sub(\"é\"; \"e\") else $d end) as $d\n  | {shown: {json: {window: {content: {width: 960, height: 600}, isVisible: true, isMiniaturized: false}, sections: {notebook: {length: ($t|u16), drawn: $d, gaps: []}}}}}' | jq \"$expr\" | sed \"s/^/corrupt=$corrupt: /\"; done",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft/work/answer.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/draft; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 12
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+    "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "e69d24db2970a7126ca2aba42bf33b9629176574616b2cde8e435d40f89e68db"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "393fb0fba3883291b2320ba86025baf09415bc78c8fbf8bb31dbdbe01d7f1871",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "bc69cd236414d15472d626960ee466d7eca16b209f880b499d4d48c1b5a1ad86",
+      "seconds" : 106.03035306930542,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "30bd12a25281fb91bfd8027647ab457ea73757fea96a1e6148bdf6d4b6c8b5cf",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "be8149adc97b69a6ea68469806a5c1ae6509909825af820f7fdc615af1d7d559",
+      "seconds" : 90.58869993686676,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "7d12973bcc5f025c33728d1a0f902d73fecf8ccd67cbce04fac4ef8bafdccaa1",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "a9d7cccc0f64b1a34b31cbaf586ea73a9aee64e59abf81a5fe1dcbb79e792b8e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "55e9b02a3ac3bdbb50d7e727e67daf6409e0dcec3feb9480e7a37554c4c1ecb8",
+      "seconds" : 89.24365103244781,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "0cd5a1d806f012f9ee4684318e35c52b8336ea2375bfac92288f980e357c722d",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/mutant-1-replay-0",
+      "seconds" : 10.10505199432373,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/replays/base-4"
+  },
+  "rule" : "req~notebook-window.open~1",
+  "started" : "2026-10-21T10:11:34Z"
+}

@@ -1,0 +1,164 @@
+{
+  "app" : "/Users/admin/acceptance/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/admin/acceptance/work/5/check.json",
+  "checkSha256" : "dbdaef127b11b18fe4d874fe72a63cd59f73787f7a711d703bd960365e5bc0aa",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.fold-all~1",
+  "seconds" : 8.720287084579468,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "fixture",
+          "seconds" : 0.0006679296493530273
+        },
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.3563588857650757
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6461269855499268,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/admin/acceptance/work/5/rec/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.03864598274231,
+          "stderr" : "palantir-drive: chose /Users/admin/acceptance/work/5/rec/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06153702735900879,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.006907105445861816,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.length == .fixture.size",
+          "value" : "true"
+        },
+        {
+          "that" : "[.opened.json.sections.notebook.drawn[].text | rtrimstr(\"\\n\")] == [\"Intro.\", \"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"# Notes\", \"Done.\"]",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with the lines \"Intro.\", \"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"# Notes\" and \"Done.\" is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.2376769781112671,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06622099876403809,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "folded",
+          "seconds" : 0.00686800479888916,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses View > Fold All",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "[.folded.json.sections.notebook.drawn[].text | rtrimstr(\"\\n\")] == [\"Intro.\", \"# Tasks\", \"# Notes\"]",
+          "value" : "true"
+        },
+        {
+          "that" : "[.folded.json.sections.notebook.drawn[].offset] == [.opened.json.sections.notebook.drawn[] | select(.text | rtrimstr(\"\\n\") | IN(\"Intro.\", \"# Tasks\", \"# Notes\")) | .offset]",
+          "value" : "true"
+        },
+        {
+          "that" : ".folded.json.window.content.height as $h | .folded.json.sections.notebook.drawn | all(.rect.height > 0 and .rect.y < $h and .rect.y + .rect.height > 0)",
+          "value" : "true"
+        },
+        {
+          "that" : ".folded.json.sections.notebook.length == .opened.json.sections.notebook.length",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then only \"Intro.\", \"# Tasks\" and \"# Notes\" are visible",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/Users/admin/acceptance/bin/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

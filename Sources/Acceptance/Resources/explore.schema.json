@@ -1,0 +1,20 @@
+{"type": "object", "additionalProperties": false,
+ "required": ["feature", "candidates", "probes"],
+ "properties": {
+   "feature": {"type": "string"},
+   "candidates": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+     "required": ["rule", "kind", "observed", "evidence", "screenshot", "proposal"],
+     "properties": {
+       "rule": {"type": ["string", "null"], "description": "the nearest rule's ID, or null"},
+       "kind": {"type": "string", "enum": ["undefined-behavior", "rule-gap", "wording"]},
+       "observed": {"type": "string", "description": "what palantir did, plainly"},
+       "evidence": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+         "required": ["probe", "path", "value"],
+         "properties": {"probe": {"type": "string", "description": "the probe's number"},
+                        "path": {"type": "string", "description": "a jq path into that probe's record.json"},
+                        "value": {"type": "string", "description": "its value as compact JSON"}}}},
+       "screenshot": {"type": ["string", "null"], "description": "a path under work/replays, or null"},
+       "proposal": {"type": "string", "description": "one spec sentence a person could adopt"}}}},
+   "probes": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+     "required": ["probe", "question", "answer"],
+     "properties": {"probe": {"type": "string"}, "question": {"type": "string"}, "answer": {"type": "string"}}}}}}

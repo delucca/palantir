@@ -27,7 +27,7 @@ struct OutlineTests {
     range(of: lines.lowerBound..<lines.upperBound + 1, in: string)
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func headingsOwnTheLinesUpToTheNextPeerOrHigherHeading() throws {
     let notebook = "# Tasks\n## Fix the reaper\nIt leaks.\n## Ship bilbo\n# Notes\nDone.\n"
     let outline = Outline(parsing: notebook)
@@ -45,7 +45,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[3].ownedRange) == "Done.\n")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func ownedRangesAreUTF16OffsetsOfTheText() throws {
     let notebook = "Intro 🎉 é.\r\n# Tâsks 🎉\r\nNaïve 👩‍👩‍👧 text.\n\nSetext\n======\nbody\n# Last"
     let outline = Outline(parsing: notebook)
@@ -59,7 +59,7 @@ struct OutlineTests {
       outline.headings[2].ownedRange == NSRange(location: (notebook as NSString).length, length: 0))
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func classicMacLineEndingsBreakLines() throws {
     let notebook = "# Tasks\r## Fix the reaper\rIt leaks.\r# Notes\rDone.\r"
     let outline = Outline(parsing: notebook)
@@ -73,7 +73,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[2].ownedRange) == "Done.\r")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func setextHeadingsEndAtTheirUnderline() {
     let notebook = "Setext\n------\n# Next\nTwo line\nsetext\n===\n\nbody\n"
     let outline = Outline(parsing: notebook)
@@ -84,7 +84,7 @@ struct OutlineTests {
         == [3..<3, 4..<4, 7..<9].map { range(of: $0, in: notebook) })
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func setextHeadingWithAStrikethroughSpanningLines() throws {
     let notebook = "~~Two line\nsetext~~\n===\nbody\n# Next\n"
     let outline = Outline(parsing: notebook)
@@ -95,7 +95,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[0].ownedRange) == "body\n")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func setextHeadingWithALinkSpanningLines() throws {
     let notebook = "[link](   /uri\n  \"title\"  )\n===\nbody\n# Next\n"
     let outline = Outline(parsing: notebook)
@@ -107,7 +107,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[0].ownedRange) == "body\n")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test(arguments: ["", "   "])
   func setextHeadingAfterLinkDefinitionsStartsAtItsText(indent: String) throws {
     let notebook = "# Tasks\nBody.\n\n\(indent)[ref]: /url\nTitle\n===\n"
@@ -119,7 +119,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[0].ownedRange) == "Body.\n\n\(indent)[ref]: /url\n")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func aLongSetextHeadingIsParsedOnce() {
     let title = String(repeating: "Fix the reaper\n", count: 2_000)
     let notebook = "# Tasks\nBody.\n\n" + title + "===\nbody\n"
@@ -134,7 +134,7 @@ struct OutlineTests {
     #expect(elapsed < .seconds(1))
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func aLongSetextHeadingThatStartsWithABracketIsParsedOnce() {
     let title = "[2026-10-20 10:00] start\n" + String(repeating: "log line\n", count: 2_000)
     let notebook = "# Tasks\nBody.\n\n" + title + "===\nbody\n"
@@ -149,7 +149,7 @@ struct OutlineTests {
     #expect(elapsed < .seconds(1))
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func aLongSetextHeadingAfterALinkDefinitionIsParsedOnce() {
     let title = String(repeating: "Fix the reaper\n", count: 2_000)
     let notebook = "# Tasks\nBody.\n\n[ref]: /url\n" + title + "===\nbody\n"
@@ -164,7 +164,7 @@ struct OutlineTests {
     #expect(elapsed < .seconds(1))
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test func aSetextHeadingWhoseTextLooksLikeAnUnderlineStartsAfterTheDefinitions() throws {
     let notebook = "# Tasks\nBody.\n\n[ref]: /url\n===\n===\nbody\n"
     let outline = Outline(parsing: notebook)
@@ -176,7 +176,7 @@ struct OutlineTests {
     #expect(text(notebook, outline.headings[1].ownedRange) == "body\n")
   }
 
-  // [utest->req~heading-outline.owned-range~1]
+  // req~heading-outline.owned-range~1
   @Test(
     arguments: [
       ("[ref]: /url\nTitle", 1),
@@ -240,7 +240,7 @@ struct OutlineTests {
         == ([1...1] + setext).map { range(of: $0, in: notebook) })
   }
 
-  // [utest->req~heading-outline.fenced-code~1]
+  // req~heading-outline.fenced-code~1
   @Test func hashLinesInFencedCodeAreNotHeadings() throws {
     let notebook = "# Setup\n```sh\n# install deps\n```\n## Run\n"
     let outline = Outline(parsing: notebook)
@@ -255,7 +255,7 @@ struct OutlineTests {
     #expect(outline.headings.map(\.range) == [1...1, 4...4].map { range(of: $0, in: notebook) })
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func innermostHeadingHoldsTheOffset() {
     let notebook = introTasksNotes
     let outline = Outline(parsing: notebook)
@@ -270,13 +270,13 @@ struct OutlineTests {
     #expect(outline.clampedOffset(string.length) == string.length - 1)
   }
 
-  // [utest->req~heading-folding.disabled-without-heading~1]
+  // req~heading-folding.disabled-without-heading~1
   @Test func noHeadingHoldsTheTextBeforeTheFirstHeading() {
     let outline = Outline(parsing: introTasksNotes)
     #expect(outline.innermostHeading(at: 0) == nil)
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func topLevelHeadingsAreTheOnesNoHeadingOwns() {
     let outline = Outline(parsing: introTasksNotes)
     #expect(
@@ -284,7 +284,7 @@ struct OutlineTests {
         == [2...2, 5...5].map { range(of: $0, in: introTasksNotes) })
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func topLevelHeadingsDependOnOwnershipNotOnLevel() {
     let notebook = "## Unowned\nText.\n# Top\n### Deeper\n## Still under top\nBody.\n# Next\n"
     let outline = Outline(parsing: notebook)
@@ -293,7 +293,7 @@ struct OutlineTests {
         == [1...1, 3...3, 7...7].map { range(of: $0, in: notebook) })
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func topLevelHeadingsTakeOnePassOverTheHeadings() {
     let outline = Outline(parsing: String(repeating: "#\n", count: 20_000))
     let clock = ContinuousClock()

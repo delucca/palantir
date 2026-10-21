@@ -7,7 +7,8 @@ let usage = """
   Uses a running palantir like a person, from outside: menu items through the accessibility tree,
   keys, clicks and scrolls as system events, sent only while palantir is in front.
 
-    menus                      every menu bar item: path, enabled or disabled, press or not
+    menus                      every menu bar item: path, enabled or disabled, press or not,
+                               key equivalent or -
     menu <path>                presses a menu item, such as "View > Fold All"
     key [--system] <chord>...  presses keys, such as cmd+a down shift+pagedown
     type [--system] <text>     types text, a key event per character
@@ -69,8 +70,10 @@ func run(_ arguments: [String]) throws {
     try Arguments.noneLeft(arguments, for: command)
     for item in try MenuBar(of: palantir).items {
       print(
-        [item.title, item.isEnabled ? "enabled" : "disabled", item.canPress ? "press" : "no-press"]
-          .joined(separator: "\t"))
+        [
+          item.title, item.isEnabled ? "enabled" : "disabled", item.canPress ? "press" : "no-press",
+          item.keyEquivalent,
+        ].joined(separator: "\t"))
     }
   case "menu":
     guard arguments.count == 1 else { throw Usage("menu takes one path") }

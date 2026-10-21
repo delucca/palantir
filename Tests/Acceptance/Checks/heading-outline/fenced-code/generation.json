@@ -1,0 +1,135 @@
+{
+  "blockSha256" : "12416b67fdcca445229b931784f3d2882d31f7385f9e5c2b72b971003385cc97",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "ended" : "2026-10-21T08:43:46Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.49172980000000005,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "12416b67fdcca445229b931784f3d2882d31f7385f9e5c2b72b971003385cc97"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/logs/draft.jsonl",
+      "logSha256" : "b723cf4ade40be4bc3644c687a6101b1b2d6e7eb619510a88fcbd8386563677f",
+      "seconds" : 148.44907009601593,
+      "toolCalls" : [
+        "Bash: ls -la . work bin && cat rule.md && echo ---- && cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; cat rule.md; echo ----; cat format.md; echo ----; cat cli.md; echo ----; cat prompt.md; ls bin work tmp",
+        "Bash: python3 -I - <<'EOF'\nimport json\ntext = \"# Setup\\n```sh\\n# install deps\\n```\\n## Run\"\nD = 'def L: \"# Setup\\\\n```sh\\\\n# install deps\\\\n```\\\\n## Run\" | split(\"\\\\n\"); def off($n): [L | .[:$n - 1][] | length + 1] | add // 0; '\nN = '.opened.json.sections.notebook'\nO = '.outline.json.sections.notebook'\ncheck = {\n  \"format\": 1,\n  \"rule\": \"req~heading-outline.fenced-code~1\",\n  \"example\": \"a shell comment in a code block\",\n  \"files\": {\"setup.md\": text},\n  \"steps\": [\n    {\"line\": \"* Given a notebook whose line 1 is \\\"# Setup\\\", whose lines 2 to 4 are a fenced code block holding the line \\\"# install deps\\\", and whose line 5 is \\\"## Run\\\"\",\n     \"do\": [{\"launch\": {\"build\": \"debug\", \"inspector\": True}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"setup.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"opened\"}],\n     \"expect\": [\n       {\"that\": D + N + '.length == (L | join(\"\\\\n\") | length)', \"why\": \"palantir has the notebook open, its whole text\"},\n       {\"that\": N + '.folded == []', \"why\": \"nothing is folded before the outline is read\"}]},\n    {\"line\": \"* When palantir reads its outline\",\n     \"do\": [{\"drive\": [\"menu\", \"View > Fold All\"]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"outline\"}],\n     \"expect\": []},\n    {\"line\": \"* Then its only headings are on lines 1 and 5\",\n     \"do\": [],\n     \"expect\": [\n       {\"that\": D + 'any(' + O + '.folded[]; .offset == off(1) and (.line | rtrimstr(\"\\\\n\")) == L[0])', \"why\": \"line 1, \\\"# Setup\\\", is a heading: Fold All folds it\"},\n       {\"that\": D + 'any(' + O + '.folded[]; .offset == off(5) and (.line | rtrimstr(\"\\\\n\")) == L[4])', \"why\": \"line 5, \\\"## Run\\\", after the code block, is a heading: Fold All folds it\"},\n       {\"that\": D + 'all(' + O + '.folded[]; .offset == off(1) or .offset == off(5))', \"why\": \"no other line is a heading, not \\\"# install deps\\\" on line 3 inside the code block\"}]},\n    {\"line\": \"* And \\\"# Setup\\\" owns lines 2 to 5\",\n     \"do\": [],\n     \"expect\": [\n       {\"that\": D + 'any(' + O + '.folded[]; .offset == off(1)) and [' + O + '.drawn[].offset] == [off(1)]', \"why\": \"with \\\"# Setup\\\" folded the window shows line 1 and hides lines 2 to 5\"}]}\n  ]\n}\nopen(\"work/check.json\", \"w\").write(json.dumps(check, indent=2, ensure_ascii=False) + \"\\n\")\nEOF\nbin/palantir-accept lint work/check.json rule.md",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; command -v jq && jq -n 'def L: \"# Setup\\n```sh\\n# install deps\\n```\\n## Run\" | split(\"\\n\"); def off($n): [L | .[:$n - 1][] | length + 1] | add // 0; [range(1;6) | off(.)], (L|join(\"\\n\")|length)' -c"
+      ],
+      "turns" : 6
+    },
+    {
+      "costUSD" : 0.47391780000000006,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "0eb8c6951d4fb66a3b045916a54986a664a84d8458e491cece2cfc7cf9d622f6",
+        "replay.json" : "f30e4353a89a72abb62575e8b3ae99df69d1ae0e0256ca56a7c8582b4a15274e",
+        "rule.md" : "12416b67fdcca445229b931784f3d2882d31f7385f9e5c2b72b971003385cc97"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/logs/revise-1.jsonl",
+      "logSha256" : "6f3cf77312a42105213c55d324244e5c4e0e0e60533381e1f5c1167d2e10c5a2",
+      "reason" : "replay",
+      "seconds" : 135.49195098876953,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && cat work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; ls -la work bin tmp; echo ---RULE; cat rule.md; echo ---PROMPT; cat prompt.md; echo ---CHECK; cat work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; cat cli.md; echo ---FORMAT; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; cat replay.json; echo ---RECORD; cat record.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; ls -laR tmp; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; bin/palantir-accept --help 2>&1 | head -40",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft/work/answer.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 8
+    },
+    {
+      "costUSD" : 0.43349000000000004,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "50ba5ba8974fafb300d7af6d457c36559103f1fd59af3b0f0ab4db05acb55953",
+        "replay.json" : "5e125b6b09bda5d5a3a76bf3000e7df6b94d8d1701799916e09437a0c1450d14",
+        "rule.md" : "12416b67fdcca445229b931784f3d2882d31f7385f9e5c2b72b971003385cc97"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/logs/revise-2.jsonl",
+      "logSha256" : "b15f64539773cd94c6174f6a34daaa3f1fb67758e200695a622f46b2b7051d1e",
+      "reason" : "replay",
+      "seconds" : 117.93320500850677,
+      "toolCalls" : [
+        "Bash: ls -la . work bin 2>/dev/null; echo ---; cat rule.md; echo ---; cat work/check.json",
+        "Bash: cat prompt.md; echo ---; cat cli.md; echo ---; cat format.md",
+        "Bash: cat replay.json; echo ---; cat record.json; echo; ls -la tmp work; ls -la tmp/*",
+        "Bash: ls -la bin; file bin/*; find tmp -type f | head; bin/palantir-accept lint work/check.json rule.md; echo \"exit=$?\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft/work/answer.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit=$?\"; shasum -a 256 work/check.json"
+      ],
+      "turns" : 7
+    },
+    {
+      "costUSD" : 0.7990086000000001,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "1e721dc3044554399bfdd30a2c12882db1a1fb2087c0f5b3cda04355d6699a7e",
+        "replay.json" : "2151e2b94c85f34bdc2b0f0a31356267a01499b63b6c64e81cbacdc90daa219a",
+        "rule.md" : "12416b67fdcca445229b931784f3d2882d31f7385f9e5c2b72b971003385cc97"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/logs/revise-3.jsonl",
+      "logSha256" : "03bf04b96e4fd5f286d300013ec6ac805e7b9f6b03aeec98cd91bbf930c8b27c",
+      "reason" : "replay",
+      "seconds" : 246.14750707149506,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat cli.md; echo ----; cat format.md; echo ----; cat prompt.md",
+        "Bash: ls -la work tmp tmp/* bin; cat work/check.json; echo ----; cat replay.json",
+        "Bash: cat record.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; bin/palantir-accept --help 2>&1 | head -40; ls -la tmp/claude-501/*/",
+        "Bash: find tmp -maxdepth 6 | head -50",
+        "Bash: ls -laR tmp 2>&1 | head -40",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/draft/work/answer.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\""
+      ],
+      "turns" : 10
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+
+  ],
+  "mutants" : [
+
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.fenced-code-1792571540/replays/base-4"
+  },
+  "rule" : "req~heading-outline.fenced-code~1",
+  "started" : "2026-10-21T08:32:20Z"
+}

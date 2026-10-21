@@ -1,0 +1,33 @@
+{
+  "checkSha256" : "53dc311d6c0ac7f9bbac47904753fa7d3384ace44bdede0066e50af64aee1da7",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook is open with every heading folded",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user chooses View > Unfold All",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the view shows the whole text of the file",
+      "problems" : [
+        {
+          "at" : "$d == $lines or $d == $lines + [{offset: $n, text: \"\"}]",
+          "problem" : "This requires every paragraph to appear in one viewport sample. A smaller window could correctly unfold the file while requiring scrolling, causing this expectation to fail. This is advisory because it depends on another window size; no coverage gap is established for this short fixture in the check's own situation.",
+          "severity" : "advisory"
+        }
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.unfold-all~1",
+  "summary" : "No blocking problems. The check establishes folded headings, invokes Unfold All, and checks the complete fixture text, offsets, fold state, and paragraph spacing.",
+  "verdict" : "faithful"
+}

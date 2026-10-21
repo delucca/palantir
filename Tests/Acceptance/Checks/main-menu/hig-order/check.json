@@ -1,0 +1,18 @@
+{
+  "format": 1,
+  "rule": "req~main-menu.hig-order~1",
+  "example": "a fresh launch",
+  "files": {},
+  "steps": [
+    {"line": "* When palantir launches",
+     "do": [{"launch": {"build": "debug", "inspector": true}, "as": "launched"}],
+     "expect": [{"that": "(.launched.pid | type) == \"number\" and .launched.pid == .pid",
+                 "why": "a new palantir started and is the one the next steps read"}]},
+    {"line": "* Then the menus after the app menu are File, Edit, View, Window and Help",
+     "do": [{"drive": ["menus"], "as": "menus"}],
+     "expect": [{"that": "(.menus.items | map(.path)) as $p | [$p[] | select(contains(\" > \") | not)] as $top | (if ($top | length) > 0 then $top else reduce ($p[] | split(\" > \")[0]) as $t ([]; if length > 0 and .[-1] == $t then . else . + [$t] end) end) as $menus | ($menus | index(\"palantir\")) != null",
+                 "why": "the menu bar holds palantir's app menu"},
+                {"that": "(.menus.items | map(.path)) as $p | [$p[] | select(contains(\" > \") | not)] as $top | (if ($top | length) > 0 then $top else reduce ($p[] | split(\" > \")[0]) as $t ([]; if length > 0 and .[-1] == $t then . else . + [$t] end) end) as $menus | ($menus | index(\"palantir\")) as $i | $i != null and $menus[$i + 1:] == [\"File\", \"Edit\", \"View\", \"Window\", \"Help\"]",
+                 "why": "the menus after the app menu are exactly File, Edit, View, Window and Help, in that order"}]}
+  ]
+}

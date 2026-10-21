@@ -1,0 +1,204 @@
+{
+  "app" : "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/checks/049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398.json",
+  "checkSha256" : "049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~notebook-window.read-only~1",
+  "seconds" : 9.405619025230408,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.38630902767181396
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5907570123672485,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/replays/base-3/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.265653014183044,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/replays/base-3/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06687092781066895,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.012395977973937988,
+          "stderr" : ""
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "fixture",
+          "seconds" : 0.0019479990005493164
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.length == .fixture.size",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] | .offset == 0 and .text == \"Alpha line one.\"",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given notebook.md is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "85",
+            "8",
+            "--count",
+            "3"
+          ],
+          "exit" : 0,
+          "seconds" : 0.640625,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06208395957946777,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "selected",
+          "seconds" : 0.006814002990722656,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "type",
+            "x"
+          ],
+          "exit" : 0,
+          "seconds" : 0.12867200374603271,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.060270071029663086,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "typed",
+          "seconds" : 0.007248044013977051,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] as $l | .selected.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the user selects its first line and types \"x\"",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.drawn[0] as $l | .typed.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then the first line is still selected",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".typed.json.sections.notebook.length == .opened.json.sections.notebook.length",
+          "value" : "true"
+        },
+        {
+          "that" : "def whole: .length as $n | [.drawn[] | select(.offset < $n)] | if length == 1 and .[0].offset == 0 and (.[0].text | length) == $n then .[0].text else null end; (.opened.json.sections.notebook | whole) as $before | $before != null and (.typed.json.sections.notebook | whole) == $before",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And the text in the view is unchanged",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

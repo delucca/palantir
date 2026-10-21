@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/Model/Folds.swift b/Sources/Notebook/Model/Folds.swift
+index 0ddefa7..ec887f9 100644
+--- a/Sources/Notebook/Model/Folds.swift
++++ b/Sources/Notebook/Model/Folds.swift
+@@ -33,7 +33,7 @@ package struct Folds: Equatable, Sendable {
+   }
+ 
+   package mutating func unfold(_ heading: OutlineHeading) {
+-    headingStarts.remove(heading.range.location)
++    headingStarts.remove(heading.range.location + 1)
+   }
+ 
+   package mutating func foldAll() {

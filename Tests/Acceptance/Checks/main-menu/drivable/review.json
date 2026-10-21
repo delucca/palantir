@@ -1,0 +1,36 @@
+{
+  "checkSha256" : "b3c82bac0d9094c24290e10f96cb2ad22b74d5d4ef390ec1fe4cd6987ef55701",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* When palantir launches",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then every menu bar item except separators shows in the accessibility tree with its title and a press action",
+      "problems" : [
+        {
+          "at" : "[.menus.items[] | select(separator | not)] | length > 0",
+          "problem" : "This establishes that some items are exposed, but cannot detect individual menu items missing entirely from accessibility. Neither documented tool supplies an independent menu inventory.",
+          "severity" : "advisory"
+        },
+        {
+          "at" : "def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\")",
+          "problem" : "An untitled, disabled command without a shortcut or press action can be indistinguishable from a separator and escape validation. The documented tools expose no separator identity.",
+          "severity" : "advisory"
+        },
+        {
+          "at" : "titles | all(blank | not)",
+          "problem" : "This verifies nonblank exposed titles, not that they match independently known titles. The tools provide no independent title source, so an incorrect but nonblank accessibility title cannot be detected.",
+          "severity" : "advisory"
+        }
+      ]
+    }
+  ],
+  "rule" : "req~main-menu.drivable~1",
+  "summary" : "No blocking problems found. The check launches palantir, reads menus while it is active, and validates exposed titles and press actions. Remaining gaps concern information the documented tools cannot independently observe.",
+  "verdict" : "faithful"
+}

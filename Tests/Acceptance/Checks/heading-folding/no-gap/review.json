@@ -1,0 +1,40 @@
+{
+  "checkSha256" : "48518772d5bde8c4f3aa6f26218388dcc1fade659273ce1fc6949b3e61a83315",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook taller than the window is open, scrolled so that \"## Fix the reaper\" is the top line",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user folds \"## Fix the reaper\"",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the next visible line starts right below \"## Fix the reaper\"",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And \"## Fix the reaper\" is still the top line",
+      "problems" : [
+        {
+          "at" : "expect[1]: comparison of .beforeFold, .folded, .below and .still",
+          "problem" : "Movement that occurs and reverses entirely between observations can escape detection. This is a sampling limitation of the documented tools, not a blocking defect.",
+          "severity" : "advisory"
+        }
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.no-gap~1",
+  "summary" : "No blocking defects found. The check establishes the example, verifies folding and adjacency, and compares the heading’s screen position using recorded geometry.",
+  "verdict" : "faithful"
+}

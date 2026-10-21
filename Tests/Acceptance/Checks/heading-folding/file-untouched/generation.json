@@ -1,0 +1,120 @@
+{
+  "blockSha256" : "dea80ced02aee88ed4c4768868882935c2128d1751f715baa3ac84dd96cec36d",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "74454185bd55a351484157478227048aa34c697e931eb482cd05feb5e223cb71",
+  "ended" : "2026-10-21T10:30:29Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.488792,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "dea80ced02aee88ed4c4768868882935c2128d1751f715baa3ac84dd96cec36d"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/logs/draft.jsonl",
+      "logSha256" : "b3400570773359c11ea30a0d0c205ca21e0b0d5fa1a1aebfa791136197e683b4",
+      "seconds" : 147.90571701526642,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && cat cli.md && cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cat rule.md; echo ----; cat cli.md; echo ----; cat format.md; echo ----; ls bin work tmp",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cat prompt.md; echo ----; head -c 600 bin/palantir-accept | cat -v | head -30",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; python3 -I -c '\nt = \"# Field notes\\nTrailing spaces end this line.  \\n\\n## Morning\\nA heron stood in the reeds.\\n\\n### Details\\nWind\\tcalm, Café open.\\n\\n## Evening\\nRain, then \\U0001F327 a clear sky.\\n\\n\\n# Appendix\\nThe last line has no newline\"\nprint(len(t.encode(\"utf-16-le\"))//2, len(t.encode()))\n'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; which jq iconv wc; printf '# Field notes\\nTrailing spaces end this line.  \\n\\n## Morning\\nA heron stood in the reeds.\\n\\n### Details\\nWind\\tcalm, Cafe\\xcc\\x81 open.\\n\\n## Evening\\nRain, then \\xf0\\x9f\\x8c\\xa7 a clear sky.\\n\\n\\n# Appendix\\nThe last line has no newline' | iconv -f UTF-8 -t UTF-16LE | wc -c",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft/work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 8
+    },
+    {
+      "costUSD" : 0.6379886000000001,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "06c89ecc93190f3418946626397695d748f9a625b16215357020b9f95e01fe38",
+        "rule.md" : "dea80ced02aee88ed4c4768868882935c2128d1751f715baa3ac84dd96cec36d"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/logs/revise-1.jsonl",
+      "logSha256" : "f4384d9c3c6301bc410dc83095a06ebcda56a035c1c7ae31095d9c559568b734",
+      "reason" : "review",
+      "seconds" : 193.3990969657898,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; ls -la work bin tmp; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; python3 -I -c '\nimport json,sys\nc=json.load(open(\"work/check.json\"))\nt=c[\"files\"][\"notebook.md\"]\nprint(\"utf16\", len(t.encode(\"utf-16-le\"))//2, \"bytes\", len(t.encode()))\noff=0\nlines=[]\nfor l in t.split(\"\\n\"):\n    lines.append({\"offset\":off,\"text\":l})\n    off+=len(l.encode(\"utf-16-le\"))//2+1\nprint(json.dumps(lines, ensure_ascii=False))\nprint([hex(ord(ch)) for ch in \"Café\"], any(ord(ch)==0x301 for ch in t))\n'; bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; which jq; jq --version; jq -c '.files[\"notebook.md\"] as $t | def u16: explode | map(if . > 65535 then 2 else 1 end) | add // 0; {u16: ($t|u16), bytes: ($t|utf8bytelength), decomposed: ($t|explode|any(. == 769)), lines: (reduce ($t|split(\"\\n\"))[] as $l ({off:0, out:[]}; .out += [{offset:.off, text:$l}] | .off += (($l|u16)+1)) | .out)}' work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cp work/check.json tmp/claude-501/check.orig.json; jq -r -f /dev/stdin tmp/claude-501/check.orig.json > tmp/claude-501/check.new.json <<'EOF'\ndef u16: explode | map(if . > 65535 then 2 else 1 end) | add // 0;\ndef lines_of: reduce (split(\"\\n\"))[] as $l ({off: 0, out: []}; .out += [{offset: .off, text: $l}] | .off += (($l | u16) + 1)) | .out;\ndef fmt: if type == \"object\" then \"{\" + (to_entries | map((.key | tojson) + \": \" + (.value | fmt)) | join(\", \")) + \"}\"\n         elif type == \"array\" then \"[\" + (map(fmt) | join(\", \")) + \"]\"\n         else tojson end;\ndef block($items; $indent): if ($items | length) == 0 then \"[]\" else \"[\\n\" + ($items | map($indent + \"  \" + fmt) | join(\",\\n\")) + \"\\n\" + $indent + \"]\" end;\n(.files[\"notebook.md\"] | lines_of) as $lines\n| {\"fold1\": \"afterFold1\", \"unfold1\": \"afterUnfold1\", \"fold2\": \"afterFold2\", \"unfold2\": \"afterUnfold2\"} as $disk\n| .steps[0].expect += [{\n    \"that\": (($lines | fmt) + \" as $lines | .opened.json.sections.notebook.drawn as $drawn | ($drawn | any(.text != \\\"\\\")) and ($drawn | all(. as $p | $lines | any(.offset == $p.offset and .text == ($p.text | rtrimstr(\\\"\\\\n\\\")))))\"),\n    \"why\": \"the paragraphs the window shows are notebook.md's own lines, each at its own offset\"}]\n| .steps[1].do |= [.[] | ., (if (.inspect == [\"state\"]) and ($disk[.as] != null) then {\"sleep\": 3}, {\"file\": \"notebook.md\", \"as\": $disk[.as]} else empty end)]\n| .steps[2].expect = [\n    {\"that\": \".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.size == $b.size)\", \"why\": \"after every fold and every unfold the file on disk has the same number of bytes as before the folds\"},\n    {\"that\": \".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.sha256 == $b.sha256)\", \"why\": \"after every fold and every unfold the file on disk has the same bytes as before the folds\"}]\n| \"{\\n\"\n  + \"  \\\"format\\\": \\(.format | tojson),\\n\"\n  + \"  \\\"rule\\\": \\(.rule | tojson),\\n\"\n  + \"  \\\"example\\\": \\(.example | tojson),\\n\"\n  + \"  \\\"files\\\": {\\n\" + (.files | to_entries | map(\"    \\(.key | tojson): \\(.value | tojson)\") | join(\",\\n\")) + \"\\n  },\\n\"\n  + \"  \\\"steps\\\": [\\n\"\n  + (.steps | map(\"    {\\n      \\\"line\\\": \\(.line | tojson),\\n      \\\"do\\\": \" + block(.do; \"      \") + \",\\n      \\\"expect\\\": \" + block(.expect; \"      \") + \"\\n    }\") | join(\",\\n\"))\n  + \"\\n  ]\\n}\"\nEOF\necho \"exit $?\"; diff tmp/claude-501/check.orig.json tmp/claude-501/check.new.json; jq -n --slurpfile a tmp/claude-501/check.orig.json --slurpfile b tmp/claude-501/check.new.json '$a[0].files == $b[0].files'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cat work/check.json > tmp/claude-501/check.orig.json && echo copied; ls -la tmp/claude-501; echo \"TMPDIR=$TMPDIR\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; jq -r -f /dev/stdin tmp/claude-501/check.orig.json > tmp/claude-501/check.new.json <<'EOF'\ndef u16: explode | map(if . > 65535 then 2 else 1 end) | add // 0;\ndef lines_of: reduce (split(\"\\n\"))[] as $l ({off: 0, out: []}; .out += [{offset: .off, text: $l}] | .off += (($l | u16) + 1)) | .out;\ndef fmt: if type == \"object\" then \"{\" + (to_entries | map((.key | tojson) + \": \" + (.value | fmt)) | join(\", \")) + \"}\"\n         elif type == \"array\" then \"[\" + (map(fmt) | join(\", \")) + \"]\"\n         else tojson end;\ndef block($items; $indent): if ($items | length) == 0 then \"[]\" else \"[\\n\" + ($items | map($indent + \"  \" + fmt) | join(\",\\n\")) + \"\\n\" + $indent + \"]\" end;\n(.files[\"notebook.md\"] | lines_of) as $lines\n| {\"fold1\": \"afterFold1\", \"unfold1\": \"afterUnfold1\", \"fold2\": \"afterFold2\", \"unfold2\": \"afterUnfold2\"} as $disk\n| .steps[0].expect += [{\n    \"that\": (($lines | fmt) + \" as $lines | .opened.json.sections.notebook.drawn as $drawn | ($drawn | any(.text != \\\"\\\")) and ($drawn | all(. as $p | $lines | any(.offset == $p.offset and .text == ($p.text | rtrimstr(\\\"\\\\n\\\")))))\"),\n    \"why\": \"the paragraphs the window shows are notebook.md's own lines, each at its own offset\"}]\n| .steps[1].do |= [.[] | ., (if (.inspect == [\"state\"]) and ($disk[.as] != null) then {\"sleep\": 3}, {\"file\": \"notebook.md\", \"as\": $disk[.as]} else empty end)]\n| .steps[2].expect = [\n    {\"that\": \".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.size == $b.size)\", \"why\": \"after every fold and every unfold the file on disk has the same number of bytes as before the folds\"},\n    {\"that\": \".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.sha256 == $b.sha256)\", \"why\": \"after every fold and every unfold the file on disk has the same bytes as before the folds\"}]\n| \"{\\n\"\n  + \"  \\\"format\\\": \\(.format | tojson),\\n\"\n  + \"  \\\"rule\\\": \\(.rule | tojson),\\n\"\n  + \"  \\\"example\\\": \\(.example | tojson),\\n\"\n  + \"  \\\"files\\\": {\\n\" + (.files | to_entries | map(\"    \\(.key | tojson): \\(.value | tojson)\") | join(\",\\n\")) + \"\\n  },\\n\"\n  + \"  \\\"steps\\\": [\\n\"\n  + (.steps | map(\"    {\\n      \\\"line\\\": \\(.line | tojson),\\n      \\\"do\\\": \" + block(.do; \"      \") + \",\\n      \\\"expect\\\": \" + block(.expect; \"      \") + \"\\n    }\") | join(\",\\n\"))\n  + \"\\n  ]\\n}\"\nEOF\necho \"exit $?\"; diff tmp/claude-501/check.orig.json tmp/claude-501/check.new.json; jq -n --slurpfile a tmp/claude-501/check.orig.json --slurpfile b tmp/claude-501/check.new.json '$a[0].files == $b[0].files'",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft/tmp/claude-501; N=check.new.json\njq -r '.steps[0].expect[1].that' $N > given.jq\njq -r '.steps[2].expect[0].that' $N > then_size.jq\njq -r '.steps[2].expect[1].that' $N > then_sha.jq\njq '.steps[0].expect[1].that | explode | any(. == 769)' $N\n# drawn records built from the fixture itself\nL='.files[\"notebook.md\"] as $t | def u16: explode | map(if . > 65535 then 2 else 1 end) | add // 0; reduce ($t|split(\"\\n\"))[] as $l ({off:0,out:[]}; .out += [{offset:.off, text:$l, rect:{x:25,y:0,width:10,height:16}}] | .off += (($l|u16)+1)) | .out'\nfor c in \\\n  'all:.' \\\n  'firstfive:.[:5]' \\\n  'scrolled:.[6:]' \\\n  'withnewlines:map(if .offset < 175 then .text += \"\\n\" else . end)' \\\n  'nfc_cafe:map(if .offset == 100 then .text = \"Wind\\tcalm, Café open.\" else . end)' \\\n  'wrongtext:map(if .offset == 59 then .text = \"A heron stood in the weeds.\" else . end)' \\\n  'shifted:map(.offset += 1)' \\\n  'blanksonly:map(select(.text == \"\"))' \\\n  'empty:[]'; do\n  name=${c%%:*}; f=${c#*:}\n  jq \"{opened:{json:{sections:{notebook:{length:203, drawn:($L | $f)}}}}}\" $N > rec.json\n  printf '%-14s %s\\n' \"$name\" \"$(jq -f given.jq rec.json 2>&1)\"\ndone\necho '--- then'\nF='{sha256:\"aa\", size:206, mtime:1}'\nfor c in 'same:{}' 'unfold1changed:{afterUnfold1:{sha256:\"bb\", size:206, mtime:2}}' 'unfold2size:{afterUnfold2:{sha256:\"cc\", size:207, mtime:2}}' 'missing:{afterFold2:null}'; do\n  name=${c%%:*}; f=${c#*:}\n  jq -n \"{before:$F, afterFold1:$F, afterUnfold1:$F, afterFold2:$F, afterUnfold2:$F, after:$F} + $f\" > rec2.json\n  printf '%-14s size=%s sha=%s\\n' \"$name\" \"$(jq -f then_size.jq rec2.json 2>&1)\" \"$(jq -f then_sha.jq rec2.json 2>&1)\"\ndone",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft; cat tmp/claude-501/check.new.json > work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/draft/work/answer.md"
+      ],
+      "turns" : 12
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+    "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "e69d24db2970a7126ca2aba42bf33b9629176574616b2cde8e435d40f89e68db"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "67990a8bf03862746f7cb14408a70ba81bf46135b631d6a6103c75d8cd4922de",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "dea80ced02aee88ed4c4768868882935c2128d1751f715baa3ac84dd96cec36d",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "4f7a1235efd516985d064d771b5c19688c92ff4940c6a2316696d850146dd241",
+      "seconds" : 85.27139508724213,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "74454185bd55a351484157478227048aa34c697e931eb482cd05feb5e223cb71",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "dea80ced02aee88ed4c4768868882935c2128d1751f715baa3ac84dd96cec36d",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "ecde83b881f875f4d0cfa0cfa046a0c25a1c690f7f24cc53c280643208c3cd15",
+      "seconds" : 104.99873006343842,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "bfaae36862dd824d86fa88f18cb47e0ecf8659ccea6d7faf5d8c2e030d5baced",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/mutant-1-replay-0",
+      "seconds" : 26.305472016334534,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/replays/base-2"
+  },
+  "rule" : "req~heading-folding.file-untouched~1",
+  "started" : "2026-10-21T10:19:48Z"
+}

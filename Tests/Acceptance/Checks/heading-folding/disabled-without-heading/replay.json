@@ -1,0 +1,202 @@
+{
+  "app" : "/Users/admin/acceptance/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/admin/acceptance/work/12/check.json",
+  "checkSha256" : "5e01ae88d57566a195df4e852a4db2f92b405e3c5299b08ff98a6dcea0dd2d7e",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.disabled-without-heading~1",
+  "seconds" : 9.930882930755615,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.4233529567718506
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.7996430397033691,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/admin/acceptance/work/12/rec/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.508818984031677,
+          "stderr" : "palantir-drive: chose /Users/admin/acceptance/work/12/rec/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0637969970703125,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.007444024085998535,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.length == (\"Intro.\\n# Tasks\" | length)",
+          "value" : "true"
+        },
+        {
+          "that" : "[.opened.json.sections.notebook.drawn[].text] == [\"Intro.\", \"# Tasks\"]",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with the lines \"Intro.\" and \"# Tasks\" is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "49.1083984375",
+            "8"
+          ],
+          "exit" : 0,
+          "seconds" : 0.3561309576034546,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0628429651260376,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "selected",
+          "seconds" : 0.008348941802978516,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".selected.json.sections.notebook as $n | ($n.drawn[] | select(.text == \"Intro.\") | .offset) as $o | $n.selection.location >= $o and $n.selection.location + $n.selection.length <= $o + (\"Intro.\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And the selection is in \"Intro.\"",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "activate"
+          ],
+          "exit" : 0,
+          "seconds" : 0.1442779302597046,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View"
+          ],
+          "exit" : 0,
+          "name" : "view",
+          "seconds" : 0.04286801815032959,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".view.exit == 0",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the user opens the View menu",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.08616805076599121,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "restore"
+          ],
+          "exit" : 0,
+          "seconds" : 0.10858404636383057,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Fold Heading\")] | (length == 1 and all(.enabled == false))",
+          "value" : "true"
+        },
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Unfold Heading\")] | (length == 1 and all(.enabled == false))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then Fold Heading and Unfold Heading are disabled",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/Users/admin/acceptance/bin/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

@@ -1,0 +1,5 @@
+{
+  "rule" : "req~inspector.screenshots~1",
+  "run" : "inspector.screenshots-1792571909",
+  "stage" : "replay"
+}

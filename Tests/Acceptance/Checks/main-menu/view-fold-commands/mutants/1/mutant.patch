@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookWindowController.swift b/Sources/Notebook/UI/NotebookWindowController.swift
+index 05c35a1..77e1f19 100644
+--- a/Sources/Notebook/UI/NotebookWindowController.swift
++++ b/Sources/Notebook/UI/NotebookWindowController.swift
+@@ -21,7 +21,7 @@ package final class NotebookWindowController: NSWindowController {
+       ("Unfold Heading", #selector(NotebookTextView.unfoldHeading(_:))),
+       ("Fold All", #selector(NotebookTextView.foldAll(_:))),
+       ("Unfold All", #selector(NotebookTextView.unfoldAll(_:))),
+-    ].map { NSMenuItem(title: $0, action: $1, keyEquivalent: "") }
++    ].map { NSMenuItem(title: $0, action: $1, keyEquivalent: $0 == "Fold All" ? "l" : "") }
+   }
+ 
+   /// Makes the window, empty until a notebook is opened.

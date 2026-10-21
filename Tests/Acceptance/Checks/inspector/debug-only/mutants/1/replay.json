@@ -1,0 +1,94 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/r13-debug-only/mutant-1-build/palantir.app",
+  "appSha256" : "fa535f2ce7a47bff90ea02d6b0d51654695a71f01f95f7b9e0fbef4e14d06346",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/r13-debug-only/checks/bd6848f2e6ef9cf10d1bff6a790db61db6408f3d16da553eb9344df402cecbff.json",
+  "checkSha256" : "bd6848f2e6ef9cf10d1bff6a790db61db6408f3d16da553eb9344df402cecbff",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 1,
+    "that" : ".bare.pid as $p | (.listed.exit == 0 or .listed.exit == 2) and ((.listed.sockets // []) | all((.pid | tostring) != ($p | tostring)))",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~inspector.debug-only~1",
+  "seconds" : 2.758181095123291,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "no flag"
+          ],
+          "name" : "bare",
+          "seconds" : 0.5575380325317383
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When a debug build of palantir launches without the inspector launch flag",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "2.0"
+          ],
+          "seconds" : 2.0050320625305176
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "list"
+          ],
+          "exit" : 0,
+          "name" : "listed",
+          "seconds" : 0.01934504508972168,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "probe",
+          "seconds" : 0.01669609546661377,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".bare.pid as $p | (.listed.exit == 0 or .listed.exit == 2) and ((.listed.sockets // []) | all((.pid | tostring) != ($p | tostring)))",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then it creates no inspector socket",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

@@ -1,0 +1,165 @@
+{
+  "blockSha256" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "ede1f30c50cf83d7b4ba14b3a583611ce31c4e6c8b0e8cb3fe7d09c4f15bb49f",
+  "ended" : "2026-10-21T12:31:27Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.7910766000000001,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/logs/draft.jsonl",
+      "logSha256" : "3e45ba9559a710ccd01f2c70b42da4352a847ba1c7c3252e8d97fc5881624718",
+      "seconds" : 253.93250596523285,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work && cat rule.md && echo ---- && cat format.md && echo ---- && cat cli.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat rule.md; echo ----; cat format.md; echo ----; cat cli.md; echo ----; cat prompt.md; ls -la work bin tmp",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; file bin/palantir-accept; bin/palantir-accept 2>&1 | head -30; bin/palantir-accept lint --help 2>&1 | head -30",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat > work/check.json <<'EOF'\n{\n  \"format\": 1,\n  \"rule\": \"req~heading-outline.owned-range~1\",\n  \"example\": \"nested headings\",\n  \"files\": {\"notebook.md\": \"# Tasks\\n## Fix the reaper\\nIt leaks.\\n## Ship bilbo\\n# Notes\\nDone.\"},\n  \"steps\": [\n    {\"line\": \"* Given a notebook with these lines\",\n     \"do\": [{\"launch\": {\"build\": \"debug\", \"inspector\": true}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"notebook.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"opened\"}],\n     \"expect\": [\n       {\"that\": \"[.opened.json.sections.notebook.drawn[].text] == [\\\"# Tasks\\\", \\\"## Fix the reaper\\\", \\\"It leaks.\\\", \\\"## Ship bilbo\\\", \\\"# Notes\\\", \\\"Done.\\\"]\",\n        \"why\": \"the notebook shows these six lines, in this order\"},\n       {\"that\": \".opened.json.sections.notebook | .drawn as $d | ($d[0].offset == 0) and ([range(1; $d | length) | $d[.].offset == $d[. - 1].offset + ($d[. - 1].text | length) + 1] | all) and (.length == $d[-1].offset + ($d[-1].text | length))\",\n        \"why\": \"each drawn paragraph is one whole line, so drawn[n - 1] is line n, and lines 1 to 6 are the whole file\"}]},\n    {\"line\": \"* When palantir reads its outline\",\n     \"do\": [{\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menus\"], \"as\": \"menus\"}],\n     \"expect\": []},\n    {\"line\": \"* Then the headings own these lines\",\n     \"do\": [{\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[3].rect | .x + .width / 2 | floor\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[3].rect | .y + .height / 2 | floor\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menu\", {\"jq\": \"[.menus.items[] | select(.path | split(\\\" > \\\") | last | test(\\\"fold\\\"; \\\"i\\\") and (test(\\\"unfold|all\\\"; \\\"i\\\") | not))] | min_by(.path | length) | .path\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"ship\"},\n            {\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[1].offset as $o | .ship.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .x + .width / 2 | floor\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[1].offset as $o | .ship.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .y + .height / 2 | floor\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menu\", {\"jq\": \"[.menus.items[] | select(.path | split(\\\" > \\\") | last | test(\\\"fold\\\"; \\\"i\\\") and (test(\\\"unfold|all\\\"; \\\"i\\\") | not))] | min_by(.path | length) | .path\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"fix\"},\n            {\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[4].offset as $o | .fix.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .x + .width / 2 | floor\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[4].offset as $o | .fix.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .y + .height / 2 | floor\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menu\", {\"jq\": \"[.menus.items[] | select(.path | split(\\\" > \\\") | last | test(\\\"fold\\\"; \\\"i\\\") and (test(\\\"unfold|all\\\"; \\\"i\\\") | not))] | min_by(.path | length) | .path\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"notes\"},\n            {\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[0].offset as $o | .notes.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .x + .width / 2 | floor\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[0].offset as $o | .notes.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .y + .height / 2 | floor\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"drive\": [\"menu\", {\"jq\": \"[.menus.items[] | select(.path | split(\\\" > \\\") | last | test(\\\"fold\\\"; \\\"i\\\") and (test(\\\"unfold|all\\\"; \\\"i\\\") | not))] | min_by(.path | length) | .path\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"tasks\"}],\n     \"expect\": [\n       {\"that\": \".opened.json.sections.notebook.drawn as $l | [.ship.json.sections.notebook.drawn[].offset] == [$l[].offset]\",\n        \"why\": \"## Ship bilbo owns no line: folding it hides none, lines 1 to 6 stay drawn\"},\n       {\"that\": \".opened.json.sections.notebook.drawn as $l | ([.fix.json.sections.notebook.drawn[].offset] == [$l[0, 1, 3, 4, 5].offset]) and any(.fix.json.sections.notebook.folded[]; .offset == $l[1].offset)\",\n        \"why\": \"## Fix the reaper owns line 3: folding it hides line 3 and stops at ## Ship bilbo, of the same level\"},\n       {\"that\": \".opened.json.sections.notebook.drawn as $l | ([.notes.json.sections.notebook.drawn[].offset] == [$l[0, 1, 3, 4].offset]) and any(.notes.json.sections.notebook.folded[]; .offset == $l[4].offset)\",\n        \"why\": \"# Notes owns line 6: folding it hides line 6, up to the end of the file\"},\n       {\"that\": \".opened.json.sections.notebook.drawn as $l | ([.tasks.json.sections.notebook.drawn[].offset] == [$l[0, 4].offset]) and any(.tasks.json.sections.notebook.folded[]; .offset == $l[0].offset)\",\n        \"why\": \"# Tasks owns lines 2 to 4: folding it hides them and stops at # Notes, of the same level, which stays drawn\"}]}\n  ]\n}\nEOF\nbin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; which jq && jq --version; mkdir -p tmp/mock && cat > tmp/mock/rec.json <<'EOF'\n{\"menus\":{\"items\":[{\"path\":\"View > Fold All\"},{\"path\":\"View > Unfold\"},{\"path\":\"View > Fold\"},{\"path\":\"View > Unfold All\"}]},\n \"opened\":{\"json\":{\"sections\":{\"notebook\":{\"length\":66,\"drawn\":[\n {\"offset\":0,\"text\":\"# Tasks\",\"rect\":{\"x\":25,\"y\":0,\"width\":60,\"height\":32}},\n {\"offset\":8,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":32,\"width\":140,\"height\":24}},\n {\"offset\":26,\"text\":\"It leaks.\",\"rect\":{\"x\":25,\"y\":56,\"width\":60,\"height\":16}},\n {\"offset\":36,\"text\":\"## Ship bilbo\",\"rect\":{\"x\":25,\"y\":72,\"width\":100,\"height\":24}},\n {\"offset\":50,\"text\":\"# Notes\",\"rect\":{\"x\":25,\"y\":96,\"width\":60,\"height\":32}},\n {\"offset\":58,\"text\":\"Done.\",\"rect\":{\"x\":25,\"y\":128,\"width\":40,\"height\":16}}]}}}},\n \"fix\":{\"json\":{\"sections\":{\"notebook\":{\"folded\":[{\"offset\":8}],\"drawn\":[{\"offset\":0},{\"offset\":8},{\"offset\":36},{\"offset\":50},{\"offset\":58}]}}}}}\nEOF\nprintf '# Tasks\\n## Fix the reaper\\nIt leaks.\\n## Ship bilbo\\n# Notes\\nDone.' | wc -c\njq -r '[.menus.items[] | select(.path | split(\" > \") | last | test(\"fold\"; \"i\") and (test(\"unfold|all\"; \"i\") | not))] | min_by(.path | length) | .path' tmp/mock/rec.json\njq '.opened.json.sections.notebook | .drawn as $d | ($d[0].offset == 0) and ([range(1; $d | length) | $d[.].offset == $d[. - 1].offset + ($d[. - 1].text | length) + 1] | all) and (.length == $d[-1].offset + ($d[-1].text | length))' tmp/mock/rec.json\njq '.opened.json.sections.notebook.drawn as $l | ([.fix.json.sections.notebook.drawn[].offset] == [$l[0, 1, 3, 4, 5].offset]) and any(.fix.json.sections.notebook.folded[]; .offset == $l[1].offset)' tmp/mock/rec.json\njq -r '.opened.json.sections.notebook.drawn[1].offset as $o | .opened.json.sections.notebook.drawn[] | select(.offset == $o) | .rect | .y + .height / 2 | floor' tmp/mock/rec.json\nrm -r tmp/mock",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; echo '{\"opened\":{\"json\":{\"sections\":{\"notebook\":{\"length\":63,\"drawn\":[{\"offset\":0,\"text\":\"# Tasks\"},{\"offset\":8,\"text\":\"## Fix the reaper\"},{\"offset\":26,\"text\":\"It leaks.\"},{\"offset\":36,\"text\":\"## Ship bilbo\"},{\"offset\":50,\"text\":\"# Notes\"},{\"offset\":58,\"text\":\"Done.\"}]}}}}}' | jq '.opened.json.sections.notebook | .drawn as $d | ($d[0].offset == 0) and ([range(1; $d | length) | $d[.].offset == $d[. - 1].offset + ($d[. - 1].text | length) + 1] | all) and (.length == $d[-1].offset + ($d[-1].text | length))'; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 7
+    },
+    {
+      "costUSD" : 0.9061954000000001,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "d72b4772bdee9d17267feb8cd2d48801147566f6334256df7f268df4c9b4d50a",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/logs/revise-1.jsonl",
+      "logSha256" : "5e7a857bd86f7d96d5daf2b805691678cc772f72a1ce31a30e329fa0e9bac3f9",
+      "reason" : "review",
+      "seconds" : 263.2890200614929,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; ls bin work tmp; echo ----; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; head -c 600 bin/palantir-accept; echo; file bin/palantir-accept; ls tmp/mock tmp/claude-501 2>&1 | head; shasum -a 256 work/check.json",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft/work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; which jq; jq --version; head -c 400 tmp/mock/rec.json",
+        "Bash: mkdir -p /tmp/simchk && cd /tmp/simchk && cat > sim.jq <<'EOF'\n# builds a record for a palantir whose fold of heading H hides the lines in own[H]\ndef line($i): {offset: ([0,8,26,36,50,58][$i]), text: ([\"# Tasks\",\"## Fix the reaper\",\"It leaks.\",\"## Ship bilbo\",\"# Notes\",\"Done.\"][$i]), rect: {x: 25, y: ($i*20), width: 60, height: 20}};\ndef st($hidden; $folded; $sel): {json: {sections: {notebook: {length: 63, drawn: [range(6) | select(. as $i | $hidden | index($i) | not) | line(.)], folded: [$folded[] | {offset: line(.).offset, line: line(.).text}], selection: {location: $sel, length: 0}}}}};\ndef rec($own; $shipexit; $shipenabled):\n  {menus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:\"enabled\"},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   opened: st([]; []; 0),\n   tasks: st($own[0]; [0]; 2),\n   fixbase: st([]; []; 0), fix: st($own[1]; [1]; 10),\n   shipbase: st([]; []; 0), atship: st([]; []; 42),\n   shipmenus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:$shipenabled},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   shipfold: {exit: $shipexit}, ship: st($own[3]; (if $shipexit == 0 then [3] else [] end); 42),\n   notesbase: st([]; []; 0), notes: st($own[4]; [4]; 52)};\nEOF\nCHK=/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft/work/check.json\nrun() { # $1 label, $2 own, $3 shipexit, $4 shipenabled\n  jq -n -c -L . \"include \\\"sim\\\"; rec($2; $3; \\\"$4\\\")\" > rec.json\n  printf '%-40s' \"$1\"\n  jq -r '.steps[2].expect[].that' \"$CHK\" | while IFS= read -r e; do jq \"$e\" rec.json | tr '\\n' ' '; done; echo\n}\nrun \"correct, ship fold applies\"      '[[1,2,3],[2],[],[],[5]]' 0 enabled\nrun \"correct, ship fold disabled\"     '[[1,2,3],[2],[],[],[5]]' 1 disabled\nrun \"tasks skips line 3\"              '[[1,3],[2],[],[],[5]]' 0 enabled\nrun \"tasks runs past # Notes\"         '[[1,2,3,4,5],[2],[],[],[5]]' 0 enabled\nrun \"fix runs past ## Ship bilbo\"     '[[1,2,3],[2,3],[],[],[5]]' 0 enabled\nrun \"ship owns # Notes\"               '[[1,2,3],[2],[],[4,5],[5]]' 0 enabled\nrun \"ship press fails, item enabled\"  '[[1,2,3],[2],[],[],[5]]' 1 enabled",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; ls -la; cat rec.json 2>/dev/null | head -c 100; echo; echo \"TMPDIR=$TMPDIR\"",
+        "Bash: D=/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft\n[ ! -s \"$D/rec.json\" ] && rm \"$D/rec.json\"\nS=\"$D/tmp/simchk\"; mkdir -p \"$S\" && cd \"$S\" && cat > sim.jq <<'EOF'\ndef line($i): {offset: ([0,8,26,36,50,58][$i]), text: ([\"# Tasks\",\"## Fix the reaper\",\"It leaks.\",\"## Ship bilbo\",\"# Notes\",\"Done.\"][$i]), rect: {x: 25, y: ($i*20), width: 60, height: 20}};\ndef st($hidden; $folded; $sel): {json: {sections: {notebook: {length: 63, drawn: [range(6) | select(. as $i | $hidden | index($i) | not) | line(.)], folded: [$folded[] | {offset: line(.).offset, line: line(.).text}], selection: {location: $sel, length: 0}}}}};\ndef rec($own; $shipexit; $shipenabled):\n  {menus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:\"enabled\"},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   opened: st([]; []; 0),\n   tasks: st($own[0]; [0]; 2),\n   fixbase: st([]; []; 0), fix: st($own[1]; [1]; 10),\n   shipbase: st([]; []; 0), atship: st([]; []; 42),\n   shipmenus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:$shipenabled},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   shipfold: {exit: $shipexit}, ship: st($own[3]; (if $shipexit == 0 then [3] else [] end); 42),\n   notesbase: st([]; []; 0), notes: st($own[4]; [4]; 52)};\nEOF\nCHK=\"$D/work/check.json\"\nrun() {\n  jq -n -c -L \"$S\" \"include \\\"sim\\\"; rec($2; $3; \\\"$4\\\")\" > \"$S/rec.json\" || return\n  printf '%-34s' \"$1\"\n  jq -r '.steps[2].expect[].that' \"$CHK\" | while IFS= read -r e; do jq \"$e\" \"$S/rec.json\" | tr '\\n' ' '; done; echo\n}\necho \"                                  tasks fix ship notes\"\nrun \"correct, ship fold applies\"      '[[1,2,3],[2],[],[],[5]]' 0 enabled\nrun \"correct, ship fold disabled\"     '[[1,2,3],[2],[],[],[5]]' 1 disabled\nrun \"tasks skips line 3\"              '[[1,3],[2],[],[],[5]]' 0 enabled\nrun \"tasks runs past # Notes\"         '[[1,2,3,4,5],[2],[],[],[5]]' 0 enabled\nrun \"fix runs past ## Ship bilbo\"     '[[1,2,3],[2,3],[],[],[5]]' 0 enabled\nrun \"ship owns # Notes\"               '[[1,2,3],[2],[],[4,5],[5]]' 0 enabled\nrun \"ship press fails, item enabled\"  '[[1,2,3],[2],[],[],[5]]' 1 enabled\nls \"$D\"",
+        "Bash: mkdir tmp/simchk; ls tmp; [ ! -s rec.json ] && mv rec.json tmp/simchk/stray-empty-rec.json; ls",
+        "Bash: D=/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft\ncd \"$D\" && S=tmp/simchk && cat > \"$S/sim.jq\" <<'EOF'\ndef line($i): {offset: ([0,8,26,36,50,58][$i]), text: ([\"# Tasks\",\"## Fix the reaper\",\"It leaks.\",\"## Ship bilbo\",\"# Notes\",\"Done.\"][$i]), rect: {x: 25, y: ($i*20), width: 60, height: 20}};\ndef st($hidden; $folded; $sel): {json: {sections: {notebook: {length: 63, drawn: [range(6) | select(. as $i | $hidden | index($i) | not) | line(.)], folded: [$folded[] | {offset: line(.).offset, line: line(.).text}], selection: {location: $sel, length: 0}}}}};\ndef rec($own; $shipexit; $shipenabled):\n  {menus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:\"enabled\"},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   opened: st([]; []; 0),\n   tasks: st($own[0]; [0]; 2),\n   fixbase: st([]; []; 0), fix: st($own[1]; [1]; 10),\n   shipbase: st([]; []; 0), atship: st([]; []; 42),\n   shipmenus: {items: [{path:\"View > Fold All\", enabled:\"enabled\"},{path:\"View > Fold\", enabled:$shipenabled},{path:\"View > Unfold All\", enabled:\"enabled\"}]},\n   shipfold: {exit: $shipexit}, ship: st($own[3]; (if $shipexit == 0 then [3] else [] end); 42),\n   notesbase: st([]; []; 0), notes: st($own[4]; [4]; 52)};\nEOF\nrun() {\n  jq -n -c -L \"$S\" \"include \\\"sim\\\"; rec($2; $3; \\\"$4\\\")\" > \"$S/rec.json\" || return\n  printf '%-34s' \"$1\"\n  jq -r '.steps[2].expect[].that' work/check.json | while IFS= read -r e; do jq \"$e\" \"$S/rec.json\" | tr '\\n' ' '; done; echo\n}\necho \"                                  tasks fix ship notes\"\nrun \"correct, ship fold applies\"      '[[1,2,3],[2],[],[],[5]]' 0 enabled\nrun \"correct, ship fold disabled\"     '[[1,2,3],[2],[],[],[5]]' 1 disabled\nrun \"tasks skips line 3\"              '[[1,3],[2],[],[],[5]]' 0 enabled\nrun \"tasks runs past # Notes\"         '[[1,2,3,4,5],[2],[],[],[5]]' 0 enabled\nrun \"fix runs past ## Ship bilbo\"     '[[1,2,3],[2,3],[],[],[5]]' 0 enabled\nrun \"ship owns # Notes\"               '[[1,2,3],[2],[],[4,5],[5]]' 0 enabled\nrun \"ship press fails, item enabled\"  '[[1,2,3],[2],[],[],[5]]' 1 enabled",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft/work/answer.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 15
+    },
+    {
+      "costUSD" : 0.7253043999999998,
+      "inputs" : {
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "rec.json" : "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "review.json" : "8f6a46e6be4f8cd2fbd93431a6842e007226f583fec051a31ca88d60535d8351",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/logs/revise-2.jsonl",
+      "logSha256" : "5f9cbeb9e2c69bcaba12ae106b5351d469ec6d6d58053b73e06330ff981de0ce",
+      "reason" : "review",
+      "seconds" : 196.56414794921875,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; ls -la work bin tmp; echo ----; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; find tmp -maxdepth 4 | head -50; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; bin/palantir-accept --help 2>&1 | head -30",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; ls -laR tmp 2>&1 | head -60",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat tmp/mock/rec.json; echo; ls -laR tmp/simchk",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cat tmp/simchk/sim.jq; echo ----; head -c 2000 tmp/simchk/rec.json; which jq; jq --version",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; cp work/check.json tmp/check.before.json; python3 -I - work/check.json <<'EOF'\nimport json, sys\np = sys.argv[1]\nsrc = open(p).read()\nUNFOLD = '{\"drive\": [\"menu\", {\"jq\": \"[.menus.items[] | select(.path | split(\\\\\" > \\\\\") | last | test(\\\\\"unfold\\\\\"; \\\\\"i\\\\\"))] | sort_by((.path | split(\\\\\" > \\\\\") | last | test(\\\\\"all\\\\\"; \\\\\"i\\\\\") | not), (.path | length)) | first | .path\"}],\\n             \"exit\": \"any\", \"as\": \"%s\"}'\nRELAUNCH = '''            {\"quit\": true},\n            {\"launch\": {\"build\": \"debug\", \"inspector\": true}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"notebook.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"%s\"},'''\nRESET = '''            %s,\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"%s\"},'''\nfor unf, base in [(\"unfoldtasks\", \"fixbase\"), (\"unfoldfix\", \"shipbase\"), (\"unfoldship\", \"notesbase\")]:\n    old = RELAUNCH % base\n    assert src.count(old) == 1, base\n    src = src.replace(old, RESET % (UNFOLD % unf, base))\nfor old, new in [\n    (\"folded in a fresh palantir with every line drawn, it hides line 3\", \"folded once unfolding has drawn every line again, it hides line 3\"),\n    (\"with the caret on it in a fresh palantir, its fold\", \"with the caret on it once unfolding has drawn every line again, its fold\"),\n    (\"folded in a fresh palantir with every line drawn, it hides line 6\", \"folded once unfolding has drawn every line again, it hides line 6\")]:\n    assert src.count(old) == 1, old\n    src = src.replace(old, new)\njson.loads(src)\nopen(p, \"w\").write(src)\nEOF\ndiff tmp/check.before.json work/check.json; bin/palantir-accept lint work/check.json rule.md",
+        "Read: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft/work/check.json",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft/work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/draft; bin/palantir-accept lint work/check.json rule.md; U='[.menus.items[] | select(.path | split(\" > \") | last | test(\"unfold\"; \"i\"))] | sort_by((.path | split(\" > \") | last | test(\"all\"; \"i\") | not), (.path | length)) | first | .path'; jq -r \"$U\" tmp/mock/rec.json; echo '{\"menus\":{\"items\":[{\"path\":\"View > Fold\"},{\"path\":\"View > Unfold\"},{\"path\":\"View > Fold All\"}]}}' | jq -r \"$U\"; echo '{\"menus\":{\"items\":[{\"path\":\"View > Fold\"},{\"path\":\"View > Fold All\"},{\"path\":\"View > Unfold All\"},{\"path\":\"View > Unfold\"}]}}' | jq -r \"$U\"; jq '[.steps[2].do[] | select(has(\"quit\") or has(\"launch\"))] | length' work/check.json"
+      ],
+      "turns" : 12
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+    "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "a31627b51fb4354b6867d537a967261ef619d812dac560f04fd24a9654d7c380"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "4b0da0119c312e2485f80afc58a2156de98d2bec550bddac7d29b8dc4df2df84",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "d100854bae9e754cb3f02f8c47ceb4e40c7058cac8fcd2d6e0eaf4542bf41383",
+      "seconds" : 54.14455795288086,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "3f3eaff559f44ab4d4a21593a680d7f18fbdf2c8bd42dbba54ca9b2510107bd9",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "586fdf9193b94977ecc52a362774a3dc83bf0a34996bbb2a66a20b735e4516f7",
+      "seconds" : 90.33891093730927,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "ede1f30c50cf83d7b4ba14b3a583611ce31c4e6c8b0e8cb3fe7d09c4f15bb49f",
+        "cli.md" : "27e0705d2d4489f6da78d1cc6df0e2881e9d29095ccbba8c51a4d4e894357c44",
+        "format.md" : "4ffe8cd29207c60fad9cb63dcbccdcbf1ea0af2468c55a2ba2b07f6e0a6fca2b",
+        "prompt.md" : "c9a2a75934f2caf816de45b8cc40d2f9be677cec5d573e45162e2e5e809613ae",
+        "rule.md" : "027123a8c268cd63a356fad12c1f10860636b61e8a65180fed1c7eddd744adbc",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "0c8559bfb35334e82f3adcb9bd0ac74fe08709cd57cfe2d630f1d4ff3e829582",
+      "seconds" : 30.46670091152191,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "b5265905c4d4f004a4e1acc6b747a130bf59ac3509085b71337f7d73b94a67b8",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/mutant-1-replay-0",
+      "seconds" : 13.224483013153076,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-outline.owned-range-1792584836/replays/base-3"
+  },
+  "rule" : "req~heading-outline.owned-range~1",
+  "started" : "2026-10-21T12:13:56Z"
+}

@@ -28,14 +28,52 @@ fmt:
 lint:
     swift format lint --strict --recursive --parallel Package.swift Sources Tests
 
-# Assemble an ad-hoc signed palantir.app from a SwiftPM build.
-bundle config="debug":
+# Assemble an ad-hoc signed palantir.app from a SwiftPM build, at `out`.
+bundle config="debug" out=app:
     swift build -c {{config}}
-    rm -rf {{app}}
-    mkdir -p {{app}}/Contents/MacOS
-    cp "$(swift build -c {{config}} --show-bin-path)/palantir" {{app}}/Contents/MacOS/
-    cp Sources/App/Info.plist {{app}}/Contents/
-    codesign --force --sign - {{app}}
+    rm -rf {{out}}
+    mkdir -p {{out}}/Contents/MacOS
+    cp "$(swift build -c {{config}} --show-bin-path)/palantir" {{out}}/Contents/MacOS/
+    cp Sources/App/Info.plist {{out}}/Contents/
+    codesign --force --sign - {{out}}
+
+acceptance_cache := env("PALANTIR_ACCEPT_CACHE", ".build/acceptance")
+
+# Build what the acceptance layer replays against: the CLIs, the runner, and a debug and a release
+# palantir.app.
+acceptance-build:
+    swift build
+    {{just_executable()}} bundle
+    {{just_executable()}} bundle release {{acceptance_cache}}/release/palantir.app
+
+# Replay the check of every rule against the debug build and print one verdict per rule ID. It
+# launches palantir and drives it, so it takes the desktop for about 15 s a rule.
+test-acceptance *args: acceptance-build
+    "$(swift build --show-bin-path)/palantir-accept" replay --all {{args}}
+
+# One line per rule: current, missing, stale, changed, ungated or orphan.
+acceptance-status:
+    swift build --product palantir-accept
+    "$(swift build --show-bin-path)/palantir-accept" status
+
+# Generate checks from the spec for the rules given, or for every missing and stale one. Replays run
+# behind PALANTIR_ACCEPT_REPLAY_WRAPPER when it is set.
+acceptance-generate *rules: acceptance-build
+    "$(swift build --show-bin-path)/palantir-accept" generate {{rules}}
+
+# Triage the failed replay in `replay` for `rule`, such as req~heading-folding.fold~1.
+acceptance-triage rule replay:
+    swift build --product palantir-accept
+    "$(swift build --show-bin-path)/palantir-accept" triage {{rule}} --replay {{replay}}
+
+# Probe a feature (or every feature) around its rules and report candidate spec changes. It fails
+# nothing. Its probes launch palantir, so it takes the desktop for about 10 s a probe.
+acceptance-explore feature="": acceptance-build
+    "$(swift build --show-bin-path)/palantir-accept" explore {{feature}}
+
+# Replay every check in a Tart VM, with no use of this Mac's desktop.
+test-acceptance-vm *args: acceptance-build
+    "$(swift build --show-bin-path)/palantir-accept" vm-replay {{args}}
 
 run: bundle
     {{app}}/Contents/MacOS/palantir

@@ -1,0 +1,6 @@
+{"type": "object", "additionalProperties": false,
+ "required": ["files", "breaks", "keeps"],
+ "properties": {
+   "files": {"type": "array", "items": {"type": "string"}},
+   "breaks": {"type": "string", "description": "the example line the change breaks, and how"},
+   "keeps": {"type": "string", "description": "why the Given and When lines still work"}}}

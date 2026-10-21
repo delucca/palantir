@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "7023dab5011422907a9e73a26a4da4c4ea55aeb7080dc46a34038a7deb040cbd",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook with \"## Fix the reaper\" folded is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the window's accessibility tree is read",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the folded marker of \"## Fix the reaper\" has the label \"Folded\"",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~accessibility.custom-view-labels~1",
+  "summary" : "The check establishes the folded heading, reads the window's accessibility tree, and verifies the marker's own accessibility label. Its positional check derives coordinates from observed geometry rather than machine-specific constants.",
+  "verdict" : "faithful"
+}

@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "ede1f30c50cf83d7b4ba14b3a583611ce31c4e6c8b0e8cb3fe7d09c4f15bb49f",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook with these lines",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When palantir reads its outline",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the headings own these lines",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-outline.owned-range~1",
+  "summary" : "The fixture matches the example, and the initial expectations verify its complete contents. Folding exercises all four ownership ranges, including the empty range and end of file. Coordinates come from observed state, and the empty heading’s menu availability is checked with palantir in front.",
+  "verdict" : "faithful"
+}

@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/Model/Folds.swift b/Sources/Notebook/Model/Folds.swift
+index 0ddefa7..36d6dac 100644
+--- a/Sources/Notebook/Model/Folds.swift
++++ b/Sources/Notebook/Model/Folds.swift
+@@ -41,7 +41,7 @@ package struct Folds: Equatable, Sendable {
+   }
+ 
+   package mutating func unfoldAll() {
+-    headingStarts = []
++    headingStarts = Set(headingStarts.sorted().suffix(1))
+   }
+ 
+   /// The outermost folded heading that hides `offset`: the first one in document order.

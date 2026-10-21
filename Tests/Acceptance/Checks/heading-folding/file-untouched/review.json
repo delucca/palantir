@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "74454185bd55a351484157478227048aa34c697e931eb482cd05feb5e223cb71",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given notebook.md is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user folds and unfolds headings any number of times",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then notebook.md on disk is byte for byte what it was before",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.file-untouched~1",
+  "summary" : "The fixture's UTF-16 length and offsets are correct. The actions exercise repeated folding and unfolding, verify those states, and compare the file's size and hash after each operation. The check is faithful to the example's byte-for-byte outcome.",
+  "verdict" : "faithful"
+}

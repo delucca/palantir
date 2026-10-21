@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookTextView.swift b/Sources/Notebook/UI/NotebookTextView.swift
+index 9c0914f..5dfb8f4 100644
+--- a/Sources/Notebook/UI/NotebookTextView.swift
++++ b/Sources/Notebook/UI/NotebookTextView.swift
+@@ -254,7 +254,7 @@ package final class NotebookTextView: NSTextView {
+   private func makeMarker(_ offset: Int) -> NSImageView {
+     // "ellipsis" is an SF Symbol in every macOS release that has them, so the image exists.
+     let marker = NSImageView(
+-      image: NSImage(systemSymbolName: "ellipsis", accessibilityDescription: "Folded")!)
++      image: NSImage(systemSymbolName: "ellipsis", accessibilityDescription: nil)!)
+     marker.contentTintColor = .secondaryLabelColor
+     marker.setAccessibilityRole(.image)
+     marker.setAccessibilityChildren([])

@@ -1,0 +1,23 @@
+{
+  "format": 1,
+  "rule": "req~main-menu.drivable~1",
+  "example": "a fresh launch",
+  "files": {},
+  "steps": [
+    {"line": "* When palantir launches",
+     "do": [{"launch": {"build": "debug", "inspector": true}, "as": "launched"}],
+     "expect": []},
+    {"line": "* Then every menu bar item except separators shows in the accessibility tree with its title and a press action",
+     "do": [{"drive": ["activate"]},
+            {"drive": ["menus"], "as": "menus"},
+            {"drive": ["restore"]}],
+     "expect": [
+       {"that": "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not)] | length > 0",
+        "why": "the menu bar's items show in the accessibility tree at all"},
+       {"that": "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not) | titles | all(blank | not)] | all",
+        "why": "every item but a separator shows with its title, as does every menu on its path; enabled is read with palantir in front, so only items disabled there count as separators"},
+       {"that": "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not) | .press == true or .press == \"press\"] | all",
+        "why": "every item but a separator shows with a press action"}
+     ]}
+  ]
+}

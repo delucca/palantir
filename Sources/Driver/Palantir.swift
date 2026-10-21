@@ -156,22 +156,31 @@ struct Palantir {
     return try content.map(Accessibility.frame) ?? frame
   }
 
-  /// Whether the topmost window at `point`, in screen points from the top-left, is palantir's.
+  /// Whether the topmost window at `point`, in screen points from the top-left, is palantir's. The
+  /// transparent full-screen windows the Dock and Notification Center keep above everything do not
+  /// count.
   func ownsTopWindow(at point: CGPoint) -> Bool {
     let windows =
       CGWindowListCopyWindowInfo([.optionOnScreenOnly, .excludeDesktopElements], kCGNullWindowID)
       as? [[String: Any]] ?? []
-    let cursor = Int(CGWindowLevelForKey(.cursorWindow))
-    let top = windows.first { info in
-      // The pointer is a window too, above everything.
-      guard (info[kCGWindowLayer as String] as? Int ?? 0) < cursor else { return false }
-      var bounds = CGRect.null
-      guard let dictionary = info[kCGWindowBounds as String] as! CFDictionary?,
-        CGRectMakeWithDictionaryRepresentation(dictionary, &bounds)
-      else { return false }
-      return bounds.contains(point)
-    }
-    return top?[kCGWindowOwnerPID as String] as? pid_t == pid
+    var count: UInt32 = 0
+    var displays = [CGDirectDisplayID](repeating: 0, count: 16)
+    CGGetActiveDisplayList(UInt32(displays.count), &displays, &count)
+    return TopWindow.owner(
+      at: point,
+      in: windows.compactMap { info in
+        var bounds = CGRect.null
+        guard let dictionary = info[kCGWindowBounds as String] as! CFDictionary?,
+          CGRectMakeWithDictionaryRepresentation(dictionary, &bounds),
+          let owner = info[kCGWindowOwnerPID as String] as? pid_t
+        else { return nil }
+        return TopWindow.Info(
+          owner: owner,
+          ownerBundleID: NSRunningApplication(processIdentifier: owner)?.bundleIdentifier,
+          layer: info[kCGWindowLayer as String] as? Int ?? 0, bounds: bounds)
+      },
+      displays: displays.prefix(Int(count)).map(CGDisplayBounds),
+      cursorLayer: Int(CGWindowLevelForKey(.cursorWindow))) == pid
   }
 
   /// The CoreGraphics id of palantir's frontmost normal window.
@@ -265,5 +274,38 @@ enum Borrow {
   static func step(front: pid_t?, palantir: pid_t, previous: pid_t) -> Step {
     if front == previous { return .done }
     return front == palantir ? .bringBack : .leave
+  }
+}
+
+/// Which window is on top at a point of the screen.
+enum TopWindow {
+  /// An on-screen window, as the window server lists it.
+  struct Info: Equatable {
+    var owner: pid_t
+    var ownerBundleID: String?
+    var layer: Int
+    var bounds: CGRect
+  }
+
+  /// The apps whose windows above the normal layer can span a whole display without showing
+  /// anything: the Dock's, whenever it does not autohide, and Notification Center's.
+  static let overlayOwners: Set<String> = ["com.apple.dock", "com.apple.notificationcenterui"]
+
+  /// The pid that owns the topmost window at `point`, given `windows` front to back, or nil when
+  /// none does. The pointer, a window above `cursorLayer`, is not a window, and neither is an
+  /// overlay: a window of `overlayOwners` above layer 0 that covers a whole display.
+  static func owner(
+    at point: CGPoint, in windows: [Info], displays: [CGRect], cursorLayer: Int
+  ) -> pid_t? {
+    windows.first { window in
+      guard window.layer < cursorLayer, window.bounds.contains(point) else { return false }
+      return !isOverlay(window, displays: displays)
+    }?.owner
+  }
+
+  private static func isOverlay(_ window: Info, displays: [CGRect]) -> Bool {
+    guard window.layer > 0, let bundleID = window.ownerBundleID, overlayOwners.contains(bundleID)
+    else { return false }
+    return displays.contains { window.bounds.contains($0) }
   }
 }

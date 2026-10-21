@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/Model/Folds.swift b/Sources/Notebook/Model/Folds.swift
+index 0ddefa7..7d48512 100644
+--- a/Sources/Notebook/Model/Folds.swift
++++ b/Sources/Notebook/Model/Folds.swift
+@@ -37,7 +37,7 @@ package struct Folds: Equatable, Sendable {
+   }
+ 
+   package mutating func foldAll() {
+-    headingStarts.formUnion(outline.topLevelHeadings.map(\.range.location))
++    headingStarts.formUnion(outline.topLevelHeadings.prefix(1).map(\.range.location))
+   }
+ 
+   package mutating func unfoldAll() {

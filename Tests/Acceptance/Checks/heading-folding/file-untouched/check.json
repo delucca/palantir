@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "rule": "req~heading-folding.file-untouched~1",
+  "example": "many folds",
+  "files": {
+    "notebook.md": "# Field notes\nTrailing spaces end this line.  \n\n## Morning\nA heron stood in the reeds.\n\n### Details\nWind\tcalm, Café open.\n\n## Evening\nRain, then 🌧 a clear sky.\n\n\n# Appendix\nThe last line has no newline"
+  },
+  "steps": [
+    {
+      "line": "* Given notebook.md is open",
+      "do": [
+        {"launch": {"build": "debug", "inspector": true}},
+        {"drive": ["menu", "File > Open…"]},
+        {"drive": ["choose", {"file": "notebook.md"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "opened"},
+        {"file": "notebook.md", "as": "before"}
+      ],
+      "expect": [
+        {"that": ".opened.json.sections.notebook.length == 203", "why": "the window shows the whole of notebook.md (203 UTF-16 code units)"},
+        {"that": "[{\"offset\": 0, \"text\": \"# Field notes\"}, {\"offset\": 14, \"text\": \"Trailing spaces end this line.  \"}, {\"offset\": 47, \"text\": \"\"}, {\"offset\": 48, \"text\": \"## Morning\"}, {\"offset\": 59, \"text\": \"A heron stood in the reeds.\"}, {\"offset\": 87, \"text\": \"\"}, {\"offset\": 88, \"text\": \"### Details\"}, {\"offset\": 100, \"text\": \"Wind\\tcalm, Café open.\"}, {\"offset\": 123, \"text\": \"\"}, {\"offset\": 124, \"text\": \"## Evening\"}, {\"offset\": 135, \"text\": \"Rain, then 🌧 a clear sky.\"}, {\"offset\": 162, \"text\": \"\"}, {\"offset\": 163, \"text\": \"\"}, {\"offset\": 164, \"text\": \"# Appendix\"}, {\"offset\": 175, \"text\": \"The last line has no newline\"}] as $lines | .opened.json.sections.notebook.drawn as $drawn | ($drawn | any(.text != \"\")) and ($drawn | all(. as $p | $lines | any(.offset == $p.offset and .text == ($p.text | rtrimstr(\"\\n\")))))", "why": "the paragraphs the window shows are notebook.md's own lines, each at its own offset"}
+      ]
+    },
+    {
+      "line": "* When the user folds and unfolds headings any number of times",
+      "do": [
+        {"drive": ["menus"], "as": "menus"},
+        {"drive": ["menu", {"jq": "[.menus.items[] | select(.path | test(\"(^| > )fold all$\"; \"i\")) | .path][0]"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "fold1"},
+        {"sleep": 3},
+        {"file": "notebook.md", "as": "afterFold1"},
+        {"drive": ["menu", {"jq": "[.menus.items[] | select(.path | test(\"(^| > )unfold all$\"; \"i\")) | .path][0]"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "unfold1"},
+        {"sleep": 3},
+        {"file": "notebook.md", "as": "afterUnfold1"},
+        {"drive": ["menu", {"jq": "[.menus.items[] | select(.path | test(\"(^| > )fold all$\"; \"i\")) | .path][0]"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "fold2"},
+        {"sleep": 3},
+        {"file": "notebook.md", "as": "afterFold2"},
+        {"drive": ["menu", {"jq": "[.menus.items[] | select(.path | test(\"(^| > )unfold all$\"; \"i\")) | .path][0]"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "unfold2"},
+        {"sleep": 3},
+        {"file": "notebook.md", "as": "afterUnfold2"},
+        {"drive": ["menu", {"jq": "[.menus.items[] | select(.path | test(\"(^| > )fold all$\"; \"i\")) | .path][0]"}]},
+        {"inspect": ["wait"]},
+        {"inspect": ["state"], "as": "fold3"}
+      ],
+      "expect": [
+        {"that": "[.fold1, .fold2, .fold3] | all(.json.sections.notebook.folded | length > 0)", "why": "each fold folded headings"},
+        {"that": "[.unfold1, .unfold2] | all(.json.sections.notebook.folded == [])", "why": "each unfold unfolded every heading"}
+      ]
+    },
+    {
+      "line": "* Then notebook.md on disk is byte for byte what it was before",
+      "do": [
+        {"sleep": 3},
+        {"file": "notebook.md", "as": "after"}
+      ],
+      "expect": [
+        {"that": ".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.size == $b.size)", "why": "after every fold and every unfold the file on disk has the same number of bytes as before the folds"},
+        {"that": ".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.sha256 == $b.sha256)", "why": "after every fold and every unfold the file on disk has the same bytes as before the folds"}
+      ]
+    }
+  ]
+}

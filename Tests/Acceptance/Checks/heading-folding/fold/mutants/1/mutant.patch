@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookTextView.swift b/Sources/Notebook/UI/NotebookTextView.swift
+index 9c0914f..2e2c1cb 100644
+--- a/Sources/Notebook/UI/NotebookTextView.swift
++++ b/Sources/Notebook/UI/NotebookTextView.swift
+@@ -33,7 +33,7 @@ package final class NotebookTextView: NSTextView {
+ 
+   @objc func foldHeading(_ sender: Any?) {
+     guard let heading = headingAtSelection else { return }
+-    setFolded { $0.fold(heading) }
++    setFolded { $0.unfold(heading) }
+   }
+ 
+   @objc func unfoldHeading(_ sender: Any?) {

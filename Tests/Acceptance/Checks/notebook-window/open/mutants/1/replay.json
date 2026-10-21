@@ -1,0 +1,213 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/mutant-1-build/palantir.app",
+  "appSha256" : "8d587f4563e2e50a0e505aa7364004866da761aac10b894d918a56b5e9585c9f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/checks/7d12973bcc5f025c33728d1a0f902d73fecf8ccd67cbce04fac4ef8bafdccaa1.json",
+  "checkSha256" : "7d12973bcc5f025c33728d1a0f902d73fecf8ccd67cbce04fac4ef8bafdccaa1",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; .shown.json.sections.notebook.length == (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | u16)",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~notebook-window.open~1",
+  "seconds" : 10.10505199432373,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "disk",
+          "seconds" : 0.0007339715957641602
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".disk.size == (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | utf8bytelength)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a file notebook.md on disk",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.5709999799728394
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5580719709396362,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/mutant-1-replay-0/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.322996020317078,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.open-1792577494/mutant-1-replay-0/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses notebook.md with File > Open",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.060408949851989746,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "shown",
+          "seconds" : 0.007182955741882324,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "-1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5596039295196533,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06766092777252197,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "top",
+          "seconds" : 0.009723901748657227,
+          "stderr" : ""
+        },
+        {
+          "action" : "repeat",
+          "arguments" : [
+            "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;(good(.top) | not) or (seen(.top) | min) == 0",
+            "rounds: 1"
+          ],
+          "seconds" : 0
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "above",
+          "seconds" : 0.009359002113342285,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6233930587768555,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06255805492401123,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "below",
+          "seconds" : 0.00945591926574707,
+          "stderr" : ""
+        },
+        {
+          "action" : "repeat",
+          "arguments" : [
+            "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; def lines: (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | split(\"\\n\")) as $l | [range(0; ($l | length) - 1) as $i | {offset: ([$l[:$i][] | u16 + 1] | add // 0), text: $l[$i]}]; def at($o): lines as $e | first(range(0; $e | length) | select($e[.].offset == $o)) // -1; def paras($n): $n.drawn | map(.text |= rtrimstr(\"\\n\")) | if length > 0 and (.[-1] | .offset == $n.length and .text == \"\") then .[:-1] else . end; def good($s): $s.json.window.content.width as $w | $s.json.sections.notebook as $n | paras($n) as $d | at($d[0].offset // -1) as $i | ($d | length) > 0 and $i >= 0 and lines[$i:$i + ($d | length)] == [$d[] | {offset, text}] and all($d[]; .rect.x >= -0.01 and .rect.x + .rect.width <= $w + 0.01 and .rect.height > 0 and (.text == \"\" or .rect.width > 0)) and all(range(1; $d | length); $d[.].rect.y >= $d[. - 1].rect.y + $d[. - 1].rect.height - 0.01) and all(($n.gaps // [])[] | select(.before < $n.length); .height >= -0.01); def seen($s): $s.json.window.content.height as $h | [paras($s.json.sections.notebook)[] | select(.rect.y >= -0.01 and .rect.y + .rect.height <= $h + 0.01) | at(.offset)]; def linked($a; $b): (seen($a) | max) as $hi | (seen($b) | min) as $lo | $hi != null and $lo != null and $lo <= $hi + 1;(good(.above) and good(.below) and linked(.above; .below) | not) or (seen(.below) | max) == (lines | length) - 1",
+            "rounds: 1"
+          ],
+          "seconds" : 0
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".shown.json.window | .isVisible and (.isMiniaturized | not)",
+          "value" : "true"
+        },
+        {
+          "that" : "def u16: [explode[] | if . > 65535 then 2 else 1 end] | add // 0; .shown.json.sections.notebook.length == (\"# Field notes\\n\\nCaf\\u00e9 cr\\u00e8me \\u2014 \\u201cquoted\\u201d and \\u2018single\\u2019, na\\u00efve fa\\u00e7ade.  \\nA hard break above; \\ud83d\\ude42 and \\u65e5\\u672c\\u8a9e too.\\n\\n- [ ] \\u00e9tape 1\\n  - nested item\\twith a tab\\n\\n```\\ncode block\\n```\\n\" | u16)",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the palantir window shows the text of notebook.md, character for character",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

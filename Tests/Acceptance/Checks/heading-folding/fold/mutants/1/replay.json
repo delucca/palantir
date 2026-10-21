@@ -1,0 +1,189 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/mutant-1-build/palantir.app",
+  "appSha256" : "f75c6464bab786109d852a147cf1628e519a91a06a66ec0822e4c9d90ae0bb33",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/checks/d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d.json",
+  "checkSha256" : "d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 3,
+    "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"It leaks.\") | .offset) as $l | .afterFold.json.sections.notebook.drawn | all(.[]; ((.text | contains(\"It leaks.\")) | not) and (.offset > $l or .offset + (.text | length) <= $l))",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "rule" : "req~heading-folding.fold~1",
+  "seconds" : 8.717381000518799,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.6324830055236816
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5364230871200562,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/mutant-1-replay-0/files/tasks.md"
+          ],
+          "exit" : 0,
+          "seconds" : 6.423035979270935,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/mutant-1-replay-0/files/tasks.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06549298763275146,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.00820302963256836,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook | [.drawn[].text | rtrimstr(\"\\n\") | select(. != \"\")] == [\"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"# Notes\"]",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.length == (\"# Tasks\\n## Fix the reaper\\nIt leaks.\\n# Notes\\n\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with the lines \"# Tasks\", \"## Fix the reaper\", \"It leaks.\" and \"# Notes\" is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "93.30712890625",
+            "24"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6139459609985352,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06677091121673584,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.009737014770507812,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"## Fix the reaper\") | .offset) as $h | .selected.json.sections.notebook.selection | .location >= $h and .location + .length <= $h + (\"## Fix the reaper\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And the selection is in \"## Fix the reaper\"",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.11829996109008789,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06102299690246582,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.011289000511169434,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses View > Fold Heading",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"It leaks.\") | .offset) as $l | .afterFold.json.sections.notebook.drawn | all(.[]; ((.text | contains(\"It leaks.\")) | not) and (.offset > $l or .offset + (.text | length) <= $l))",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then \"It leaks.\" is hidden",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

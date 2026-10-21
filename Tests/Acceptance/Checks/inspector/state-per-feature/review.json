@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given palantir wires in the notebook feature",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When an agent asks the inspector for its state",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the state holds a notebook section",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~inspector.state-per-feature~1",
+  "summary" : "The check launches palantir with its inspector, waits before requesting state, and requires a notebook section in the documented JSON shape. Missing notebook state fails, and no assertion depends on machine-specific layout, timing, or display values.",
+  "verdict" : "faithful"
+}

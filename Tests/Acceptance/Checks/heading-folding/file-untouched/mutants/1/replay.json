@@ -1,0 +1,366 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/mutant-1-build/palantir.app",
+  "appSha256" : "193e02b0e925d3d79827d884429bbdc6fb28837a51427c0f545e8565516ab57a",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/checks/74454185bd55a351484157478227048aa34c697e931eb482cd05feb5e223cb71.json",
+  "checkSha256" : "74454185bd55a351484157478227048aa34c697e931eb482cd05feb5e223cb71",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : ".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.size == $b.size)",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.file-untouched~1",
+  "seconds" : 26.305472016334534,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.5638589859008789
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5442389249801636,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/mutant-1-replay-0/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.76385498046875,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.file-untouched-1792577988/mutant-1-replay-0/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0642169713973999,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.009347081184387207,
+          "stderr" : ""
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "before",
+          "seconds" : 0.0014859437942504883
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.length == 203",
+          "value" : "true"
+        },
+        {
+          "that" : "[{\"offset\": 0, \"text\": \"# Field notes\"}, {\"offset\": 14, \"text\": \"Trailing spaces end this line.  \"}, {\"offset\": 47, \"text\": \"\"}, {\"offset\": 48, \"text\": \"## Morning\"}, {\"offset\": 59, \"text\": \"A heron stood in the reeds.\"}, {\"offset\": 87, \"text\": \"\"}, {\"offset\": 88, \"text\": \"### Details\"}, {\"offset\": 100, \"text\": \"Wind\\tcalm, Café open.\"}, {\"offset\": 123, \"text\": \"\"}, {\"offset\": 124, \"text\": \"## Evening\"}, {\"offset\": 135, \"text\": \"Rain, then 🌧 a clear sky.\"}, {\"offset\": 162, \"text\": \"\"}, {\"offset\": 163, \"text\": \"\"}, {\"offset\": 164, \"text\": \"# Appendix\"}, {\"offset\": 175, \"text\": \"The last line has no newline\"}] as $lines | .opened.json.sections.notebook.drawn as $drawn | ($drawn | any(.text != \"\")) and ($drawn | all(. as $p | $lines | any(.offset == $p.offset and .text == ($p.text | rtrimstr(\"\\n\")))))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given notebook.md is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.05312204360961914,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 1.0721369981765747,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.07006204128265381,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "fold1",
+          "seconds" : 0.013450980186462402,
+          "stderr" : ""
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "3.0"
+          ],
+          "seconds" : 3.0050519704818726
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "afterFold1",
+          "seconds" : 0.0013550519943237305
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.14482498168945312,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06269693374633789,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "unfold1",
+          "seconds" : 0.00913095474243164,
+          "stderr" : ""
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "3.0"
+          ],
+          "seconds" : 3.0050219297409058
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "afterUnfold1",
+          "seconds" : 0.0004899501800537109
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.1258859634399414,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06389307975769043,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "fold2",
+          "seconds" : 0.008900046348571777,
+          "stderr" : ""
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "3.0"
+          ],
+          "seconds" : 3.005038022994995
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "afterFold2",
+          "seconds" : 0.0011150836944580078
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.14810705184936523,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06483995914459229,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "unfold2",
+          "seconds" : 0.010237932205200195,
+          "stderr" : ""
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "3.0"
+          ],
+          "seconds" : 3.0050350427627563
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "afterUnfold2",
+          "seconds" : 0.0013099908828735352
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.16848599910736084,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06315505504608154,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "fold3",
+          "seconds" : 0.009505987167358398,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "[.fold1, .fold2, .fold3] | all(.json.sections.notebook.folded | length > 0)",
+          "value" : "true"
+        },
+        {
+          "that" : "[.unfold1, .unfold2] | all(.json.sections.notebook.folded == [])",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the user folds and unfolds headings any number of times",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "3.0"
+          ],
+          "seconds" : 3.0050450563430786
+        },
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "after",
+          "seconds" : 0.0010569095611572266
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".before as $b | [.afterFold1, .afterUnfold1, .afterFold2, .afterUnfold2, .after] | all(.size == $b.size)",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then notebook.md on disk is byte for byte what it was before",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

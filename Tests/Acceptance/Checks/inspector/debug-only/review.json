@@ -1,0 +1,44 @@
+{
+  "checkSha256" : "bd6848f2e6ef9cf10d1bff6a790db61db6408f3d16da553eb9344df402cecbff",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* When a debug build of palantir launches without the inspector launch flag",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then it creates no inspector socket",
+      "problems" : [
+        {
+          "at" : "inspect list; .probe.exit == 2",
+          "problem" : "These observations establish no discoverable listener, not that no socket was created. A non-listening socket at an unknown path, or one existing only between samples, can escape detection. The documented tools cannot establish their absence.",
+          "severity" : "advisory"
+        }
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When it launches again with the flag",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then it answers on a socket in a directory only the user can open",
+      "problems" : [
+        {
+          "at" : "Final expectation over up0 through up339: any(.exists == true and .isDirectory == true and ...)",
+          "problem" : "Ownership and mode bits do not establish effective access when ACLs grant or deny access. This can accept a directory another user can open or reject one protected by ACLs. The documented metadata exposes no ACLs, so this is an instrument limitation.",
+          "severity" : "advisory"
+        }
+      ]
+    }
+  ],
+  "rule" : "req~inspector.debug-only~1",
+  "summary" : "No blocking defects found. The steps match the example within the documented tools' observational limits.",
+  "verdict" : "faithful"
+}

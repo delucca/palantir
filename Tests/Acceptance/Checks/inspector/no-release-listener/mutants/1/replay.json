@@ -1,0 +1,65 @@
+{
+  "app" : "/Users/admin/acceptance/work/7/palantir.app",
+  "appSha256" : "689426b785c86aa27bbb50b04e39752105f54d609dc6a322e49c169713fdb6e8",
+  "check" : "/Users/admin/acceptance/work/7/check.json",
+  "checkSha256" : "654e7285090cdb0791025d71360c6544ed94f57b46001f29737a27d5ddf0982b",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 1,
+    "that" : ".release.defined | map(tostring | select(test(\"inspector\"; \"i\"))) | length == 0",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/work/7/palantir-release.app",
+  "releaseAppSha256" : "7af9c5345d8bc8a3ef503ce6c61a08ac66d2e20042ddc8d05312f17f12e62f46",
+  "rule" : "req~inspector.no-release-listener~1",
+  "seconds" : 0.06134200096130371,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "symbols",
+          "arguments" : [
+            "/Users/admin/acceptance/work/7/palantir-release.app/Contents/MacOS/palantir"
+          ],
+          "name" : "release",
+          "seconds" : 0.027781009674072266
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When palantir is built for release",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".release.defined | map(tostring | select(test(\"inspector\"; \"i\"))) | length == 0",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then its executable holds no code from an inspector target",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/usr/bin/jq",
+    "/usr/bin/nm"
+  ],
+  "verdict" : "fail"
+}

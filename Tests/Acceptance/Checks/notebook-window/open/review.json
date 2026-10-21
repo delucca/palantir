@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "7d12973bcc5f025c33728d1a0f902d73fecf8ccd67cbce04fac4ef8bafdccaa1",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a file notebook.md on disk",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user chooses notebook.md with File > Open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the palantir window shows the text of notebook.md, character for character",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~notebook-window.open~1",
+  "summary" : "The check creates the fixture, opens it through File > Open, and verifies exact paragraph text, offsets, total length, and visible coverage from first to last line. The scrolling loop stops on any invalid or disconnected sample, so later samples cannot erase a detected failure. No blocking mismatch was found in the example’s own situation.",
+  "verdict" : "faithful"
+}

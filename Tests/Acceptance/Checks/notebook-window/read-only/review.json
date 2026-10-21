@@ -1,0 +1,36 @@
+{
+  "checkSha256" : "049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given notebook.md is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user selects its first line and types \"x\"",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the first line is still selected",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And the text in the view is unchanged",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~notebook-window.read-only~1",
+  "summary" : "The check opens the fixture, selects its first line using observed coordinates, types \"x\", and verifies the resulting selection and complete text. Its ASCII, single-paragraph fixture makes the length and full-content comparisons sound without machine-specific assumptions.",
+  "verdict" : "faithful"
+}
