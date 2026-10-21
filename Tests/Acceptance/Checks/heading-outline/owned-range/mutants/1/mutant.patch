@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/Model/Outline.swift b/Sources/Notebook/Model/Outline.swift
+index 9f5ed7a..e55ff54 100644
+--- a/Sources/Notebook/Model/Outline.swift
++++ b/Sources/Notebook/Model/Outline.swift
+@@ -50,7 +50,7 @@ package struct Outline: Equatable, Sendable {
+         parsed[(index + 1)...].first { $0.level <= heading.level }?.lines.lowerBound
+         ?? lineStarts.count + 1
+       let firstOwned = heading.lines.upperBound + 1
+-      let ownedLines = firstOwned..<max(firstOwned, stop)
++      let ownedLines = firstOwned..<max(firstOwned, stop + 1)
+       let headingStart = start(ofLine: heading.lines.lowerBound)
+       let ownedStart = start(ofLine: ownedLines.lowerBound)
+       let ownedEnd = start(ofLine: ownedLines.upperBound)

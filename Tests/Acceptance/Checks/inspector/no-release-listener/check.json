@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "rule": "req~inspector.no-release-listener~1",
+  "example": "a release build",
+  "files": {},
+  "steps": [
+    {"line": "* When palantir is built for release",
+     "do": [{"symbols": "release", "as": "release"}],
+     "expect": []},
+    {"line": "* Then its executable holds no code from an inspector target",
+     "do": [],
+     "expect": [
+       {"that": ".release.defined | map(tostring | select(test(\"inspector\"; \"i\"))) | length == 0",
+        "why": "the release executable defines no symbol from the inspector target"}]},
+    {"line": "* And launching it with the inspector launch flag creates no socket",
+     "do": [{"launch": {"build": "release", "inspector": true}, "as": "launched"},
+            {"inspect": ["list"], "as": "listedAtLaunch", "exit": "any"},
+            {"inspect": ["state"], "as": "reachedAtLaunch", "exit": "any"},
+            {"sleep": 2},
+            {"inspect": ["list"], "as": "listedAfter2s", "exit": "any"},
+            {"inspect": ["state"], "as": "reachedAfter2s", "exit": "any"},
+            {"sleep": 5},
+            {"inspect": ["list"], "as": "listedAfter7s", "exit": "any"},
+            {"inspect": ["state"], "as": "reachedAfter7s", "exit": "any"}],
+     "expect": [
+       {"that": "(.launched.pid | tostring) as $p | [.listedAtLaunch, .listedAfter2s, .listedAfter7s] | all((.exit == 0 or .exit == 2) and ((.sockets // []) | map(select((.pid | tostring) == $p)) | length == 0))",
+        "why": "at launch, 2 s and 7 s later, no palantir socket lists the release palantir's pid"},
+       {"that": "[.reachedAtLaunch, .reachedAfter2s, .reachedAfter7s] | all(.exit == 2)",
+        "why": "at launch, 2 s and 7 s later, asking the release palantir for its state finds no socket to answer"}]}
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/mutant-1-build/palantir.app",
+  "appSha256" : "72d6d1e625daad85ed3c1de905803fc26a17d8d39e3139a759e820df4e7273b7",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/checks/53dc311d6c0ac7f9bbac47904753fa7d3384ace44bdede0066e50af64aee1da7.json",
+  "checkSha256" : "53dc311d6c0ac7f9bbac47904753fa7d3384ace44bdede0066e50af64aee1da7",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : ".unfolded.json.sections.notebook.folded == []",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.unfold-all~1",
+  "seconds" : 8.956769108772278,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "file",
+          "arguments" : [
+            "notebook.md"
+          ],
+          "name" : "source",
+          "seconds" : 0.000722050666809082
+        },
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.5501300096511841
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5677449703216553,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/mutant-1-replay-0/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.222636938095093,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.unfold-all-1792577492/mutant-1-replay-0/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06338095664978027,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.11395299434661865,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06351804733276367,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "folded",
+          "seconds" : 0.009662985801696777,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".folded.json.sections.notebook.length == .source.size",
+          "value" : "true"
+        },
+        {
+          "that" : "def lines: \"# One\\nAlpha line.\\n# Two\\nBeta line.\\n# Three\\nGamma line.\\n# Four\\nDelta line.\\n# Five\\nEpsilon line.\\n\" | split(\"\\n\") | .[:-1] | reduce .[] as $l ({o: 0, ls: []}; .ls += [{offset: .o, text: $l}] | .o += (($l | length) + 1)) | .ls; (lines | map(select(.text | startswith(\"#\")) | {offset, line: .text})) == (.folded.json.sections.notebook.folded | map({offset, line}) | sort_by(.offset))",
+          "value" : "true"
+        },
+        {
+          "that" : "def lines: \"# One\\nAlpha line.\\n# Two\\nBeta line.\\n# Three\\nGamma line.\\n# Four\\nDelta line.\\n# Five\\nEpsilon line.\\n\" | split(\"\\n\") | .[:-1] | reduce .[] as $l ({o: 0, ls: []}; .ls += [{offset: .o, text: $l}] | .o += (($l | length) + 1)) | .ls; (lines | map(select(.text | startswith(\"#\") | not) | .offset)) as $body | [.folded.json.sections.notebook.drawn[].offset | select(IN($body[]))] == []",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook is open with every heading folded",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "seconds" : 0.10019993782043457,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06257498264312744,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses View > Unfold All",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "unfolded",
+          "seconds" : 0.008206009864807129,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".unfolded.json.sections.notebook.folded == []",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the view shows the whole text of the file",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

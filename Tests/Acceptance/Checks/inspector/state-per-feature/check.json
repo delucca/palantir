@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "rule": "req~inspector.state-per-feature~1",
+  "example": "today's features",
+  "files": {},
+  "steps": [
+    {"line": "* Given palantir wires in the notebook feature",
+     "do": [{"launch": {"build": "debug", "inspector": true}, "as": "launched"},
+            {"inspect": ["list"], "as": "listening"}],
+     "expect": [{"that": ".launched.pid as $p | .listening.sockets | any((.pid | tostring) == ($p | tostring))",
+                 "why": "the palantir launched, with the features it wires in, answers its inspector"}]},
+    {"line": "* When an agent asks the inspector for its state",
+     "do": [{"inspect": ["wait"]},
+            {"inspect": ["state"], "as": "state"}],
+     "expect": [{"that": ".state.exit == 0 and (.state.json | type == \"object\")",
+                 "why": "the inspector answers with a state"}]},
+    {"line": "* Then the state holds a notebook section",
+     "do": [],
+     "expect": [{"that": ".state.json.sections | type == \"object\" and (.notebook | type == \"object\")",
+                 "why": "the state's sections hold one for the notebook feature"}]}
+  ]
+}

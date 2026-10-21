@@ -1,0 +1,22 @@
+diff --git a/Sources/App/MainMenu.swift b/Sources/App/MainMenu.swift
+index 78ca79d..64f16b1 100644
+--- a/Sources/App/MainMenu.swift
++++ b/Sources/App/MainMenu.swift
+@@ -44,8 +44,6 @@ enum MainMenu {
+         item("Select All", #selector(NSText.selectAll(_:)), "a"),
+       ])
+ 
+-    menu.addSubmenu("View", NotebookWindowController.makeViewMenuItems())
+-
+     menu.addSubmenu(
+       "Window",
+       [
+@@ -55,6 +53,8 @@ enum MainMenu {
+         item("Bring All to Front", #selector(NSApplication.arrangeInFront(_:))),
+       ])
+ 
++    menu.addSubmenu("View", NotebookWindowController.makeViewMenuItems())
++
+     menu.addSubmenu("Help", [])
+ 
+     return menu

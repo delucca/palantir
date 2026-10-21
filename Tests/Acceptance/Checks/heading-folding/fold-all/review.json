@@ -1,0 +1,29 @@
+{
+  "checkSha256" : "dbdaef127b11b18fe4d874fe72a63cd59f73787f7a711d703bd960365e5bc0aa",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook with the lines \"Intro.\", \"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"# Notes\" and \"Done.\" is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user chooses View > Fold All",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then only \"Intro.\", \"# Tasks\" and \"# Notes\" are visible",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.fold-all~1",
+  "summary" : "The check opens the specified notebook, invokes Fold All, and verifies exactly the expected visible paragraphs at their original offsets while preserving text length. Its geometry checks use the observed window dimensions, with no machine-specific constants.",
+  "verdict" : "faithful"
+}

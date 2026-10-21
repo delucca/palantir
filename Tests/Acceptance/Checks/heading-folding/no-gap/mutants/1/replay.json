@@ -1,0 +1,529 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/mutant-1-build/palantir.app",
+  "appSha256" : "a43018f196d7171146fa2613ede3598b8e984f9524639d4210f043f8648b2a45",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/checks/48518772d5bde8c4f3aa6f26218388dcc1fade659273ce1fc6949b3e61a83315.json",
+  "checkSha256" : "48518772d5bde8c4f3aa6f26218388dcc1fade659273ce1fc6949b3e61a83315",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : "all(.folded, .below; .json as $j | $j.sections.notebook.drawn as $d | ([$d[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$d[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and (($n.rect.y - ($h.rect.y + $h.rect.height)) | fabs) < (1 / $j.window.scale))",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-folding.no-gap~1",
+  "seconds" : 18.157073974609375,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "file",
+          "arguments" : [
+            "reaper.md"
+          ],
+          "name" : "fixture",
+          "seconds" : 0.0006119012832641602
+        },
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.5500290393829346
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5293190479278564,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/mutant-1-replay-0/files/reaper.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.141102075576782,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/mutant-1-replay-0/files/reaper.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0651930570602417,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.011651992797851562,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6207590103149414,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06513500213623047,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.00893104076385498,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5553920269012451,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06539499759674072,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.011664986610412598,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5700420141220093,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06648504734039307,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.010725975036621094,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6352359056472778,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06490910053253174,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.010354042053222656,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5503259897232056,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06661498546600342,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.009109973907470703,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5777029991149902,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.07451999187469482,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.012734055519104004,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6242510080337524,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06538593769073486,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.01007699966430664,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.558771014213562,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.07184708118438721,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.01241600513458252,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6104389429092407,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06676101684570312,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.01283407211303711,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "scroll",
+            "1"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5704830884933472,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06408488750457764,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "given",
+          "seconds" : 0.009379982948303223,
+          "stderr" : ""
+        },
+        {
+          "action" : "repeat",
+          "arguments" : [
+            "([.given.json.sections.notebook.drawn[]? | select(.rect.y + .rect.height > 0)] | first | .text // \"\" | sub(\"\\n$\"; \"\")) == \"## Fix the reaper\"",
+            "rounds: 10"
+          ],
+          "seconds" : 0
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".given.json.sections.notebook.length == .fixture.size",
+          "value" : "true"
+        },
+        {
+          "that" : ".given.json.sections.notebook.scroll | .documentHeight > .height",
+          "value" : "true"
+        },
+        {
+          "that" : "([.given.json.sections.notebook.drawn[] | select(.rect.y + .rect.height > 0)] | first | .text | sub(\"\\n$\"; \"\")) == \"## Fix the reaper\"",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook taller than the window is open, scrolled so that \"## Fix the reaper\" is the top line",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "93.30712890625",
+            "6"
+          ],
+          "exit" : 0,
+          "seconds" : 0.575160026550293,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06555700302124023,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "beforeFold",
+          "seconds" : 0.0117110013961792,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.06693708896636963,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 1.101830005645752,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0692899227142334,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "folded",
+          "seconds" : 0.011030077934265137,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "any(.folded.json.sections.notebook.folded[]; .line | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When the user folds \"## Fix the reaper\"",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "1.0"
+          ],
+          "seconds" : 1.0050369501113892
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.07153606414794922,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "below",
+          "seconds" : 0.011622905731201172,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "all(.folded, .below; .json as $j | $j.sections.notebook.drawn as $d | ([$d[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$d[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and (($n.rect.y - ($h.rect.y + $h.rect.height)) | fabs) < (1 / $j.window.scale))",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the next visible line starts right below \"## Fix the reaper\"",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

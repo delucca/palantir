@@ -1,0 +1,22 @@
+{
+  "checkSha256" : "cdedc597b9a49b2b14d94c05bbbdbf5ebb43385f1cae7affd4bf5e1136fb3407",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* When palantir launches",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the menus after the app menu are File, Edit, View, Window and Help",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~main-menu.hig-order~1",
+  "summary" : "The check launches palantir and verifies that its app menu is followed by exactly the five named menus in order. It introduces no layout, display, or timing assumptions. Reading menu titles requires no activation.",
+  "verdict" : "faithful"
+}

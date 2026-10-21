@@ -1,0 +1,77 @@
+{
+  "blockSha256" : "16c48f5b373228e7a836189a6c91e5b70da0d7de8ed16fe79941630d7cd28db3",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d",
+  "ended" : "2026-10-21T06:20:54Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.380965,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "16c48f5b373228e7a836189a6c91e5b70da0d7de8ed16fe79941630d7cd28db3"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/logs/draft.jsonl",
+      "logSha256" : "2bc00f10741d8f636305f8510ed092574f8825e598c88db752956e96e519915e",
+      "seconds" : 111.1076990365982,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat cli.md; echo ------; cat format.md; echo -----; cat prompt.md; ls -la bin tmp work",
+        "Bash: cat > work/check.json <<'EOF'\n{\n  \"format\": 1,\n  \"rule\": \"req~heading-folding.fold~1\",\n  \"example\": \"folding a task\",\n  \"files\": {\"tasks.md\": \"# Tasks\\n## Fix the reaper\\nIt leaks.\\n# Notes\\n\"},\n  \"steps\": [\n    {\"line\": \"* Given a notebook with the lines \\\"# Tasks\\\", \\\"## Fix the reaper\\\", \\\"It leaks.\\\" and \\\"# Notes\\\" is open\",\n     \"do\": [{\"launch\": {\"build\": \"debug\", \"inspector\": true}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"tasks.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"opened\"}],\n     \"expect\": [{\"that\": \".opened.json.sections.notebook | [.drawn[].text | rtrimstr(\\\"\\\\n\\\") | select(. != \\\"\\\")] == [\\\"# Tasks\\\", \\\"## Fix the reaper\\\", \\\"It leaks.\\\", \\\"# Notes\\\"]\",\n                 \"why\": \"the window shows the notebook's four lines, in order\"},\n                {\"that\": \".opened.json.sections.notebook.length == (\\\"# Tasks\\\\n## Fix the reaper\\\\nIt leaks.\\\\n# Notes\\\\n\\\" | length)\",\n                 \"why\": \"the open notebook holds the whole fixture\"}]},\n    {\"line\": \"* And the selection is in \\\"## Fix the reaper\\\"\",\n     \"do\": [{\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .rect | .x + .width / 2\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .rect | .y + .height / 2\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"selected\"}],\n     \"expect\": [{\"that\": \"(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .offset) as $h | .selected.json.sections.notebook.selection | .location >= $h and .location + .length <= $h + (\\\"## Fix the reaper\\\" | length)\",\n                 \"why\": \"the selection lies within the line \\\"## Fix the reaper\\\"\"}]},\n    {\"line\": \"* When the user chooses View > Fold Heading\",\n     \"do\": [{\"drive\": [\"menu\", \"View > Fold Heading\"]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"afterFold\"}],\n     \"expect\": []},\n    {\"line\": \"* Then \\\"It leaks.\\\" is hidden\",\n     \"do\": [],\n     \"expect\": [{\"that\": \"(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"It leaks.\\\") | .offset) as $l | .afterFold.json.sections.notebook.drawn | all(.[]; ((.text | contains(\\\"It leaks.\\\")) | not) and (.offset > $l or .offset + (.text | length) <= $l))\",\n                 \"why\": \"no paragraph the window shows holds \\\"It leaks.\\\"\"},\n                {\"that\": \".afterFold.json.sections.notebook.length == .opened.json.sections.notebook.length\",\n                 \"why\": \"the text is hidden, not removed\"}]},\n    {\"line\": \"* And \\\"## Fix the reaper\\\" shows the folded marker\",\n     \"do\": [],\n     \"expect\": [{\"that\": \"(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .offset) as $h | .afterFold.json.sections.notebook | any(.folded[]; .offset == $h and (.line | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\")\",\n                 \"why\": \"the heading is marked as folded\"},\n                {\"that\": \"(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .offset) as $h | .afterFold.json.sections.notebook as $n | ($n.drawn[] | select(.offset == $h and (.text | rtrimstr(\\\"\\\\n\\\")) == \\\"## Fix the reaper\\\") | .rect) as $d | any($n.markers[]; .heading == $h and .rect.width > 0 and .rect.height > 0 and .rect.y < $d.y + $d.height and .rect.y + .rect.height > $d.y)\",\n                 \"why\": \"the heading is on screen with a folded marker beside it\"}]},\n    {\"line\": \"* And \\\"# Tasks\\\" and \\\"# Notes\\\" are visible\",\n     \"do\": [],\n     \"expect\": [{\"that\": \".afterFold.json as $s | [\\\"# Tasks\\\", \\\"# Notes\\\"] | all(.[] as $t; any($s.sections.notebook.drawn[]; (.text | rtrimstr(\\\"\\\\n\\\")) == $t and .rect.width > 0 and .rect.height > 0 and .rect.y < $s.window.content.height and .rect.y + .rect.height > 0 and .rect.x < $s.window.content.width and .rect.x + .rect.width > 0))\",\n                 \"why\": \"both top-level headings are drawn within the window\"}]}\n  ]\n}\nEOF\nbin/palantir-accept lint work/check.json rule.md",
+        "Bash: /usr/bin/sed -i '' 's/all(\\.\\[\\] as \\$t; any(/all(.[]; . as $t | any(/' work/check.json && grep -n 'as \\$t' work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: which jq && mkdir -p tmp/mock && cat > tmp/mock/rec.json <<'EOF'\n{\"opened\":{\"json\":{\"window\":{\"content\":{\"width\":960,\"height\":600}},\"sections\":{\"notebook\":{\"length\":44,\"folded\":[],\"markers\":[],\n \"drawn\":[{\"offset\":0,\"text\":\"# Tasks\",\"rect\":{\"x\":25,\"y\":0,\"width\":60,\"height\":20}},\n          {\"offset\":8,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":20,\"width\":120,\"height\":18}},\n          {\"offset\":26,\"text\":\"It leaks.\",\"rect\":{\"x\":25,\"y\":38,\"width\":60,\"height\":16}},\n          {\"offset\":36,\"text\":\"# Notes\",\"rect\":{\"x\":25,\"y\":54,\"width\":60,\"height\":20}}],\n \"selection\":{\"location\":0,\"length\":0}}}}},\n \"selected\":{\"json\":{\"sections\":{\"notebook\":{\"selection\":{\"location\":15,\"length\":0}}}}},\n \"afterFold\":{\"json\":{\"window\":{\"content\":{\"width\":960,\"height\":600}},\"sections\":{\"notebook\":{\"length\":44,\n \"folded\":[{\"offset\":8,\"line\":\"## Fix the reaper\"}],\n \"markers\":[{\"heading\":8,\"label\":\"…\",\"rect\":{\"x\":150,\"y\":20,\"width\":16,\"height\":16}}],\n \"drawn\":[{\"offset\":0,\"text\":\"# Tasks\",\"rect\":{\"x\":25,\"y\":0,\"width\":60,\"height\":20}},\n          {\"offset\":8,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":20,\"width\":120,\"height\":18}},\n          {\"offset\":36,\"text\":\"# Notes\",\"rect\":{\"x\":25,\"y\":38,\"width\":60,\"height\":20}}]}}}}}\nEOF\njq -r '.steps[] | .expect[].that' work/check.json > tmp/mock/exprs.txt\nwhile IFS= read -r e; do printf '%s\\n' \"$(jq \"$e\" tmp/mock/rec.json)\"; done < tmp/mock/exprs.txt\necho --- broken: no fold\njq '.afterFold = (.opened | .json.window.content={\"width\":960,\"height\":600})' tmp/mock/rec.json > tmp/mock/bad.json\ntail -n 4 tmp/mock/exprs.txt | while IFS= read -r e; do printf '%s\\n' \"$(jq \"$e\" tmp/mock/bad.json)\"; done",
+        "Bash: ls tmp/mock 2>/dev/null; rm -rf tmp/mock; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 7
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "38b980987a02eefc4e094e21eed071908357aca92e74e7fd3f8965eecd496039"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "16c48f5b373228e7a836189a6c91e5b70da0d7de8ed16fe79941630d7cd28db3",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "dba0e72b7c6ff8781e8f1576b4c6bcea367cf1fdd983e649740178650a9dfa2c",
+      "seconds" : 34.19545090198517,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "b60067bf8d0ad9bfc757a9e04828946818d0d4865c7f4b98ef7fb33e6f1fb35d",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/mutant-1-replay-0",
+      "seconds" : 8.717381000518799,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/replays/base-1"
+  },
+  "rule" : "req~heading-folding.fold~1",
+  "started" : "2026-10-21T06:17:34Z"
+}

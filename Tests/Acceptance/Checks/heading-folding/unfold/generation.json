@@ -1,0 +1,76 @@
+{
+  "blockSha256" : "dd580be554c8e517922743c3177d954b497bdc1107b078e1a26e6ab0af368d4c",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "0c5a88b18cb83a0c524b8d15128010ed72ed79edf31c54c781e23a47a44c9767",
+  "ended" : "2026-10-21T07:28:48Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.30350920000000003,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "dd580be554c8e517922743c3177d954b497bdc1107b078e1a26e6ab0af368d4c"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/unfold-2-vm/logs/draft.jsonl",
+      "logSha256" : "d5d3d58e1b9fe354d69e517548b45e7cf16708c0a962473deaee4ee380c2e4b5",
+      "seconds" : 91.58643293380737,
+      "toolCalls" : [
+        "Bash: ls -la . work bin 2>/dev/null; echo ---; cat rule.md; echo ---; cat format.md",
+        "Bash: cat cli.md; echo ---; cat prompt.md; echo ---; ls -laR tmp bin",
+        "Bash: head -c 3000 tmp/claude-501/*/*/tasks/by10bd9f7.output",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/unfold-2-vm/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 6
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "0c5a88b18cb83a0c524b8d15128010ed72ed79edf31c54c781e23a47a44c9767",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "dd580be554c8e517922743c3177d954b497bdc1107b078e1a26e6ab0af368d4c",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "041e191a4f104f9bf4e3b68368b610c5a487366482f45da5364d30150fbb7204",
+      "seconds" : 32.717233061790466,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "91c152a449e4f31ba4ab9f4fc70bfdbae04160ad87b1207350f431ed40fa370d",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/unfold-2-vm/mutant-1-replay-0",
+      "seconds" : 9.108402013778687,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/unfold-2-vm/replays/base-1"
+  },
+  "rule" : "req~heading-folding.unfold~1",
+  "started" : "2026-10-21T07:25:00Z"
+}

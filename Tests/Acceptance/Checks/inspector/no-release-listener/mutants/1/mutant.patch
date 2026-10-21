@@ -1,0 +1,14 @@
+diff --git a/Sources/Inspector/Protocol.swift b/Sources/Inspector/Protocol.swift
+index e713e98..77cc3d1 100644
+--- a/Sources/Inspector/Protocol.swift
++++ b/Sources/Inspector/Protocol.swift
+@@ -1,4 +1,3 @@
+-#if DEBUG
+   package import CoreGraphics
+   package import Foundation
+ 
+@@ -244,4 +243,3 @@
+       self.height = height
+     }
+   }
+-#endif

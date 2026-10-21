@@ -1,0 +1,110 @@
+{
+  "app" : "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.view-fold-commands-1792568002/checks/975c072aad2543e53837595590680dd0d2e6a0a2dee98dbf069286081646762a.json",
+  "checkSha256" : "975c072aad2543e53837595590680dd0d2e6a0a2dee98dbf069286081646762a",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~main-menu.view-fold-commands~1",
+  "seconds" : 0.5975369215011597,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "name" : "launched",
+          "seconds" : 0.3417290449142456
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".launched.pid == .pid",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When palantir launches",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.09401798248291016,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "any(.menus.items[]; .path == \"View > Fold Heading\")",
+          "value" : "true"
+        },
+        {
+          "that" : "any(.menus.items[]; .path == \"View > Unfold Heading\")",
+          "value" : "true"
+        },
+        {
+          "that" : "any(.menus.items[]; .path == \"View > Fold All\")",
+          "value" : "true"
+        },
+        {
+          "that" : "any(.menus.items[]; .path == \"View > Unfold All\")",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then the View menu holds Fold Heading, Unfold Heading, Fold All and Unfold All",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Fold Heading\")] | length > 0 and all(.key == \"-\")",
+          "value" : "true"
+        },
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Unfold Heading\")] | length > 0 and all(.key == \"-\")",
+          "value" : "true"
+        },
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Fold All\")] | length > 0 and all(.key == \"-\")",
+          "value" : "true"
+        },
+        {
+          "that" : "[.menus.items[] | select(.path == \"View > Unfold All\")] | length > 0 and all(.key == \"-\")",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And none of them has a key equivalent",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

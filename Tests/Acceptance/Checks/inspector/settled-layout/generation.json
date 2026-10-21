@@ -1,0 +1,167 @@
+{
+  "blockSha256" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "ended" : "2026-10-21T08:38:29Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.3637736000000001,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/logs/draft.jsonl",
+      "logSha256" : "9040c5714a5bf50c56f1e299836c00c69aa13120007ddf75e8c698cfb21c8131",
+      "seconds" : 111.09730303287506,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin; cat rule.md; echo ----; cat cli.md; echo ----; cat format.md",
+        "Bash: cat prompt.md; ls -la bin tmp; file bin/*",
+        "Bash: python3 -I -c '\ntext = \"\\n\".join(\"# Section %d\\n\" % k + \"\\n\".join(\"Line %d of section %d.\" % (j, k) for j in range(1, 6)) for k in range(1, 41))\nprint(len(text), len(text.encode(\"utf-16-le\"))//2, text.count(\"\\n\")+1)\nprint(repr(text[:120]), repr(text[-40:]))\n'",
+        "Bash: t=\"\"; for k in $(seq 1 40); do [ -n \"$t\" ] && t=\"$t\\\\n\"; t=\"$t# Section $k\"; for j in 1 2 3 4 5; do t=\"$t\\\\nLine $j of section $k.\"; done; done; printf '%s' \"$t\" > tmp/fixture.txt; printf '%b' \"$t\" | wc -c; printf '%b' \"$t\" | wc -l; head -c 200 tmp/fixture.txt; echo; which jq",
+        "Bash: t=\"\"; raw=\"\"; nl=$'\\n'; for ((k=1;k<=40;k++)); do if [ -n \"$t\" ]; then t=\"$t\\\\n\"; raw=\"$raw$nl\"; fi; t=\"$t# Section $k\"; raw=\"$raw# Section $k\"; for ((j=1;j<=5;j++)); do t=\"$t\\\\nLine $j of section $k.\"; raw=\"$raw${nl}Line $j of section $k.\"; done; done; printf '%s' \"$t\" > tmp/fixture.txt; echo \"length=${#raw}\"; echo \"${t:0:160}\"; echo \"${t: -60}\"",
+        "Bash: fx=$(cat tmp/fixture.txt) && cat > work/check.json <<EOF\n{\n  \"format\": 1,\n  \"rule\": \"req~inspector.settled-layout~1\",\n  \"example\": \"waiting after Fold All\",\n  \"files\": {\"tall.md\": \"$fx\"},\n  \"steps\": [\n    {\"line\": \"* Given a notebook taller than the window is open\",\n     \"do\": [{\"launch\": {\"build\": \"debug\", \"inspector\": true}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"tall.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"opened\"}],\n     \"expect\": [{\"that\": \".opened.json.sections.notebook.length == 4865\", \"why\": \"the whole of tall.md is open\"},\n                {\"that\": \".opened.json.sections.notebook.scroll | .documentHeight > .height\", \"why\": \"the notebook is taller than the window\"}]},\n    {\"line\": \"* When the user chooses View > Fold All and an agent at once waits for settled layout\",\n     \"do\": [{\"drive\": [\"menu\", \"View > Fold All\"]},\n            {\"inspect\": [\"wait\"], \"as\": \"waited\"}],\n     \"expect\": []},\n    {\"line\": \"* Then the wait answers after the fold's layout\",\n     \"do\": [{\"inspect\": [\"state\"], \"as\": \"after\"}],\n     \"expect\": [{\"that\": \".after.json.sections.notebook.folded | length > 0\", \"why\": \"the fold is in place when the wait answers\"},\n                {\"that\": \".after.json.sections.notebook.drawn | length > 0 and all(.[]; .text | startswith(\\\"#\\\"))\", \"why\": \"only headings are drawn: the folded lines are already laid out of view\"},\n                {\"that\": \".after.json.sections.notebook.scroll.documentHeight < .opened.json.sections.notebook.scroll.documentHeight\", \"why\": \"the scroller already spans the folded text, not the unfolded one\"},\n                {\"that\": \".after.json.sections.notebook | [.folded[].offset] as \\$f | ([.drawn[] | .offset as \\$o | select(any(\\$f[]; . == \\$o)) | .offset] | sort) == ([.markers[].heading] | sort)\", \"why\": \"every folded heading on screen already shows its marker\"}]},\n    {\"line\": \"* And the state read right after it matches the state read a second later\",\n     \"do\": [{\"sleep\": 1},\n            {\"inspect\": [\"state\"], \"as\": \"later\"}],\n     \"expect\": [{\"that\": \"(.after.json | del(.window.isActive, .window.isKey)) == (.later.json | del(.window.isActive, .window.isKey))\", \"why\": \"nothing laid out or drawn changed in the second after the wait answered (focus, which the drive hands back, is not layout)\"}]}\n  ]\n}\nEOF\nbin/palantir-accept lint work/check.json rule.md",
+        "Bash: head -c 300 work/check.json; echo; grep -n 'as \\$f\\|File >' work/check.json | cut -c1-160"
+      ],
+      "turns" : 8
+    },
+    {
+      "costUSD" : 1.5568304000000004,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "gate-signal.txt" : "017c45f1a2a73fc74d66140416ad64f0a09921037a737646bf349da3a9f791f1",
+        "prompt.md" : "39c8750f80df682c66b8558dc1b55a2249f79eb6d131bfc76ec993d5337b9285",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/logs/revise-1.jsonl",
+      "logSha256" : "df7816911ea2cccd56d9b477dc7c780e5877c8562ff262576bd573d14ec1e275",
+      "reason" : "gate-signal",
+      "seconds" : 424.39678597450256,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; echo ---; cat rule.md; echo ---; cat gate-signal.txt",
+        "Bash: cat prompt.md; echo ---; cat cli.md; echo ---; cat format.md; echo ---; ls -la work bin tmp; cat work/check.json",
+        "Bash: file bin/*; head -50 bin/palantir-accept; find tmp -maxdepth 3 | head -50",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; bin/palantir-accept --help 2>&1 | head -40; head -c 600 tmp/fixture.txt; echo; ls -la tmp/claude-501",
+        "Bash: strings -n 6 bin/palantir-accept | grep -iE 'settl|pending|wait|capture|sha256|\"out\"|mtime|elapsed|duration|started|ended|time' | head -80",
+        "Bash: LC_ALL=C grep -aoE '[[:print:]]{8,}' bin/palantir-accept | grep -iE 'settl|pending|wait|capture|sha256|mtime|elapsed|duration|startedAt|endedAt|seconds|mutant|gate' | sort -u | head -80",
+        "Bash: cp work/check.json /tmp/check.before.json && python3 -I - <<'EOF'\nimport json\np = \"work/check.json\"\nc = json.load(open(p))\nold = c[\"files\"][\"tall.md\"]\n# sanity: the old fixture follows the 40-section pattern this extends\ngen = lambda n: \"\\n\".join(\"# Section %d\\n\" % s + \"\\n\".join(\"Line %d of section %d.\" % (l, s) for l in range(1, 6)) for s in range(1, n + 1))\nassert gen(40) == old, \"old fixture differs from pattern\"\ntext = gen(1000)\nassert text.isascii()\nc[\"files\"][\"tall.md\"] = text\ns = c[\"steps\"]\ns[0][\"expect\"][0][\"that\"] = \".opened.json.sections.notebook.length == %d\" % len(text)\ns[2][\"expect\"] = [\n  {\"that\": \".after.json.sections.notebook.folded | length > 0\", \"why\": \"the fold is in place when the wait answers\"},\n  {\"that\": \".after.json.sections.notebook.drawn | length > 0 and all(.[]; .text | startswith(\\\"#\\\"))\", \"why\": \"only headings are drawn: the folded lines are already laid out of view\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | all(.drawn[]; .offset as $o | any($f[]; . == $o))\", \"why\": \"every heading on screen is already folded\"},\n  {\"that\": \".after.json.sections.notebook.scroll.documentHeight < .opened.json.sections.notebook.scroll.documentHeight\", \"why\": \"the scroller already spans the folded text, not the unfolded one\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | ([.drawn[] | .offset as $o | select(any($f[]; . == $o)) | .offset] | sort) == ([.markers[].heading] | sort)\", \"why\": \"every folded heading on screen already shows its marker\"},\n  {\"that\": \".after.json.sections.notebook as $n | all($n.markers[]; . as $m | any($n.drawn[]; .offset == $m.heading and .rect.y < $m.rect.y + $m.rect.height and $m.rect.y < .rect.y + .rect.height))\", \"why\": \"each marker already sits beside its heading's laid-out line, not where the line was before the fold\"}\n]\ns[3][\"expect\"] = [\n  {\"that\": \".after.json == .later.json\", \"why\": \"nothing in the state, window included, changed in the second after the wait answered\"}\n]\nout = json.dumps(c, ensure_ascii=False, indent=None)\n# keep the file's original layout: one key per line at top, one step per block\nlines = ['{', '  \"format\": 1,', '  \"rule\": %s,' % json.dumps(c[\"rule\"]), '  \"example\": %s,' % json.dumps(c[\"example\"]),\n         '  \"files\": {\"tall.md\": %s},' % json.dumps(text), '  \"steps\": [']\nblocks = []\nfor st in s:\n    b = '    {\"line\": %s,\\n     \"do\": [' % json.dumps(st[\"line\"], ensure_ascii=False)\n    b += \",\\n            \".join(json.dumps(a, ensure_ascii=False) for a in st[\"do\"]) + \"],\\n\"\n    b += '     \"expect\": [' + \",\\n                \".join(json.dumps(e, ensure_ascii=False) for e in st[\"expect\"]) + \"]}\"\n    blocks.append(b)\nlines.append(\",\\n\".join(blocks))\nlines += ['  ]', '}']\nsrc = \"\\n\".join(lines) + \"\\n\"\nassert json.loads(src) == c\nopen(p, \"w\").write(src)\nprint(\"length\", len(text), \"bytes\", len(src))\nEOF\nbin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Bash: grep -c 'del(.window' work/check.json; python3 -I - <<'EOF'\nimport json\np = \"work/check.json\"\nraw = open(p).read()\nopen(\"tmp/check.before.json\", \"w\").write(raw)\nc = json.loads(raw)\nold = c[\"files\"][\"tall.md\"]\ngen = lambda n: \"\\n\".join(\"# Section %d\\n\" % s + \"\\n\".join(\"Line %d of section %d.\" % (l, s) for l in range(1, 6)) for s in range(1, n + 1))\nassert gen(40) == old, \"old fixture differs from pattern\"\nassert len(old) == 4865\ntext = gen(1000)\nassert text.isascii()\nc[\"files\"][\"tall.md\"] = text\ns = c[\"steps\"]\ns[0][\"expect\"][0][\"that\"] = \".opened.json.sections.notebook.length == %d\" % len(text)\ns[2][\"expect\"] = [\n  {\"that\": \".after.json.sections.notebook.folded | length > 0\", \"why\": \"the fold is in place when the wait answers\"},\n  {\"that\": \".after.json.sections.notebook.drawn | length > 0 and all(.[]; .text | startswith(\\\"#\\\"))\", \"why\": \"only headings are drawn: the folded lines are already laid out of view\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | all(.drawn[]; .offset as $o | any($f[]; . == $o))\", \"why\": \"every heading on screen is already folded\"},\n  {\"that\": \".after.json.sections.notebook.scroll.documentHeight < .opened.json.sections.notebook.scroll.documentHeight\", \"why\": \"the scroller already spans the folded text, not the unfolded one\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | ([.drawn[] | .offset as $o | select(any($f[]; . == $o)) | .offset] | sort) == ([.markers[].heading] | sort)\", \"why\": \"every folded heading on screen already shows its marker\"},\n  {\"that\": \".after.json.sections.notebook as $n | all($n.markers[]; . as $m | any($n.drawn[]; .offset == $m.heading and .rect.y < $m.rect.y + $m.rect.height and $m.rect.y < .rect.y + .rect.height))\", \"why\": \"each marker already sits beside its heading's laid-out line, not where the line was before the fold\"}\n]\ns[3][\"expect\"] = [\n  {\"that\": \".after.json == .later.json\", \"why\": \"nothing in the state, window included, changed in the second after the wait answered\"}\n]\nlines = ['{', '  \"format\": 1,', '  \"rule\": %s,' % json.dumps(c[\"rule\"]), '  \"example\": %s,' % json.dumps(c[\"example\"]),\n         '  \"files\": {\"tall.md\": %s},' % json.dumps(text), '  \"steps\": [']\nblocks = []\nfor st in s:\n    b = '    {\"line\": %s,\\n     \"do\": [' % json.dumps(st[\"line\"], ensure_ascii=False)\n    b += \",\\n            \".join(json.dumps(a, ensure_ascii=False) for a in st[\"do\"]) + \"],\\n\"\n    b += '     \"expect\": [' + \",\\n                \".join(json.dumps(e, ensure_ascii=False) for e in st[\"expect\"]) + \"]}\"\n    blocks.append(b)\nlines.append(\",\\n\".join(blocks))\nlines += ['  ]', '}']\nsrc = \"\\n\".join(lines) + \"\\n\"\nassert json.loads(src) == c\nopen(p, \"w\").write(src)\nprint(\"length\", len(text), \"bytes\", len(src))\nEOF\necho \"py exit $?\"; grep -c 'del(.window' work/check.json; bin/palantir-accept lint work/check.json rule.md; echo \"lint exit $?\"",
+        "Bash: for t in /usr/bin/python3 /usr/bin/jq /opt/homebrew/bin/jq /usr/bin/awk /usr/bin/perl /usr/bin/ruby /usr/bin/osascript; do [ -x \"$t\" ] && { \"$t\" --version </dev/null >/dev/null 2>&1; echo \"$t -> $?\"; } ; done 2>&1",
+        "Bash: /usr/bin/jq -r 'def gen(n): [range(1; n+1) as $s | \"# Section \\($s)\\n\" + ([range(1;6) as $l | \"Line \\($l) of section \\($s).\"] | join(\"\\n\"))] | join(\"\\n\");\n  (gen(40) == .files[\"tall.md\"]), (.files[\"tall.md\"] | length), (gen(1000) | length), (gen(1000) | test(\"^[\\\\u0000-\\\\u007f]*$\"))' work/check.json",
+        "Bash: /usr/bin/jq -n -r 'def gen(n): [range(1; n+1) as $s | \"# Section \\($s)\\n\" + ([range(1;6) as $l | \"Line \\($l) of section \\($s).\"] | join(\"\\n\"))] | join(\"\\n\"); gen(1000) | (explode | all(. < 128)), (utf8bytelength), ([splits(\"\\n\")] | length), ([splits(\"\\n\")] | map(select(startswith(\"#\"))) | length)'",
+        "Bash: cat work/check.json > tmp/check.before.json && /usr/bin/jq -r '\ndef gen(n): [range(1; n+1) as $s | \"# Section \\($s)\\n\" + ([range(1;6) as $l | \"Line \\($l) of section \\($s).\"] | join(\"\\n\"))] | join(\"\\n\");\ngen(1000) as $text\n| .files[\"tall.md\"] = $text\n| .steps[0].expect[0].that = \".opened.json.sections.notebook.length == \\($text | length)\"\n| .steps[2].expect = [\n  {\"that\": \".after.json.sections.notebook.folded | length > 0\", \"why\": \"the fold is in place when the wait answers\"},\n  {\"that\": \".after.json.sections.notebook.drawn | length > 0 and all(.[]; .text | startswith(\\\"#\\\"))\", \"why\": \"only headings are drawn: the folded lines are already laid out of view\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | all(.drawn[]; .offset as $o | any($f[]; . == $o))\", \"why\": \"every heading on screen is already folded\"},\n  {\"that\": \".after.json.sections.notebook.scroll.documentHeight < .opened.json.sections.notebook.scroll.documentHeight\", \"why\": \"the scroller already spans the folded text, not the unfolded one\"},\n  {\"that\": \".after.json.sections.notebook | [.folded[].offset] as $f | ([.drawn[] | .offset as $o | select(any($f[]; . == $o)) | .offset] | sort) == ([.markers[].heading] | sort)\", \"why\": \"every folded heading on screen already shows its marker\"},\n  {\"that\": \".after.json.sections.notebook as $n | all($n.markers[]; . as $m | any($n.drawn[]; .offset == $m.heading and .rect.y < $m.rect.y + $m.rect.height and $m.rect.y < .rect.y + .rect.height))\", \"why\": \"each marker already sits beside its heading'\"'\"'s laid-out line, not where the line was before the fold\"}]\n| .steps[3].expect = [\n  {\"that\": \".after.json == .later.json\", \"why\": \"nothing in the state, the window'\"'\"'s included, changed in the second after the wait answered\"}]\n| . as $c\n| ([ \"{\",\n     \"  \\\"format\\\": \\($c.format),\",\n     \"  \\\"rule\\\": \\($c.rule | tojson),\",\n     \"  \\\"example\\\": \\($c.example | tojson),\",\n     \"  \\\"files\\\": {\\\"tall.md\\\": \\($c.files[\"tall.md\"] | tojson)},\",\n     \"  \\\"steps\\\": [\",\n     ([$c.steps[] |\n        \"    {\\\"line\\\": \\(.line | tojson),\\n     \\\"do\\\": [\" + ([.do[] | tojson] | join(\",\\n            \")) + \"],\\n     \\\"expect\\\": [\" + ([.expect[] | tojson] | join(\",\\n                \")) + \"]}\"]\n      | join(\",\\n\")),\n     \"  ]\",\n     \"}\" ] | join(\"\\n\"))\n' tmp/check.before.json > tmp/check.new.json && /usr/bin/jq -e --slurpfile a tmp/check.new.json '$a[0] | (.steps | length == 4) and (.files[\"tall.md\"] | length == 128357)' tmp/check.before.json && cat tmp/check.new.json > work/check.json && bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Bash: /usr/bin/jq 'del(.files) | .steps[] |= {line, do, expect: [.expect[].that]}' work/check.json | head -60\ncat > tmp/rec.jq <<'EOF'\ndef win(a): {\"frame\":{\"x\":375,\"y\":145,\"width\":960,\"height\":632},\"content\":{\"width\":960,\"height\":600},\"scale\":2,\"isActive\":a,\"isKey\":a,\"isVisible\":true,\"isMiniaturized\":false};\ndef settled: {\"window\": win(false), \"sections\":{\"notebook\":{\"length\":128357,\n  \"folded\":[{\"offset\":0,\"line\":\"# Section 1\"},{\"offset\":120,\"line\":\"# Section 2\"}],\n  \"drawn\":[{\"offset\":0,\"text\":\"# Section 1\",\"rect\":{\"x\":25,\"y\":0,\"width\":90,\"height\":30}},\n           {\"offset\":120,\"text\":\"# Section 2\",\"rect\":{\"x\":25,\"y\":30,\"width\":90,\"height\":30}}],\n  \"gaps\":[],\n  \"markers\":[{\"heading\":0,\"label\":\"...\",\"rect\":{\"x\":120,\"y\":7,\"width\":16,\"height\":16}},\n             {\"heading\":120,\"label\":\"...\",\"rect\":{\"x\":120,\"y\":37,\"width\":16,\"height\":16}}],\n  \"selection\":{\"location\":0,\"length\":0},\"scroll\":{\"y\":0,\"height\":600,\"documentHeight\":30000}}}};\ndef opened: settled | .sections.notebook.scroll.documentHeight = 120000;\n{opened: {json: opened}, after: {json: settled}, later: {json: settled}}\n| if $case == \"stale-marker\" then .after.json.sections.notebook.markers[1].rect.y = 300\n  elif $case == \"focus\" then .after.json.window = win(true)\n  elif $case == \"unfolded-heading\" then .after.json.sections.notebook.folded |= .[:1] | .after.json.sections.notebook.markers |= .[:1]\n  else . end\nEOF\nfor c in settled stale-marker focus unfolded-heading; do\n  printf '%-17s' \"$c\"; /usr/bin/jq -n --arg case \"$c\" -f tmp/rec.jq > tmp/rec.json\n  /usr/bin/jq -r '[.steps[2,3].expect[].that]' work/check.json | /usr/bin/jq -r '.[]' | while IFS= read -r e; do /usr/bin/jq -c \"$e\" tmp/rec.json | tr '\\n' ' '; done; echo\ndone",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft/work/answer.md",
+        "Bash: rm -f tmp/rec.jq tmp/rec.json tmp/check.new.json; ls tmp; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 16
+    },
+    {
+      "costUSD" : 0.6760986000000001,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "47ff12e06d8085b29e7723daf7373530d7752e4669ff010ed4f32254eaaa7a7a",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/logs/revise-2.jsonl",
+      "logSha256" : "df4edb0c5d11244491d7a2d46ef71ea803ca7c8d3d649bb227f068aeee0b102a",
+      "reason" : "review",
+      "seconds" : 145.62034499645233,
+      "toolCalls" : [
+        "Bash: ls -la . work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; ls -la work bin tmp; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; jq '.files |= with_entries(.value |= (length|tostring) + \" chars\")' work/check.json; echo ----; cat prompt.md; echo ----; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; cat tmp/rec.jq; echo ----; head -c 3000 tmp/rec.json; echo; echo ----; head -c 1500 tmp/fixture.txt; echo; echo ----; jq '.files |= with_entries(.value |= (length|tostring))' tmp/check.before.json | head -80; cmp tmp/check.new.json work/check.json && echo same-as-new",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; jq -r '.files[\"tall.md\"]' work/check.json > \"$TMPDIR/tall.md\"; f=\"$TMPDIR/tall.md\"; wc -c \"$f\"; grep -c '^#' \"$f\"; grep '^#' \"$f\" | head -2; grep '^#' \"$f\" | tail -2; grep -vc '^\\(# Section [0-9]*\\|Line [1-5] of section [0-9]*\\.\\)$' \"$f\"; tail -c 50 \"$f\" | od -c | tail -3\n# does a generated text match the fixture exactly?\njq -nr '[range(1;1001) | . as $n | \"# Section \\($n)\\n\" + ([range(1;6) | \"Line \\(.) of section \\($n).\\n\"] | add)] | add' > \"$TMPDIR/gen.md\"; diff -q \"$f\" \"$TMPDIR/gen.md\" && echo generated-matches\n# heading offsets computed in jq from the section shape vs actual\njq -r '.files[\"tall.md\"] | [match(\"^# .*$\"; \"gm\").offset] | .[0:3], .[-1], length' work/check.json -c",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; jq -c '.files[\"tall.md\"] as $t\n | ([range(1;1001) | . as $n | \"# Section \\($n)\\n\" + ([range(1;6) | \"Line \\(.) of section \\($n).\\n\"] | add)] | add) as $g\n | {fixlen: ($t|length), genlen: ($g|length), eq: ($t == $g), eqNoTrail: ($t == ($g|rtrimstr(\"\\n\"))), last: ($t[-30:])}\n , ($t | split(\"\\n\") | [foreach .[] as $l ({o:0,p:0}; {o:(.o+.p), p:(($l|length)+1), l:$l}; select(.l|startswith(\"#\")) | .o)] | {n:length, first3: .[0:3], last: .[-1]})' work/check.json; jq --version",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; jq -c '.files[\"tall.md\"]\n | (split(\"\\n\") | [foreach .[] as $l ({o:0,p:0}; {o:(.o+.p), p:(($l|length)+1), l:$l}; select(.l|startswith(\"#\")) | {offset:.o, line:.l})]) as $actual\n | [range(1;1001) | {offset: ([range(1;.) | 111 + 6 * (tostring | length)] | add // 0), line: \"# Section \\(.)\"}] as $expected\n | {same: ($actual == $expected), n: ($expected|length), last: $expected[-1]}' work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; cp work/check.json tmp/check.pre-review.json\njq --indent 2 '(.steps[] | select(.line == \"* Then the wait answers after the fold'\"'\"'s layout\") | .expect[0]) |= (\n  if .that == \".after.json.sections.notebook.folded | length > 0\" then\n  {\"that\": \".after.json.sections.notebook.folded | map({offset, line}) | sort_by(.offset) == [range(1; 1001) | {offset: ([range(1; .) | 111 + 6 * (tostring | length)] | add // 0), line: \\\"# Section \\\\(.)\\\"}]\",\n   \"why\": \"the whole fold is in place when the wait answers: every one of tall.md'\"'\"'s 1000 headings, \\\"# Section N\\\" at the offset where its six-line section starts, is folded, not only those on screen\"}\n  else error(\"unexpected expectation: \\(.that)\") end)' tmp/check.pre-review.json > tmp/check.reviewed.json && mv tmp/check.reviewed.json work/check.json\njq '.steps[2]' work/check.json; jq -e '.files == input.files' work/check.json tmp/check.pre-review.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; cat work/check.json > tmp/check.pre-review.json && \njq --indent 2 '(.steps[] | select(.line == \"* Then the wait answers after the fold'\"'\"'s layout\") | .expect[0]) |= (\n  if .that == \".after.json.sections.notebook.folded | length > 0\" then\n  {\"that\": \".after.json.sections.notebook.folded | map({offset, line}) | sort_by(.offset) == [range(1; 1001) | {offset: ([range(1; .) | 111 + 6 * (tostring | length)] | add // 0), line: \\\"# Section \\\\(.)\\\"}]\",\n   \"why\": \"the whole fold is in place when the wait answers: every one of tall.md'\"'\"'s 1000 headings, \\\"# Section N\\\" at the offset where its six-line section starts, is folded, not only those on screen\"}\n  else error(\"unexpected expectation: \\(.that)\") end)' tmp/check.pre-review.json > tmp/check.reviewed.json && cat tmp/check.reviewed.json > work/check.json\njq '.steps[2].expect[0]' work/check.json; jq -e --slurpfile old tmp/check.pre-review.json '(.files == $old[0].files) and (del(.steps[2].expect[0]) == ($old[0] | del(.steps[2].expect[0])))' work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; e=$(jq -r '.steps[2].expect[0].that' work/check.json)\nfull=$(jq -c '.files[\"tall.md\"] | split(\"\\n\") | [foreach .[] as $l ({o:0,p:0}; {o:(.o+.p), p:(($l|length)+1), l:$l}; select(.l|startswith(\"#\")) | {offset:.o, line:.l})]' work/check.json)\nfor c in full visible-only reversed extra-key one-missing off-by-one; do\n  printf '%-13s ' \"$c\"\n  jq -n --argjson f \"$full\" --arg c \"$c\" '\n    ( if $c == \"full\" then $f\n      elif $c == \"visible-only\" then $f[:20]\n      elif $c == \"reversed\" then ($f | reverse)\n      elif $c == \"extra-key\" then ($f | map(. + {depth: 1}))\n      elif $c == \"one-missing\" then ($f | del(.[500]))\n      else ($f | .[999].offset += 1) end) as $folded\n    | {after: {json: {sections: {notebook: {folded: $folded}}}}}' | jq \"$e\"\ndone",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/draft/work/answer.md"
+      ],
+      "turns" : 13
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "0df01e4268b1946d8ef47145a511ee277971062d248f42a9fa7d5d946202902b",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "6e23f56a7982b75629d058b52c46aff34281bd4b2175a73d9dc745c7deac7645",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "cf81749e35d747f389cef7f7409d22ee2334bcad4fd5cce69a4044f871b54e60",
+      "seconds" : 71.45575797557831,
+      "verdict" : "faithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "799b372d92cf88c82612fdd2bb57c7ec30b6d8cea07a5c76ff50b02bf975e438",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "6e23f56a7982b75629d058b52c46aff34281bd4b2175a73d9dc745c7deac7645",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "710d559495cc2e830d72ea6712dc6bc450305dd5e46f2a7dffd3144915b18ec8",
+      "seconds" : 102.2445479631424,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "ac37ee4e642ac0ef0e62b62d79a7227f9537ec394aa96dbd189eb19a6fa571c7",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "6e23f56a7982b75629d058b52c46aff34281bd4b2175a73d9dc745c7deac7645",
+        "rule.md" : "fce1c38f3d13c613e976bc2d444ee2a9a422c9f06db4b7b7bf76cfa0f70e626d",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "3f343217b357c368a514312c936b14a4eb402b3cade1954ee81308320e57127b",
+      "seconds" : 94.85819804668427,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "note" : "the check passes against the mutant after its revision",
+      "patchSha256" : "47741c08a3fd5cd620e48b390e90737ba24519d3ceeaa052568b8c40309c695a",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/mutant-1-replay-1",
+      "seconds" : 9.78164291381836,
+      "valid" : false
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.settled-layout-1792570869/replays/base-3"
+  },
+  "rule" : "req~inspector.settled-layout~1",
+  "started" : "2026-10-21T08:21:09Z"
+}

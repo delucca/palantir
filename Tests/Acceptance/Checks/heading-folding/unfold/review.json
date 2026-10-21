@@ -1,0 +1,36 @@
+{
+  "checkSha256" : "0c5a88b18cb83a0c524b8d15128010ed72ed79edf31c54c781e23a47a44c9767",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given \"## Fix the reaper\" is folded and the selection is in it",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user chooses View > Unfold Heading",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then the view shows the same text as before the fold",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And \"## Fix the reaper\" shows no folded marker",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.unfold~1",
+  "summary" : "The check establishes the folded heading and selection, invokes the specified command, compares the displayed text with its pre-fold state, and verifies marker removal. Coordinates come from observed layout, and reads follow layout waits.",
+  "verdict" : "faithful"
+}

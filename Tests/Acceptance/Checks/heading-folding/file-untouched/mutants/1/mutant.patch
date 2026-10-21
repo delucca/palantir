@@ -1,0 +1,33 @@
+diff --git a/Sources/Notebook/UI/NotebookTextView.swift b/Sources/Notebook/UI/NotebookTextView.swift
+index 9c0914f..62b5713 100644
+--- a/Sources/Notebook/UI/NotebookTextView.swift
++++ b/Sources/Notebook/UI/NotebookTextView.swift
+@@ -7,6 +7,7 @@ package final class NotebookTextView: NSTextView {
+   static let markerInset = NSSize(width: markerGap + 16, height: 0)
+ 
+   private let folding = FoldedParagraphs()
++  var notebookURL: URL?
+   package private(set) var folds = Folds(outline: Outline(parsing: ""))
+   package private(set) var foldedMarkers: [Int: NSImageView] = [:]
+   package private(set) var laidOut: [NSTextLayoutFragment] = []
+@@ -127,6 +128,9 @@ package final class NotebookTextView: NSTextView {
+     let anchor = topLine(layout, storage)
+     let previous = folds
+     change(&folds)
++    if let notebookURL {
++      try? (string + "\n").write(to: notebookURL, atomically: true, encoding: .utf8)
++    }
+     // Markers move on every viewport layout; find the paragraph each one sits on once, here.
+     let text = string as NSString
+     foldedHeadingEndingAt = [:]
+diff --git a/Sources/Notebook/UI/NotebookWindowController.swift b/Sources/Notebook/UI/NotebookWindowController.swift
+index 05c35a1..3c927ac 100644
+--- a/Sources/Notebook/UI/NotebookWindowController.swift
++++ b/Sources/Notebook/UI/NotebookWindowController.swift
+@@ -74,5 +74,6 @@ package final class NotebookWindowController: NSWindowController {
+ 
+   func open(_ url: URL) throws {
+     textView.show(try String(contentsOf: url, encoding: .utf8))
++    textView.notebookURL = url
+   }
+ }

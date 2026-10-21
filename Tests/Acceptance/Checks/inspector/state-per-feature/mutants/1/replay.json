@@ -1,0 +1,112 @@
+{
+  "app" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/mutant-1-build/palantir.app",
+  "appSha256" : "211945b21de792499c59b129447cc174d2029e6b014ea44f67a3e78b836dc3a7",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/checks/c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92.json",
+  "checkSha256" : "c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "failure" : {
+    "kind" : "expect",
+    "phase" : "then",
+    "step" : 2,
+    "that" : ".state.json.sections | type == \"object\" and (.notebook | type == \"object\")",
+    "value" : "false"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~inspector.state-per-feature~1",
+  "seconds" : 0.6701140403747559,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "name" : "launched",
+          "seconds" : 0.42806005477905273
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "list"
+          ],
+          "exit" : 0,
+          "name" : "listening",
+          "seconds" : 0.004510045051574707,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".launched.pid as $p | .listening.sockets | any((.pid | tostring) == ($p | tostring))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given palantir wires in the notebook feature",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.05845999717712402,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "state",
+          "seconds" : 0.005986928939819336,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".state.exit == 0 and (.state.json | type == \"object\")",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When an agent asks the inspector for its state",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".state.json.sections | type == \"object\" and (.notebook | type == \"object\")",
+          "value" : "false"
+        }
+      ],
+      "line" : "* Then the state holds a notebook section",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "fail"
+}

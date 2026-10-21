@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookWindowController.swift b/Sources/Notebook/UI/NotebookWindowController.swift
+index 05c35a1..8bcb6f3 100644
+--- a/Sources/Notebook/UI/NotebookWindowController.swift
++++ b/Sources/Notebook/UI/NotebookWindowController.swift
+@@ -44,7 +44,7 @@ package final class NotebookWindowController: NSWindowController {
+     textView.autoresizingMask = [.width]
+     textView.textContainer?.widthTracksTextView = true
+     textView.textContainerInset = NotebookTextView.markerInset
+-    textView.isEditable = false
++    textView.isEditable = true
+     textView.isSelectable = true
+     textView.isRichText = false
+     textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)

@@ -1,0 +1,42 @@
+{
+  "checkSha256" : "654e7285090cdb0791025d71360c6544ed94f57b46001f29737a27d5ddf0982b",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* When palantir is built for release",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then its executable holds no code from an inspector target",
+      "problems" : [
+        {
+          "at" : ".release.defined | map(tostring | select(test(\"inspector\"; \"i\"))) | length == 0",
+          "problem" : "Symbol names do not establish target provenance. Inspector code could lack matching symbols, and unrelated code could have matching names. The documented tools provide no target attribution or executable-code inspection that could resolve this limitation.",
+          "severity" : "advisory"
+        }
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And launching it with the inspector launch flag creates no socket",
+      "problems" : [
+        {
+          "at" : "The three inspect list/state sample pairs",
+          "problem" : "A socket could exist only between samples or appear after the final sample. Finite polling cannot establish that no socket is ever created; the tools offer no continuous creation monitor.",
+          "severity" : "advisory"
+        },
+        {
+          "at" : "The listedAtLaunch/listedAfter2s/listedAfter7s and reachedAtLaunch/reachedAfter2s/reachedAfter7s expectations",
+          "problem" : "These establish no listed listener and socket errors when requesting state. They cannot exclude a created socket that is not listening or discoverable. No socket path or enumeration of such filesystem objects is documented, so stat cannot reliably close this gap.",
+          "severity" : "advisory"
+        }
+      ]
+    }
+  ],
+  "rule" : "req~inspector.no-release-listener~1",
+  "summary" : "No blocking defect identified. The check exercises the release build and checks the available symbol and listener observations; its remaining gaps concern information the documented tools cannot establish.",
+  "verdict" : "faithful"
+}

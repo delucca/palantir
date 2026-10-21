@@ -1,0 +1,160 @@
+{
+  "app" : "/Users/admin/acceptance/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/admin/acceptance/work/6/check.json",
+  "checkSha256" : "654e7285090cdb0791025d71360c6544ed94f57b46001f29737a27d5ddf0982b",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~inspector.no-release-listener~1",
+  "seconds" : 8.10960304737091,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "symbols",
+          "arguments" : [
+            "/Users/admin/acceptance/release/palantir.app/Contents/MacOS/palantir"
+          ],
+          "name" : "release",
+          "seconds" : 0.02653801441192627
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When palantir is built for release",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".release.defined | map(tostring | select(test(\"inspector\"; \"i\"))) | length == 0",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then its executable holds no code from an inspector target",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "release",
+            "--inspector"
+          ],
+          "name" : "launched",
+          "seconds" : 0.5806100368499756
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "list"
+          ],
+          "exit" : 0,
+          "name" : "listedAtLaunch",
+          "seconds" : 0.005056023597717285,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 2,
+          "name" : "reachedAtLaunch",
+          "seconds" : 0.003484010696411133,
+          "stderr" : "palantir-inspect: connect /var/folders/yt/jkgjjlb55fvbjsx8t5xw72280000gn/T/palantir-inspector/1568.sock: No such file or directory\n"
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "2.0"
+          ],
+          "seconds" : 2.0277570486068726
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "list"
+          ],
+          "exit" : 0,
+          "name" : "listedAfter2s",
+          "seconds" : 0.004928946495056152,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 2,
+          "name" : "reachedAfter2s",
+          "seconds" : 0.0032570362091064453,
+          "stderr" : "palantir-inspect: connect /var/folders/yt/jkgjjlb55fvbjsx8t5xw72280000gn/T/palantir-inspector/1568.sock: No such file or directory\n"
+        },
+        {
+          "action" : "sleep",
+          "arguments" : [
+            "5.0"
+          ],
+          "seconds" : 5.001976013183594
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "list"
+          ],
+          "exit" : 0,
+          "name" : "listedAfter7s",
+          "seconds" : 0.00586700439453125,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 2,
+          "name" : "reachedAfter7s",
+          "seconds" : 0.00397801399230957,
+          "stderr" : "palantir-inspect: connect /var/folders/yt/jkgjjlb55fvbjsx8t5xw72280000gn/T/palantir-inspector/1568.sock: No such file or directory\n"
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.launched.pid | tostring) as $p | [.listedAtLaunch, .listedAfter2s, .listedAfter7s] | all((.exit == 0 or .exit == 2) and ((.sockets // []) | map(select((.pid | tostring) == $p)) | length == 0))",
+          "value" : "true"
+        },
+        {
+          "that" : "[.reachedAtLaunch, .reachedAfter2s, .reachedAfter7s] | all(.exit == 2)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And launching it with the inspector launch flag creates no socket",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/Users/admin/acceptance/bin/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/nm",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

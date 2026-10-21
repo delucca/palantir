@@ -1,0 +1,149 @@
+{
+  "blockSha256" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398",
+  "ended" : "2026-10-21T08:22:22Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.29348299999999994,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/logs/draft.jsonl",
+      "logSha256" : "b14ea9a82b1554ca6022aa06139961f5a86a4c30e08ef0e41d241d61df10bd45",
+      "seconds" : 83.32764005661011,
+      "toolCalls" : [
+        "Bash: ls -la . work bin && cat rule.md && cat format.md && cat cli.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; cat rule.md; echo ----; cat format.md; echo ----; cat cli.md; echo ----; ls bin work tmp",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; cat prompt.md; echo ----; head -c 600 bin/palantir-accept | cat -v | head -20",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft/work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 6
+    },
+    {
+      "costUSD" : 0.7432949999999999,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "ce6d4dfc6a2e21def93e5d63a158ce319b0cbeaea4050b670de5a5df8c35f343",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/logs/revise-1.jsonl",
+      "logSha256" : "825710fb1d00548853d1cfc25be37af4983437b67e4e54d625d5dd9d47ff16fd",
+      "reason" : "review",
+      "seconds" : 237.07858395576477,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; echo ---; cat rule.md; echo ---; cat review.json; echo ---; cat work/check.json; echo ---; cat work/answer.md 2>/dev/null",
+        "Bash: cat cli.md; echo ---; cat format.md; echo ---; cat prompt.md; echo ---; ls -la bin work tmp; ls -la tmp/*",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; which jq; jq --version",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft/work/check.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"\nE=$(jq -r '.steps[3].expect[1].that' work/check.json)\nL=$(jq -r '.steps[3].expect[0].that' work/check.json)\no='{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.\",\"rect\":{\"x\":5,\"y\":0,\"width\":90,\"height\":16}}]}'\nrun(){ printf '%-48s len=%s text=%s\\n' \"$1\" \"$(jq -n --argjson o \"$o\" --argjson t \"$2\" '{opened:{json:{sections:{notebook:$o}}},typed:{json:{sections:{notebook:$t}}}}' | jq \"$L\")\" \"$(jq -n --argjson o \"$o\" --argjson t \"$2\" '{opened:{json:{sections:{notebook:$o}}},typed:{json:{sections:{notebook:$t}}}}' | jq \"$E\")\"; }\nrun \"unchanged\" \"$o\"\nrun \"unchanged, scrolled + empty last para drawn\" '{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.\",\"rect\":{\"x\":5,\"y\":-8,\"width\":90,\"height\":16}},{\"offset\":16,\"text\":\"\",\"rect\":{\"x\":5,\"y\":8,\"width\":1,\"height\":16}}]}'\nrun \"x replaced the line\" '{\"length\":1,\"drawn\":[{\"offset\":0,\"text\":\"x\",\"rect\":{\"x\":5,\"y\":0,\"width\":9,\"height\":16}}]}'\nrun \"x inserted\" '{\"length\":17,\"drawn\":[{\"offset\":0,\"text\":\"xAlpha line one.\",\"rect\":{\"x\":5,\"y\":0,\"width\":9,\"height\":16}}]}'\nrun \"same length, changed char\" '{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line onex\",\"rect\":{\"x\":5,\"y\":0,\"width\":9,\"height\":16}}]}'\nrun \"same length, break became x\" '{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.x\",\"rect\":{\"x\":5,\"y\":0,\"width\":9,\"height\":16}}]}'\nrun \"same length, split into two paras\" '{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line\",\"rect\":{}},{\"offset\":11,\"text\":\"one.\",\"rect\":{}}]}'\nrun \"nothing drawn\" '{\"length\":16,\"drawn\":[]}'",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft/work/answer.md"
+      ],
+      "turns" : 7
+    },
+    {
+      "costUSD" : 0.39157200000000003,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "289fd45c9a216d04f8242298c0480ffafc96fa5cd77275526fc75452eee863fe",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/logs/revise-2.jsonl",
+      "logSha256" : "a944cb6ea497cdf75dc29945a5e84cadce40f965b4f6ebc9b80b1bc3cd2a5649",
+      "reason" : "review",
+      "seconds" : 125.07902204990387,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; ls work bin tmp; echo ----; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; cat cli.md; echo ----; cat format.md; echo ----; file bin/palantir-accept; head -c 2000 bin/palantir-accept",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; cp work/check.json tmp/check.before.json; cat > work/check.json <<'EOF'\n{\n  \"format\": 1,\n  \"rule\": \"req~notebook-window.read-only~1\",\n  \"example\": \"typing into an open notebook\",\n  \"files\": {\"notebook.md\": \"Alpha line one.\"},\n  \"steps\": [\n    {\"line\": \"* Given notebook.md is open\",\n     \"do\": [{\"launch\": {\"build\": \"debug\", \"inspector\": true}},\n            {\"drive\": [\"menu\", \"File > Open…\"]},\n            {\"drive\": [\"choose\", {\"file\": \"notebook.md\"}]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"opened\"},\n            {\"file\": \"notebook.md\", \"as\": \"fixture\"}],\n     \"expect\": [{\"that\": \".opened.json.sections.notebook.length == .fixture.size\",\n                 \"why\": \"the view holds the whole of notebook.md\"},\n                {\"that\": \".opened.json.sections.notebook.drawn[0] | .offset == 0 and .text == \\\"Alpha line one.\\\"\",\n                 \"why\": \"the view shows notebook.md from its first line\"}]},\n    {\"line\": \"* When the user selects its first line and types \\\"x\\\"\",\n     \"do\": [{\"drive\": [\"click\",\n                       {\"jq\": \".opened.json.sections.notebook.drawn[0].rect | .x + .width / 2 | floor\"},\n                       {\"jq\": \".opened.json.sections.notebook.drawn[0].rect | .y + .height / 2 | floor\"},\n                       \"--count\", 3]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"selected\"},\n            {\"drive\": [\"type\", \"x\"]},\n            {\"inspect\": [\"wait\"]},\n            {\"inspect\": [\"state\"], \"as\": \"typed\"}],\n     \"expect\": [{\"that\": \".opened.json.sections.notebook.drawn[0] as $l | .selected.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)\",\n                 \"why\": \"the triple click selected the first line, with its line break if it has one\"}]},\n    {\"line\": \"* Then the first line is still selected\",\n     \"do\": [],\n     \"expect\": [{\"that\": \".opened.json.sections.notebook.drawn[0] as $l | .typed.json.sections.notebook.selection | .location == $l.offset and (.length == ($l.text | length) or .length == ($l.text | length) + 1)\",\n                 \"why\": \"the selection after typing still covers the first line, with its line break if it has one\"}]},\n    {\"line\": \"* And the text in the view is unchanged\",\n     \"do\": [],\n     \"expect\": [{\"that\": \".typed.json.sections.notebook.length == .opened.json.sections.notebook.length\",\n                 \"why\": \"typing added or removed no characters\"},\n                {\"that\": \"def whole: .length as $n | [.drawn[] | select(.offset < $n)] | if length == 1 and .[0].offset == 0 and (.[0].text | length) == $n then .[0].text else null end; (.opened.json.sections.notebook | whole) as $before | $before != null and (.typed.json.sections.notebook | whole) == $before\",\n                 \"why\": \"notebook.md has no line break, so before and after typing one drawn paragraph spans the whole text, every character of it observed and none reconstructed, and that text is the same\"}]}\n  ]\n}\nEOF\nbin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/draft; E='def whole: .length as $n | [.drawn[] | select(.offset < $n)] | if length == 1 and .[0].offset == 0 and (.[0].text | length) == $n then .[0].text else null end; (.opened.json.sections.notebook | whole) as $before | $before != null and (.typed.json.sections.notebook | whole) == $before'\nO='{\"length\":15,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.\"}]}'\nfor T in '{\"length\":15,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.\"}]}' \\\n         '{\"length\":15,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one\"},{\"offset\":15,\"text\":\"\"}]}' \\\n         '{\"length\":15,\"drawn\":[{\"offset\":0,\"text\":\"Alpha\"},{\"offset\":6,\"text\":\"line one.\"}]}' \\\n         '{\"length\":15,\"drawn\":[{\"offset\":0,\"text\":\"xlpha line one.\"}]}' \\\n         '{\"length\":16,\"drawn\":[{\"offset\":0,\"text\":\"Alpha line one.\"},{\"offset\":16,\"text\":\"\"}]}'; do\n  echo \"{\\\"opened\\\":{\\\"json\\\":{\\\"sections\\\":{\\\"notebook\\\":$O}}},\\\"typed\\\":{\\\"json\\\":{\\\"sections\\\":{\\\"notebook\\\":$T}}}}\" | jq \"$E\"\ndone"
+      ],
+      "turns" : 6
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "d4bb0e55fed72afccb8b0048ebeddede2f66815e17b3d489aa78b8d639866e62",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "3b1a9e6b3346efa42426b4ba75cff90359e9143f2aaf2594898fdfc1fe762c51",
+      "seconds" : 71.04684400558472,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "f8c177474e45c0592a5fd6f621d0ba4fdd1ff358f6bd6660af1af002e7eb8ee1",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "858e9e0f3b478815bf97c07a15ed6c7a14091a65fd68dad4af374bcd895d8e1b",
+      "seconds" : 76.41867101192474,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "049b08e00926079f98dad8a0e7cbbc9f1b701ccfbcd38067dd49d531f98b7398",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "304a919e22c6faaf23ebbf312d3e69d2a030f664faa640505bfa440e5c56ba3e",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "5937d8104e60c4d69fb47eea4fa9a91dac7d7088529957f42077cc25057d9cef",
+      "seconds" : 40.62677705287933,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "8683c616e1fbae0c1fa61ad40a50917b22ec0853d7fd9691ce86b2c52226618a",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/mutant-1-replay-0",
+      "seconds" : 9.713441014289856,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/notebook-window.read-only-1792570235/replays/base-3"
+  },
+  "rule" : "req~notebook-window.read-only~1",
+  "started" : "2026-10-21T08:10:35Z"
+}

@@ -1,0 +1,470 @@
+{
+  "app" : "/Users/admin/acceptance/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/admin/acceptance/work/3/check.json",
+  "checkSha256" : "ede1f30c50cf83d7b4ba14b3a583611ce31c4e6c8b0e8cb3fe7d09c4f15bb49f",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "manageds-virtual-machine.local",
+    "macos" : "Version 27.0 (Build 26A428)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/admin/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~heading-outline.owned-range~1",
+  "seconds" : 13.191771984100342,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.38964807987213135
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.6255419254302979,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/admin/acceptance/work/3/rec/files/notebook.md"
+          ],
+          "exit" : 0,
+          "seconds" : 7.083644986152649,
+          "stderr" : "palantir-drive: chose /Users/admin/acceptance/work/3/rec/files/notebook.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.064750075340271,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "opened",
+          "seconds" : 0.00775599479675293,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "[.opened.json.sections.notebook.drawn[].text] == [\"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"## Ship bilbo\", \"# Notes\", \"Done.\"]",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook | .drawn as $d | ($d[0].offset == 0) and ([range(1; $d | length) | $d[.].offset == $d[. - 1].offset + ($d[. - 1].text | length) + 1] | all) and (.length == $d[-1].offset + ($d[-1].text | length))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with these lines",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06384801864624023,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.04566395282745361,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When palantir reads its outline",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "53",
+            "8"
+          ],
+          "exit" : 0,
+          "seconds" : 0.344743013381958,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.060662031173706055,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.7307729721069336,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06496989727020264,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "tasks",
+          "seconds" : 0.0077970027923583984,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "name" : "unfoldtasks",
+          "seconds" : 0.24528300762176514,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06707596778869629,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "fixbase",
+          "seconds" : 0.007790088653564453,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "93",
+            "24"
+          ],
+          "exit" : 0,
+          "seconds" : 0.3325190544128418,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0638810396194458,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.24517500400543213,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06416404247283936,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "fix",
+          "seconds" : 0.006229996681213379,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "name" : "unfoldfix",
+          "seconds" : 0.24606108665466309,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06143295764923096,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "shipbase",
+          "seconds" : 0.007904052734375,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "77",
+            "56"
+          ],
+          "exit" : 0,
+          "seconds" : 0.3473210334777832,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06001102924346924,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "atship",
+          "seconds" : 0.0057849884033203125,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "activate"
+          ],
+          "exit" : 0,
+          "seconds" : 0.128836989402771,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "shipmenus",
+          "seconds" : 0.03682601451873779,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "restore"
+          ],
+          "exit" : 0,
+          "seconds" : 0.10900008678436279,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "name" : "shipfold",
+          "seconds" : 0.24716699123382568,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06390094757080078,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "ship",
+          "seconds" : 0.0058100223541259766,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Unfold All"
+          ],
+          "exit" : 0,
+          "name" : "unfoldship",
+          "seconds" : 0.24186110496520996,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.062178969383239746,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "notesbase",
+          "seconds" : 0.007750034332275391,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "53",
+            "72"
+          ],
+          "exit" : 0,
+          "seconds" : 0.34741103649139404,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.0629739761352539,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.2467210292816162,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.061408042907714844,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "name" : "notes",
+          "seconds" : 0.008115053176879883,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook.drawn as $l | ([.tasks.json.sections.notebook.drawn[].offset] == [$l[0, 4, 5].offset]) and any(.tasks.json.sections.notebook.folded[]; .offset == $l[0].offset)",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.drawn as $l | ([.fixbase.json.sections.notebook.drawn[].offset] == [$l[].offset]) and ([.fix.json.sections.notebook.drawn[].offset] == [$l[0, 1, 3, 4, 5].offset]) and any(.fix.json.sections.notebook.folded[]; .offset == $l[1].offset)",
+          "value" : "true"
+        },
+        {
+          "that" : "([.menus.items[] | select(.path | split(\" > \") | last | test(\"fold\"; \"i\") and (test(\"unfold|all\"; \"i\") | not))] | min_by(.path | length) | .path) as $fp | .opened.json.sections.notebook.drawn as $l | ([.shipbase.json.sections.notebook.drawn[].offset] == [$l[].offset]) and (.atship.json.sections.notebook.selection.location | . >= $l[3].offset and . <= $l[3].offset + ($l[3].text | length)) and (.shipfold.exit == 0 or ([.shipmenus.items[] | select(.path == $fp)] | length == 1 and (.[0].enabled | . == false or . == \"disabled\"))) and ([.ship.json.sections.notebook.drawn[].offset] == [$l[].offset])",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.drawn as $l | ([.notesbase.json.sections.notebook.drawn[].offset] == [$l[].offset]) and ([.notes.json.sections.notebook.drawn[].offset] == [$l[0, 1, 2, 3, 4].offset]) and any(.notes.json.sections.notebook.folded[]; .offset == $l[4].offset)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then the headings own these lines",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/admin/acceptance/bin/palantir-drive",
+    "/Users/admin/acceptance/bin/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

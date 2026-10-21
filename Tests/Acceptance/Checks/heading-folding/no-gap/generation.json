@@ -1,0 +1,252 @@
+{
+  "blockSha256" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "48518772d5bde8c4f3aa6f26218388dcc1fade659273ce1fc6949b3e61a83315",
+  "ended" : "2026-10-21T08:36:27Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 1.0531538,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/draft.jsonl",
+      "logSha256" : "a3b7c0981754bb88e5dd05759a8f189e1b244ac5aa906973d46a79ff156b96f2",
+      "seconds" : 337.499626994133,
+      "toolCalls" : [
+        "Bash: ls -la . work bin; cat rule.md; echo ----; cat format.md",
+        "Bash: cat cli.md; echo ----; cat prompt.md; echo ----; ls -la bin tmp; find tmp bin",
+        "Bash: bin/palantir-accept --help 2>&1 | head -40; bin/palantir-accept lint --help 2>&1 | head; strings bin/palantir-accept | grep -iE 'fold|View >|menu' | head -60",
+        "Bash: ls -la tmp/claude-501 work; which python3 jq; jq --version",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501/check.template.json",
+        "Bash: T=tmp/claude-501 && {\nprintf '%s\\n' '# Ops notebook' 'Notes from the on-call week.' '## Rotate the keys' '- Generate the new key pair' '- Upload the public key' '- Retire the old key' \\\n  '## Fix the reaper' '- The reaper skips jobs that finish during a restart' '- Reproduce it with a restart in the middle of a sweep' '- Patch the cursor so it resumes from the last job' '- Add a test for the restart case' \\\n  '## Sweep the logs' '- Find the logs older than a week' '- Compress them into the archive' '- Delete the originals'\nfor d in $(seq 1 24); do printf '## Day %d\\n' \"$d\"; for k in $(seq 1 7); do printf -- '- Check item %d of day %d\\n' \"$k\" \"$d\"; done; done\n} > $T/reaper.md && wc -lc $T/reaper.md && LC_ALL=C grep -c '[^ -~]' $T/reaper.md; jq --rawfile t $T/reaper.md '.files[\"reaper.md\"] = $t' $T/check.template.json > work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: T=tmp/claude-501 && {\nprintf '%s\\n' '# Ops notebook' 'Notes from the on-call week.' '## Rotate the keys' '- Generate the new key pair' '- Upload the public key' '- Retire the old key' \\\n  '## Fix the reaper' '- The reaper skips jobs that finish during a restart' '- Reproduce it with a restart in the middle of a sweep' '- Patch the cursor so it resumes from the last job' '- Add a test for the restart case' \\\n  '## Sweep the logs' '- Find the logs older than a week' '- Compress them into the archive' '- Delete the originals'\nd=1; while [ $d -le 24 ]; do printf '## Day %d\\n' \"$d\"; k=1; while [ $k -le 7 ]; do printf -- '- Check item %d of day %d\\n' \"$k\" \"$d\"; k=$((k+1)); done; d=$((d+1)); done\n} > $T/reaper.md && wc -lc $T/reaper.md && LC_ALL=C grep -c '[^ -~]' $T/reaper.md; sed -n '1,20p;$p' $T/reaper.md; jq --rawfile t $T/reaper.md '.files[\"reaper.md\"] = $t' $T/check.template.json > work/check.json && jq -r '.files[\"reaper.md\"] | length' work/check.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: T=tmp/claude-501 && cat > $T/mock.json <<'EOF'\n{\"fixture\":{\"size\":4823},\n \"opened\":{\"json\":{\"window\":{\"scale\":2},\"sections\":{\"notebook\":{\"length\":4823,\"folded\":[],\"gaps\":[],\"scroll\":{\"y\":0,\"height\":600,\"documentHeight\":3600},\n   \"drawn\":[{\"offset\":0,\"text\":\"# Ops notebook\",\"rect\":{\"x\":25,\"y\":0,\"width\":90,\"height\":30}},{\"offset\":100,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":120,\"width\":120,\"height\":24}}]}}}},\n \"given\":{\"json\":{\"window\":{\"scale\":2},\"sections\":{\"notebook\":{\"length\":4823,\"folded\":[],\"gaps\":[],\"scroll\":{\"y\":118,\"height\":600,\"documentHeight\":3600},\n   \"drawn\":[{\"offset\":90,\"text\":\"- Retire the old key\",\"rect\":{\"x\":25,\"y\":-18,\"width\":90,\"height\":16}},{\"offset\":100,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":-2,\"width\":120,\"height\":24}},{\"offset\":118,\"text\":\"- The reaper\",\"rect\":{\"x\":25,\"y\":22,\"width\":90,\"height\":16}}]}}}},\n \"menus\":{\"items\":[{\"path\":\"View > Fold All\"},{\"path\":\"View > Unfold\"},{\"path\":\"View > Fold Heading\"},{\"path\":\"View > Unfold All\"}]},\n \"beforeFold\":{\"json\":{\"window\":{\"scale\":2},\"sections\":{\"notebook\":{\"drawn\":[{\"offset\":100,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":-2,\"width\":120,\"height\":24}}]}}}},\n \"folded\":{\"json\":{\"sections\":{\"notebook\":{\"folded\":[{\"offset\":100,\"line\":\"## Fix the reaper\"}]}}}},\n \"below\":{\"json\":{\"window\":{\"scale\":2},\"sections\":{\"notebook\":{\"gaps\":[],\"drawn\":[{\"offset\":100,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":-2,\"width\":120,\"height\":24}},{\"offset\":250,\"text\":\"## Sweep the logs\",\"rect\":{\"x\":25,\"y\":22,\"width\":120,\"height\":24}}]}}}},\n \"still\":{\"json\":{\"window\":{\"scale\":2},\"sections\":{\"notebook\":{\"drawn\":[{\"offset\":90,\"text\":\"x\",\"rect\":{\"x\":25,\"y\":-30,\"width\":90,\"height\":28}},{\"offset\":100,\"text\":\"## Fix the reaper\",\"rect\":{\"x\":25,\"y\":-2,\"width\":120,\"height\":24}}]}}}}}\nEOF\necho \"-- args\"; jq -r '.steps[] | .do[] | (.. | objects | select(has(\"jq\")) | .jq), (.repeat? // [] | .[] | .drive? // [] | .[] | objects | .jq)' work/check.json | sort -u | while IFS= read -r e; do jq -r \"$e\" $T/mock.json; done\necho \"-- until\"; jq -r '.steps[0].do[] | select(has(\"repeat\")) | .until' work/check.json | while IFS= read -r e; do jq \"$e\" $T/mock.json; done\necho \"-- expects\"; jq -r '.steps[].expect[].that' work/check.json | while IFS= read -r e; do jq \"$e\" $T/mock.json; done\necho \"-- broken: gap\"; jq '.below.json.sections.notebook.drawn[1].rect.y = 90 | .below.json.sections.notebook.gaps = [{\"after\":100,\"before\":250,\"height\":68}]' $T/mock.json > $T/m2.json; jq -r '.steps[2].expect[].that' work/check.json | while IFS= read -r e; do jq \"$e\" $T/m2.json; done\necho \"-- broken: moved\"; jq '.still.json.sections.notebook.drawn[1].rect.y = 10' $T/mock.json > $T/m3.json; jq -r '.steps[3].expect[].that' work/check.json | while IFS= read -r e; do jq \"$e\" $T/m3.json; done",
+        "Bash: T=tmp/claude-501 && e=$(jq -r '.steps[0].do[] | select(has(\"repeat\")) | .repeat[0].drive[1].jq' work/check.json) && jq -r 'del(.given) | '\"$e\" $T/mock.json && rm $T/m2.json $T/m3.json $T/mock.json && bin/palantir-accept lint work/check.json rule.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 11
+    },
+    {
+      "costUSD" : 0.6553587999999999,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "8e197e9cc31c1dbf78a9f07bd6a882cd2eb2408bd71a642ea490979bce2622b7",
+        "replay.json" : "f74cb921459a40a0e6354e5b4f616eaa9c82d7de44739f696af0b771558c58a5",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/revise-1.jsonl",
+      "logSha256" : "e80b51c54126d3c8a61304ed4f84e3e53dd8c8a415b5ec2f24863551efd28c5f",
+      "reason" : "replay",
+      "seconds" : 171.1629319190979,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; echo ---; cat rule.md",
+        "Bash: cat prompt.md; echo ----; cat cli.md; echo ----; cat format.md; echo ---; ls -la work bin tmp tmp/*",
+        "Bash: cat work/check.json",
+        "Bash: cat replay.json",
+        "Bash: jq -c 'keys' record.json; jq '.given.json | {window, scroll: .sections.notebook.scroll, selection: .sections.notebook.selection, folded: .sections.notebook.folded, gaps: .sections.notebook.gaps, markers: .sections.notebook.markers, drawn: .sections.notebook.drawn[0:4], keys: (.sections|keys)}' record.json",
+        "Bash: jq '.beforeFold.json | {window, scroll: .sections.notebook.scroll, selection: .sections.notebook.selection, folded: .sections.notebook.folded, markers: .sections.notebook.markers, drawn: .sections.notebook.drawn[0:3]}' record.json; jq -r '.menus.items[] | [.path,.enabled,.press,.key] | @tsv' record.json; jq '.menus | {exit, stderr}' record.json",
+        "Bash: ls -la \"tmp/claude-501/-Users-delucca-Library-Caches-palantir-acceptance-acceptance-runs-heading-folding-no-gap-1792569801-draft\" && find tmp -type f | head -50; echo; cat tmp/claude-501/mock.json | head -60",
+        "Bash: cd \"/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501/-Users-delucca-Library-Caches-palantir-acceptance-acceptance-runs-heading-folding-no-gap-1792569801-draft\" && ls -laR . 2>&1 | head -40",
+        "Bash: jq '.opened.json | {window, nb: (.sections.notebook | {length, folded, gaps, markers, selection, scroll, drawn: .drawn[0:9]})}' record.json; jq '{fixture, files, pid, uid, out}' record.json; jq -r '.files[\"reaper.md\"]' work/check.json 2>/dev/null | head -0; python3 -I -c '\nimport json,sys\nc=json.load(open(sys.argv[1]))\nt=c[\"files\"][\"reaper.md\"]\nprint(len(t.encode(\"utf-16-le\"))//2, len(t.encode()))\ni=t.index(\"## Fix the reaper\"); print(i, repr(t[i:i+20])); j=t.index(\"## Sweep the logs\"); print(j)\nprint(repr(t[140:150]), repr(t[145]))\n' work/check.json",
+        "Bash: jq -r '.files[\"reaper.md\"] as $t | ($t | index(\"## Fix the reaper\")) as $i | ($t | index(\"## Sweep the logs\")) as $j | \"heading \\($i)..\\($i+17) newline-at \\($i+17) next-line \\($i+18); sweep \\($j); char145=\\($t[145:146]|@json); utf16len \\($t|length); bytes \\($t|utf8bytelength)\"' work/check.json; bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/work/answer.md"
+      ],
+      "turns" : 12
+    },
+    {
+      "costUSD" : 0.5568506000000001,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "b4f3a843ca5e0e70fb77cfef926b08798aeba819b480e5e00e91c2f28a4036d6",
+        "replay.json" : "b5ce4176e8306aa9ea59cf41afd436b91abc727d3b6c14b686cc78d982b4ece2",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/revise-2.jsonl",
+      "logSha256" : "12f346d9fba1952ea927a94abb8fc413edf93950c53df8ca288a4188706a4bcc",
+      "reason" : "replay",
+      "seconds" : 190.97226202487946,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat prompt.md; echo ----; cat cli.md; echo ----; cat format.md; echo ----; ls -la work bin tmp; cat work/check.json",
+        "Bash: cat replay.json",
+        "Bash: jq -c 'keys' record.json; jq '.given.json.window, (.given.json.sections.notebook | {length, folded, gaps, markers, selection, scroll, drawn: .drawn[:6]})' record.json; jq '.beforeFold.json.window, (.beforeFold.json.sections.notebook | {length, folded, gaps, markers, selection, scroll, drawn: .drawn[:6]})' record.json",
+        "Bash: jq -r '.menus.stdout' record.json; jq -c '.menus | del(.stdout) | del(.items)' record.json; jq '{files, out, pid, uid, fixture}' record.json",
+        "Bash: find tmp -maxdepth 3 | head -50; jq '.opened.json.window, (.opened.json.sections.notebook | {selection, scroll, folded, markers, gaps})' record.json; jq '.opened.json.sections | keys' record.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/work/answer.md"
+      ],
+      "turns" : 9
+    },
+    {
+      "costUSD" : 0.6286492,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "ddb13f449b71a5d10619832effb249a72ffed559c5c653ed9a897bdc5ef6a9a7",
+        "record.json" : "435fbd819660cfd3b6a836f79f53bb99738f8cdc0db5e592c484c9510c8939c6",
+        "replay.json" : "885d626507632b0a95cf3f5fe67abe47b3937dd23b8a69cc72eb92ae639a8426",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/revise-3.jsonl",
+      "logSha256" : "3bde735e95e5709e36aa99c3bd198375763882276f69c7484fcdbdd607a790b3",
+      "reason" : "replay",
+      "seconds" : 187.18251705169678,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null",
+        "Bash: ls work bin tmp; echo ---; cat rule.md; echo ---; cat prompt.md; echo ---; cat format.md",
+        "Bash: cat cli.md; echo ---; cat work/check.json",
+        "Bash: cat replay.json",
+        "Bash: jq -c 'keys' record.json; jq -c '.menus.items[] | select(.path | test(\"View|Fold|fold|Edit\"))' record.json; echo; jq '.beforeFold.json | {window, sel: .sections.notebook.selection, scroll: .sections.notebook.scroll, folded: .sections.notebook.folded, drawn: .sections.notebook.drawn[0:4]}' record.json; jq '.given.json | {window, sel: .sections.notebook.selection, scroll: .sections.notebook.scroll, drawn: .sections.notebook.drawn[0:3]}' record.json",
+        "Bash: jq -r '.menus.items[] | [.path,.enabled,.key] | @tsv' record.json | grep -v \"Writing Tools\\|AutoFill\" ; jq -c '{files, out, pid, uid, fixture}' record.json; jq -c '.opened.json.sections.notebook | {length, sel: .selection, scroll, folded, gaps, markers, n: (.drawn|length)}' record.json; jq -c '.beforeFold.json.sections.notebook | {gaps, markers, n: (.drawn|length)}' record.json",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/work/answer.md"
+      ],
+      "turns" : 9
+    },
+    {
+      "costUSD" : 0.7413586000000001,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "3a4b92d840a72a093a36f75f5d198c8441cb0930782cd9f4915cef9d74358df7",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/revise-4.jsonl",
+      "logSha256" : "a6a17987127df75e8483f12acfb252d006bcfa3f033f89da11210fe369903a7b",
+      "reason" : "review",
+      "seconds" : 195.09792304039001,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && cat rule.md && echo ---- && cat review.json && echo ---- && cat work/check.json && echo ---- && ls work",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; ls -la work bin tmp; echo ----; cat rule.md; echo ----; cat review.json; echo ----; cat work/check.json; echo ----; cat prompt.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; cat cli.md; echo ----; cat format.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; which jq python3; jq --version; jq -r '.files[\"reaper.md\"]' work/check.json | head -7; jq -r '.files[\"reaper.md\"] | (index(\"## Fix the reaper\")), (\"# Ops notebook\\nNotes from the on-call week.\\n## Rotate the keys\\n- Generate the new key pair\\n- Upload the public key\\n- Retire the old key\\n\" | length)' work/check.json; bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; d=$(mktemp -d); cat > \"$d/scroll.jq\" <<'EOF'\n(.given // .opened).json.sections.notebook as $n | (([$n.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | .offset] | first) // (\"# Ops notebook\\nNotes from the on-call week.\\n## Rotate the keys\\n- Generate the new key pair\\n- Upload the public key\\n- Retire the old key\\n\" | length)) as $h | ([$n.drawn[] | select(.rect.y + .rect.height > 0)] | first) as $top | if $top.offset < $h then 1 else -1 end\nEOF\ncat > \"$d/still.jq\" <<'EOF'\n[(.beforeFold, .still) | .json as $j | $j.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | [$j.window.frame.x + .rect.x, $j.window.frame.y + $j.window.frame.height - $j.window.content.height + .rect.y]] | length == 2 and .[0] == .[1]\nEOF\ncp work/check.json \"$d/check.orig.json\"\njq --indent 2 --rawfile s \"$d/scroll.jq\" --rawfile t \"$d/still.jq\" '\n  .steps[0].do[6].repeat[0].drive[1].jq = ($s | rtrimstr(\"\\n\"))\n  | .steps[3].expect[1] = {that: ($t | rtrimstr(\"\\n\")), why: \"folding did not move the heading on screen: its screen point is exactly where it was before the fold\"}\n' \"$d/check.orig.json\" > work/check.json\ndiff <(jq . \"$d/check.orig.json\") <(jq . work/check.json); echo \"tmp: $d\"; bin/palantir-accept lint work/check.json rule.md",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; ls -la work; wc -c work/check.json; ls -la tmp/claude-501",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501; head -c 600 check.template.json; echo; echo ...; grep -n '\"files\"' -A3 check.template.json | head; shasum -a 256 reaper.md; head -3 reaper.md; ls -la ./-Users-*",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501/restore.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501; for t in openssl sha256sum shasum; do command -v $t; done; openssl version 2>&1 | head -1",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/claude-501; jq --rawfile f reaper.md '.files[\"reaper.md\"] = $f' restore.json > orig.json && wc -c orig.json && /sbin/sha256sum orig.json; echo \"review: 6a241730db44037c19bdb4c73a85226e37b6f9a388a81edfcba5207a5595cdf4\"",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; python3 -I -c 'import hashlib,sys; print(hashlib.sha256(open(sys.argv[1],\"rb\").read()).hexdigest())' tmp/claude-501/orig.json 2>&1; bin/palantir-accept 2>&1 | head -20",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; s=tmp/claude-501\ncat > $s/scroll.jq <<'EOF'\n(.given // .opened).json.sections.notebook as $n | (([$n.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | .offset] | first) // (\"# Ops notebook\\nNotes from the on-call week.\\n## Rotate the keys\\n- Generate the new key pair\\n- Upload the public key\\n- Retire the old key\\n\" | length)) as $h | ([$n.drawn[] | select(.rect.y + .rect.height > 0)] | first) as $top | if $top.offset < $h then 1 else -1 end\nEOF\ncat > $s/still.jq <<'EOF'\n[(.beforeFold, .still) | .json as $j | $j.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | [$j.window.frame.x + .rect.x, $j.window.frame.y + $j.window.frame.height - $j.window.content.height + .rect.y]] | length == 2 and .[0] == .[1]\nEOF\njq --rawfile s $s/scroll.jq --rawfile t $s/still.jq '\n  .steps[0].do[6].repeat[0].drive[1].jq = ($s | rtrimstr(\"\\n\"))\n  | .steps[3].expect[1] = {that: ($t | rtrimstr(\"\\n\")), why: \"folding did not move the heading on screen: its point on the screen is exactly where it was before the fold\"}\n' $s/orig.json > $s/new.json && bin/palantir-accept lint $s/new.json rule.md && cat $s/new.json > work/check.json && bin/palantir-accept lint work/check.json rule.md && wc -c work/check.json",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft; s=tmp/claude-501\nS=$(jq -r '.steps[0].do[6].repeat[0].drive[1].jq' work/check.json); T=$(jq -r '.steps[3].expect[1].that' work/check.json)\nst() { jq -n --argjson d \"$1\" '{json: {window: {frame: {x: 100, y: 50, width: 960, height: 232}, content: {width: 960, height: 200}, scale: 2}, sections: {notebook: {drawn: $d}}}}'; }\nr() { jq -n --argjson y \"$1\" '{x: 25, y: $y, width: 100, height: 16}'; }\n# heading below a small window, opened at top: must scroll down (1)\nsmall=$(st \"[{\\\"offset\\\":0,\\\"text\\\":\\\"# Ops notebook\\n\\\",\\\"rect\\\":$(r 0)},{\\\"offset\\\":15,\\\"text\\\":\\\"Notes\\n\\\",\\\"rect\\\":$(r 16)}]\")\njq -rn --argjson o \"$small\" \"{opened: \\$o} | $S\"\n# past the heading, heading not drawn: must scroll up (-1)\npast=$(st \"[{\\\"offset\\\":160,\\\"text\\\":\\\"- The reaper skips\\n\\\",\\\"rect\\\":$(r -4)},{\\\"offset\\\":210,\\\"text\\\":\\\"- Reproduce\\n\\\",\\\"rect\\\":$(r 12)}]\")\njq -rn --argjson o \"$small\" --argjson g \"$past\" \"{opened: \\$o, given: \\$g} | $S\"\n# still: same, shifted 0.25 pt, window moved, heading missing\nh() { st \"[{\\\"offset\\\":136,\\\"text\\\":\\\"## Fix the reaper\\n\\\",\\\"rect\\\":$(r $1)}]\"; }\njq -rn --argjson a \"$(h 0)\" --argjson b \"$(h 0)\" \"{beforeFold: \\$a, still: \\$b} | $T\"\njq -rn --argjson a \"$(h 0)\" --argjson b \"$(h 0.25)\" \"{beforeFold: \\$a, still: \\$b} | $T\"\njq -rn --argjson a \"$(h 0)\" --argjson b \"$(h 0 | jq -c '.json.window.frame.y = 51')\" \"{beforeFold: \\$a, still: \\$b} | $T\"\njq -rn --argjson a \"$(h 0)\" --argjson b \"$(st '[]')\" \"{beforeFold: \\$a, still: \\$b} | $T\"\n# window grows at the bottom, heading stays put on screen: still true\njq -rn --argjson a \"$(h 0)\" --argjson b \"$(h 0 | jq -c '.json.window.frame.height = 300 | .json.window.content.height = 268')\" \"{beforeFold: \\$a, still: \\$b} | $T\"",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/work/answer.md"
+      ],
+      "turns" : 15
+    },
+    {
+      "costUSD" : 0.6437981999999999,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "90632830df4bd3ba54e811d0a39453efe1b21defcc30b79e56ca021910d795ad",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/logs/revise-5.jsonl",
+      "logSha256" : "87dcaf010a0c90e593ffb0ba0bb1c3416be3756d1b954bf22211f12a22ba7459",
+      "reason" : "review",
+      "seconds" : 155.7870079278946,
+      "toolCalls" : [
+        "Bash: ls -la . work bin 2>&1; echo ---; cat rule.md; echo ---; cat review.json; echo ---; cat work/check.json; echo ---; ls work; cat work/answer.md 2>/dev/null",
+        "Bash: cat prompt.md; echo ---; cat cli.md; echo ---; cat format.md; ls bin tmp",
+        "Bash: python3 -I -c \"import json,sys; d=json.load(open('work/check.json')); print(json.dumps(d['files'],indent=1)[:200]); print(json.dumps(d['steps'][0],indent=1))\" ; python3 -I -c \"import json; d=json.load(open('work/check.json')); print([k for k in d])\"",
+        "Read: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/work/check.json",
+        "Bash: which jq; jq --version; head -c 400 /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/bin/palantir-accept; echo; file /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/bin/palantir-accept",
+        "Bash: mkdir -p tmp/expr && cd tmp/expr && \ncat > menu.jq <<'EOF'\n[.menus.items[] | select(.press == true or .press == \"press\") | .path | select(split(\" > \") | last | ascii_downcase | test(\"\\\\bfold\\\\b\") and (test(\"\\\\b(all|others?|every|level)\\\\b\") | not))] + [.menus.items[] | select(.press == true or .press == \"press\") | .path | select(split(\" > \") | last | ascii_downcase | test(\"\\\\bcollapse\\\\b\") and (test(\"\\\\b(all|others?|every|level)\\\\b\") | not))] | first\nEOF\ncat > adjacent.jq <<'EOF'\nall(.folded, .below; .json as $j | $j.sections.notebook.drawn as $d | ([$d[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$d[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and (($n.rect.y - ($h.rect.y + $h.rect.height)) | fabs) < (1 / $j.window.scale))\nEOF\ncat > gaps.jq <<'EOF'\nall(.folded, .below; .json.sections.notebook as $nb | ([$nb.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\")] | first) as $h | ([$nb.drawn[] | select($h != null and .offset > $h.offset and .rect.height > 0)] | first) as $n | $h != null and $n != null and ([$nb.gaps[] | select(.after >= $h.offset and .before <= $n.offset)] | length == 0))\nEOF\ncat > still.jq <<'EOF'\n[(.beforeFold, .folded, .below, .still) | .json as $j | $j.sections.notebook.drawn[] | select(.text | sub(\"\\n$\"; \"\") == \"## Fix the reaper\") | [$j.window.frame.x + .rect.x, $j.window.frame.y + $j.window.frame.height - $j.window.content.height + .rect.y]] as $p | ($p | length) == 4 and all($p[]; . == $p[0])\nEOF\nfor f in *.jq; do jq -n -f $f >/dev/null 2>&1; echo \"$f compiles? $(jq -n \"try ($(cat $f)) catch \\\"runtime\\\"\" >/dev/null 2>&1 && echo yes || echo check)\"; done",
+        "Bash: cd /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/draft/tmp/expr && \nst() { # headY nextOffset nextY nextText gapsJSON extraDrawnJSON frameY\njq -n --argjson hy \"$1\" --argjson no \"$2\" --argjson ny \"$3\" --arg nt \"$4\" --argjson gaps \"$5\" --argjson extra \"$6\" --argjson fy \"${7:-145}\" '{json:{window:{frame:{x:375,y:$fy,width:960,height:632},content:{width:960,height:600},scale:2},sections:{notebook:{folded:[{offset:150,line:\"## Fix the reaper\"}],drawn:([{offset:150,text:\"## Fix the reaper\\n\",rect:{x:25,y:$hy,width:120,height:20}}] + $extra + [{offset:$no,text:($nt+\"\\n\"),rect:{x:25,y:$ny,width:120,height:20}}]),gaps:$gaps}}}}'; }\nOK=$(st 0 400 20 \"## Sweep the logs\" '[]' '[]')\nOTHER=$(st 0 470 20 \"## Day 1\" '[]' '[]')\nGAP=$(st 0 400 32 \"## Sweep the logs\" '[{\"after\":150,\"before\":400,\"height\":12}]' '[]')\nZERO=$(st 0 400 32 \"## Sweep the logs\" '[{\"after\":380,\"before\":400,\"height\":12}]' '[{\"offset\":380,\"text\":\"- hidden\\n\",\"rect\":{\"x\":25,\"y\":20,\"width\":0,\"height\":0}}]')\nMOVED=$(st 8 400 28 \"## Sweep the logs\" '[]' '[]')\nrec() { jq -n --argjson b \"$1\" --argjson f \"$2\" --argjson w \"$3\" --argjson s \"$4\" '{beforeFold:$b,folded:$f,below:$w,still:$s}'; }\nrun() { printf '%-34s adj=%-5s gaps=%-5s still=%s\\n' \"$1\" \"$(echo \"$2\" | jq -f adjacent.jq)\" \"$(echo \"$2\" | jq -f gaps.jq)\" \"$(echo \"$2\" | jq -f still.jq)\"; }\nrun \"holds (Sweep next)\"            \"$(rec \"$OK\" \"$OK\" \"$OK\" \"$OK\")\"\nrun \"holds (other range, Day 1)\"    \"$(rec \"$OK\" \"$OTHER\" \"$OTHER\" \"$OTHER\")\"\nrun \"gap in .folded, gone in below\" \"$(rec \"$OK\" \"$GAP\" \"$OK\" \"$OK\")\"\nrun \"zero-height hidden, then gap\"  \"$(rec \"$OK\" \"$ZERO\" \"$ZERO\" \"$ZERO\")\"\nrun \"moved in .folded, back later\"  \"$(rec \"$OK\" \"$MOVED\" \"$OK\" \"$OK\")\"\nrun \"moved in .below, back later\"   \"$(rec \"$OK\" \"$OK\" \"$MOVED\" \"$OK\")\"\nrun \"window moved in .folded\"       \"$(rec \"$OK\" \"$(st 0 400 20 \"## Sweep the logs\" '[]' '[]' 160)\" \"$OK\" \"$OK\")\"\necho '--- menu'\njq -n '{menus:{items:[{path:\"View > Fold\",enabled:true,press:\"no-press\",key:\"-\"},{path:\"View > Fold > Fold All\",enabled:true,press:\"press\",key:\"-\"},{path:\"View > Fold > Fold Heading\",enabled:true,press:\"press\",key:\"cmd+alt+left\"}]}}' | jq -r -f menu.jq\njq -n '{menus:{items:[{path:\"View > Fold\",enabled:true,press:false,key:\"-\"},{path:\"View > Fold > Fold Heading\",enabled:false,press:true,key:\"-\"}]}}' | jq -r -f menu.jq\njq -n '{menus:{items:[{path:\"View > Unfold\",press:\"press\"},{path:\"View > Collapse Section\",press:\"press\"}]}}' | jq -r -f menu.jq",
+        "Bash: cp work/check.json tmp/check.before.json &&\njq --rawfile menu tmp/expr/menu.jq --rawfile adj tmp/expr/adjacent.jq --rawfile gaps tmp/expr/gaps.jq --rawfile still tmp/expr/still.jq '\n  def t: sub(\"\\n$\"; \"\");\n  .steps[1].do[4].drive[1].jq = ($menu | t)\n  | .steps[2].expect[0] = {that: ($adj | t), why: \"right after the fold and again a second later, the next visible line is drawn directly under the heading, within a pixel\"}\n  | .steps[2].expect[1] = {that: ($gaps | t), why: \"right after the fold and again a second later, no blank space is left between the heading and the next visible line\"}\n  | .steps[3].expect[1] = {that: ($still | t), why: \"folding did not move the heading on screen: in every state read from before the fold to now, its point on the screen is exactly where it was\"}\n' tmp/check.before.json > work/check.json && bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; diff <(jq . tmp/check.before.json) <(jq . work/check.json)",
+        "Bash: shasum -a 256 work/check.json && jq . work/check.json > tmp/check.before.json &&\njq --rawfile menu tmp/expr/menu.jq --rawfile adj tmp/expr/adjacent.jq --rawfile gaps tmp/expr/gaps.jq --rawfile still tmp/expr/still.jq '\n  def t: sub(\"\\n$\"; \"\");\n  .steps[1].do[4].drive[1].jq = ($menu | t)\n  | .steps[2].expect[0] = {that: ($adj | t), why: \"right after the fold and again a second later, the next visible line is drawn directly under the heading, within a pixel\"}\n  | .steps[2].expect[1] = {that: ($gaps | t), why: \"right after the fold and again a second later, no blank space is left between the heading and the next visible line\"}\n  | .steps[3].expect[1] = {that: ($still | t), why: \"folding did not move the heading on screen: in every state read from before the fold to now, its point on the screen is exactly where it was\"}\n' tmp/check.before.json > tmp/check.after.json && jq . tmp/check.after.json > work/check.json && bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; diff tmp/check.before.json work/check.json",
+        "Bash: jq . work/check.json > tmp/check.before.json &&\njq --rawfile menu tmp/expr/menu.jq --rawfile adj tmp/expr/adjacent.jq --rawfile gaps tmp/expr/gaps.jq --rawfile still tmp/expr/still.jq '\n  def t: sub(\"\\n$\"; \"\");\n  .steps[1].do[4].drive[1].jq = ($menu | t)\n  | .steps[2].expect[0] = {that: ($adj | t), why: \"right after the fold and again a second later, the next visible line is drawn directly under the heading, within a pixel\"}\n  | .steps[2].expect[1] = {that: ($gaps | t), why: \"right after the fold and again a second later, no blank space is left between the heading and the next visible line\"}\n  | .steps[3].expect[1] = {that: ($still | t), why: \"folding did not move the heading on screen: in every state read from before the fold to now, its point on the screen is exactly where it was\"}\n' tmp/check.before.json > tmp/check.after.json && jq . tmp/check.after.json > work/check.json && bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; diff tmp/check.before.json work/check.json",
+        "Bash: \njq -r '.steps[2].expect[0].that' work/check.json > tmp/expr/c_adj.jq; jq -r '.steps[2].expect[1].that' work/check.json > tmp/expr/c_gaps.jq; jq -r '.steps[3].expect[1].that' work/check.json > tmp/expr/c_still.jq; jq -r '.steps[1].do[4].drive[1].jq' work/check.json > tmp/expr/c_menu.jq\nfor n in adj:adjacent gaps:gaps still:still menu:menu; do a=${n%%:*}; b=${n##*:}; [ \"$(jq -Rs . tmp/expr/c_$a.jq)\" = \"$(jq -Rs 'sub(\"\\n$\";\"\")+\"\\n\"' tmp/expr/$b.jq)\" ] && echo \"$a identical\" || echo \"$a DIFFERS\"; done\ncat > work/answer.md <<'EOF'\n# Answers to review.json\n\n- When, menu selector ignores press: fixed. The selector now keeps only menu items whose `press` is set, so a no-press `Fold` submenu can no longer be chosen ahead of its `Fold Heading` item.\n- Then, successor text \"## Sweep the logs\": fixed. The expectation no longer names the next line. It takes the first drawn paragraph with a height after the heading and checks only that it starts within a pixel of the heading's bottom.\n- Then, only .below is inspected after the sleep: fixed. The adjacency and gaps expectations now hold over both `.folded` (settled right after the fold) and `.below` (a second later).\n- And, position compared only in .beforeFold and .still: fixed. The heading's screen point must now be identical in `.beforeFold`, `.folded`, `.below` and `.still`.\n\nNo replay has run since these changes, so nothing yet shows palantir breaking the rule.\nEOF\ncat work/answer.md; bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 12
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "6a241730db44037c19bdb4c73a85226e37b6f9a388a81edfcba5207a5595cdf4",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "671ebecc8ae259fab73ac5e05b45b8ad3100112d3c31b72f8c9b46bb1647b8df",
+      "seconds" : 76.46172904968262,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "2d02b5c9d3234a77ffb2d3a0be6d5b46ef09bc247979e3e15d58fc498b529687",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "6e23f56a7982b75629d058b52c46aff34281bd4b2175a73d9dc745c7deac7645",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "794d2d85de819fa5622bed06a27bf00faf891c5bf26d49f0627e366bf5554682",
+      "seconds" : 193.53874599933624,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "48518772d5bde8c4f3aa6f26218388dcc1fade659273ce1fc6949b3e61a83315",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "6e23f56a7982b75629d058b52c46aff34281bd4b2175a73d9dc745c7deac7645",
+        "rule.md" : "8e2443f05f99c2669fe1fb3635dd170d90f84ea820be63e63bd0fc865322f064",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "74c415889587cc48be6e287cf3aa2b79dff1c8f406d84b90b6a9c2c186c5bb95",
+      "seconds" : 293.1096329689026,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "a56d29600171632df893f38a9adbe04d61c3e41e5a3ff35a1146500288e88c9c",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/mutant-1-replay-0",
+      "seconds" : 18.157073974609375,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/heading-folding.no-gap-1792569801/replays/base-6"
+  },
+  "rule" : "req~heading-folding.no-gap~1",
+  "started" : "2026-10-21T08:03:21Z"
+}

@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/UI/NotebookTextView.swift b/Sources/Notebook/UI/NotebookTextView.swift
+index 9c0914f..b2a51b0 100644
+--- a/Sources/Notebook/UI/NotebookTextView.swift
++++ b/Sources/Notebook/UI/NotebookTextView.swift
+@@ -52,7 +52,7 @@ package final class NotebookTextView: NSTextView {
+   package override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+     switch menuItem.action {
+     case #selector(foldHeading(_:)), #selector(unfoldHeading(_:)):
+-      headingAtSelection != nil
++      folds.hasHeadings
+     case #selector(foldAll(_:)), #selector(unfoldAll(_:)):
+       folds.hasHeadings
+     default:

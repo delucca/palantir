@@ -1,0 +1,77 @@
+{
+  "app" : "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/main-menu.hig-order-1792567847/checks/cdedc597b9a49b2b14d94c05bbbdbf5ebb43385f1cae7affd4bf5e1136fb3407.json",
+  "checkSha256" : "cdedc597b9a49b2b14d94c05bbbdbf5ebb43385f1cae7affd4bf5e1136fb3407",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~main-menu.hig-order~1",
+  "seconds" : 0.7191840410232544,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "name" : "launched",
+          "seconds" : 0.4672039747238159
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.launched.pid | type) == \"number\" and .launched.pid == .pid",
+          "value" : "true"
+        }
+      ],
+      "line" : "* When palantir launches",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.08238494396209717,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.menus.items | map(.path)) as $p | [$p[] | select(contains(\" > \") | not)] as $top | (if ($top | length) > 0 then $top else reduce ($p[] | split(\" > \")[0]) as $t ([]; if length > 0 and .[-1] == $t then . else . + [$t] end) end) as $menus | ($menus | index(\"palantir\")) != null",
+          "value" : "true"
+        },
+        {
+          "that" : "(.menus.items | map(.path)) as $p | [$p[] | select(contains(\" > \") | not)] as $top | (if ($top | length) > 0 then $top else reduce ($p[] | split(\" > \")[0]) as $t ([]; if length > 0 and .[-1] == $t then . else . + [$t] end) end) as $menus | ($menus | index(\"palantir\")) as $i | $i != null and $menus[$i + 1:] == [\"File\", \"Edit\", \"View\", \"Window\", \"Help\"]",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then the menus after the app menu are File, Edit, View, Window and Help",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

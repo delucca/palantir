@@ -1,0 +1,23 @@
+{
+  "format": 1,
+  "rule": "req~main-menu.view-fold-commands~1",
+  "example": "the View menu",
+  "files": {},
+  "steps": [
+    {"line": "* When palantir launches",
+     "do": [{"launch": {"build": "debug", "inspector": true}, "as": "launched"}],
+     "expect": [{"that": ".launched.pid == .pid", "why": "palantir launched and answers"}]},
+    {"line": "* Then the View menu holds Fold Heading, Unfold Heading, Fold All and Unfold All",
+     "do": [{"drive": ["menus"], "as": "menus"}],
+     "expect": [{"that": "any(.menus.items[]; .path == \"View > Fold Heading\")", "why": "the View menu holds Fold Heading"},
+                {"that": "any(.menus.items[]; .path == \"View > Unfold Heading\")", "why": "the View menu holds Unfold Heading"},
+                {"that": "any(.menus.items[]; .path == \"View > Fold All\")", "why": "the View menu holds Fold All"},
+                {"that": "any(.menus.items[]; .path == \"View > Unfold All\")", "why": "the View menu holds Unfold All"}]},
+    {"line": "* And none of them has a key equivalent",
+     "do": [],
+     "expect": [{"that": "[.menus.items[] | select(.path == \"View > Fold Heading\")] | length > 0 and all(.key == \"-\")", "why": "Fold Heading has no key equivalent"},
+                {"that": "[.menus.items[] | select(.path == \"View > Unfold Heading\")] | length > 0 and all(.key == \"-\")", "why": "Unfold Heading has no key equivalent"},
+                {"that": "[.menus.items[] | select(.path == \"View > Fold All\")] | length > 0 and all(.key == \"-\")", "why": "Fold All has no key equivalent"},
+                {"that": "[.menus.items[] | select(.path == \"View > Unfold All\")] | length > 0 and all(.key == \"-\")", "why": "Unfold All has no key equivalent"}]}
+  ]
+}

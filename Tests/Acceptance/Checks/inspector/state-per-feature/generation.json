@@ -1,0 +1,116 @@
+{
+  "blockSha256" : "e5d6ec3241f2f2ab65ccee65986b09e427a0069a98d30baad2bbab0b5a7ec40c",
+  "build" : {
+    "commit" : "02ff605960000a4ebe08db45f97f6af3fa9cf13b",
+    "dirty" : true
+  },
+  "checkSha256" : "c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92",
+  "ended" : "2026-10-21T08:21:09Z",
+  "generator" : {
+    "harness" : "claude 2.1.306 (Claude Code)",
+    "model" : "claude-opus-5-5"
+  },
+  "generatorRuns" : [
+    {
+      "costUSD" : 0.1754506,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+        "rule.md" : "e5d6ec3241f2f2ab65ccee65986b09e427a0069a98d30baad2bbab0b5a7ec40c"
+      },
+      "kind" : "draft",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/logs/draft.jsonl",
+      "logSha256" : "c1511b4ecdfd54cb0b774f96c657076406fd27d99f1594be54e96bb142f8ff77",
+      "seconds" : 108.22041094303131,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin 2>/dev/null; cat rule.md",
+        "Bash: cat cli.md",
+        "Bash: cat format.md",
+        "Bash: cat prompt.md; echo ---; ls -la bin tmp; file bin/*",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/draft/work/check.json",
+        "Bash: sed -i '' 's/any(.pid == $p)/any((.pid | tostring) == ($p | tostring))/' work/check.json && grep -n 'any(' work/check.json && bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\""
+      ],
+      "turns" : 7
+    },
+    {
+      "costUSD" : 0.5795348,
+      "inputs" : {
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "0fcc93a79264fb39b636e826c438c360bf7984741f6808355cbae4ac66d7186e",
+        "review.json" : "563c16db41143c33aad018cc599f7f7b31a0260163361c0818e99cd615591482",
+        "rule.md" : "e5d6ec3241f2f2ab65ccee65986b09e427a0069a98d30baad2bbab0b5a7ec40c"
+      },
+      "kind" : "revise",
+      "log" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/logs/revise-1.jsonl",
+      "logSha256" : "c49880b12d9d765d4882906c69b459921af64d8035ea1ee73a7e5b9d2ec04845",
+      "reason" : "review",
+      "seconds" : 202.30941498279572,
+      "toolCalls" : [
+        "Bash: ls -la && ls -la work bin && echo ---RULE && cat rule.md && echo ---CLI && cat cli.md && echo ---FORMAT && cat format.md",
+        "Bash: echo ---CHECK && cat work/check.json && echo ---REVIEW && cat review.json && echo ---ANSWER && cat work/answer.md 2>/dev/null",
+        "Bash: echo ---RULE && cat rule.md && echo ---PROMPT && cat prompt.md && echo ---CLI && cat cli.md && echo ---FORMAT && cat format.md; ls -la work bin tmp",
+        "Bash: bin/palantir-accept lint work/check.json rule.md; echo \"exit $?\"; shasum -a 256 work/check.json",
+        "Bash: openssl dgst -sha256 work/check.json",
+        "Bash: python3 -I -c 'import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],\"rb\").read()).hexdigest())' work/check.json",
+        "Write: /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/draft/work/answer.md",
+        "Bash: bin/palantir-accept lint work/check.json rule.md"
+      ],
+      "turns" : 9
+    }
+  ],
+  "inputs" : {
+    "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+    "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+    "generate.md" : "a93b10882ffd9aab5c7edeea65d2961d6217d3f65a28f20c62ba9b59407a00d4",
+    "palantir-accept" : "cb5ea3106007be2c572aa9a594ef589b10721fea22db47dd5a712edb5cd0c853"
+  },
+  "judge" : {
+    "harness" : "codex-cli 0.163.0",
+    "model" : "gpt-6-astra"
+  },
+  "judgeRounds" : [
+    {
+      "inputs" : {
+        "check.json" : "c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "e5d6ec3241f2f2ab65ccee65986b09e427a0069a98d30baad2bbab0b5a7ec40c",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "92e628cc4140d455fcea3ce7f097c51e14064d6a4d4d17b710c3acb560bca168",
+      "seconds" : 42.05336594581604,
+      "verdict" : "unfaithful"
+    },
+    {
+      "inputs" : {
+        "check.json" : "c833a3a41f1d8cf2f62b4a19a0e98652a9b3e9b0dff41f69052a74f2d60f8c92",
+        "cli.md" : "a4acbdba5c5ade02539a4594f55f31c87118cd8c385316423f1c2f68e9aaa8fd",
+        "format.md" : "e2a6d4a24da9c5560f7229fe7bc11dc01a135278d79f8bcdf097d05c7a1e4e85",
+        "prompt.md" : "8621f9d418ef525f3868f1af15d45745ed78a2d5ed994322a80fa90e730c1c1d",
+        "rule.md" : "e5d6ec3241f2f2ab65ccee65986b09e427a0069a98d30baad2bbab0b5a7ec40c",
+        "schema.json" : "b9172df3d834e46a4eb2cf3cf6ebf4a413da722a124af9c6765c956cc0d595b8"
+      },
+      "logSha256" : "62dcba49be1d7e1024a04430a6878438bd7870ae93e1eea5313f7ad7927d972a",
+      "seconds" : 23.36378300189972,
+      "verdict" : "faithful"
+    }
+  ],
+  "mutants" : [
+    {
+      "model" : "gpt-6.1-sol",
+      "n" : 1,
+      "patchSha256" : "01c4266ec76e06c64c9e255ec1fd88729d88741b38bf606a8129a06229695c50",
+      "replay" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/mutant-1-replay-0",
+      "seconds" : 0.6701140403747559,
+      "valid" : true
+    }
+  ],
+  "replays" : {
+    "base" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/inspector.state-per-feature-1792570450/replays/base-2"
+  },
+  "rule" : "req~inspector.state-per-feature~1",
+  "started" : "2026-10-21T08:14:10Z"
+}

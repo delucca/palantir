@@ -1,0 +1,113 @@
+{
+  "format": 1,
+  "rule": "req~accessibility.custom-view-labels~1",
+  "example": "the folded marker",
+  "files": {
+    "reaper.md": "Notes from Tuesday.\n\n## Fix the reaper\nThe reaper leaves zombie processes behind.\nRestart it when it exits.\n"
+  },
+  "steps": [
+    {
+      "line": "* Given a notebook with \"## Fix the reaper\" folded is open",
+      "do": [
+        {
+          "launch": {
+            "build": "debug",
+            "inspector": true
+          }
+        },
+        {
+          "drive": [
+            "menu",
+            "File > Open…"
+          ]
+        },
+        {
+          "drive": [
+            "choose",
+            {
+              "file": "reaper.md"
+            }
+          ]
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "drive": [
+            "menu",
+            "View > Fold All"
+          ]
+        },
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "folded"
+        }
+      ],
+      "expect": [
+        {
+          "that": ".folded.json.sections.notebook.folded | map(.line) == [\"## Fix the reaper\"]",
+          "why": "\"## Fix the reaper\" is the one folded heading"
+        },
+        {
+          "that": "(.folded.json.sections.notebook.folded[0].offset) as $h | .folded.json.sections.notebook.drawn | any(.offset == $h and (.text | startswith(\"## Fix the reaper\")))",
+          "why": "the notebook is open in the window with the folded heading shown"
+        }
+      ]
+    },
+    {
+      "line": "* When the window's accessibility tree is read",
+      "do": [
+        {
+          "inspect": [
+            "wait"
+          ]
+        },
+        {
+          "inspect": [
+            "state"
+          ],
+          "as": "shown"
+        },
+        {
+          "drive": [
+            "tree"
+          ],
+          "as": "tree"
+        }
+      ],
+      "expect": [
+        {
+          "that": ".tree.elements | length > 0",
+          "why": "the window's accessibility tree was read"
+        }
+      ]
+    },
+    {
+      "line": "* Then the folded marker of \"## Fix the reaper\" has the label \"Folded\"",
+      "do": [],
+      "expect": [
+        {
+          "that": "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | [.shown.json.sections.notebook.markers[] | select(.heading == $h)] | length == 1",
+          "why": "the window shows the folded marker beside \"## Fix the reaper\""
+        },
+        {
+          "that": "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | [.shown.json.sections.notebook.markers[] | select(.heading == $h) | .label] == [\"Folded\"]",
+          "why": "palantir gives the folded marker of \"## Fix the reaper\" itself the accessibility label \"Folded\""
+        },
+        {
+          "that": "(.shown.json.sections.notebook.folded[] | select(.line == \"## Fix the reaper\") | .offset) as $h | (.shown.json.sections.notebook.markers[] | select(.heading == $h) | .rect) as $m | (.tree.elements | min_by(.depth) | .frame) as $w | ($w[0] + $m.x + $m.width / 2) as $x | ($w[1] + $w[3] - .shown.json.window.content.height + $m.y + $m.height / 2) as $y | any(.tree.elements[]; .label == \"Folded\" and (.frame | type) == \"array\" and .frame[0] <= $x and $x <= .frame[0] + .frame[2] and .frame[1] <= $y and $y <= .frame[1] + .frame[3])",
+          "why": "the accessibility tree read shows an element labeled \"Folded\" where that marker is, placed from the tree's window frame"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+diff --git a/Sources/Notebook/Inspector/NotebookState.swift b/Sources/Notebook/Inspector/NotebookState.swift
+index 3cc93a2..164a852 100644
+--- a/Sources/Notebook/Inspector/NotebookState.swift
++++ b/Sources/Notebook/Inspector/NotebookState.swift
+@@ -100,7 +100,7 @@
+   struct NotebookStateSection: StateSection {
+     let view: NotebookTextView
+ 
+-    var name: String { "notebook" }
++    var name: String { "notes" }
+ 
+     func state() throws -> any Encodable { try NotebookState(view) }
+   }

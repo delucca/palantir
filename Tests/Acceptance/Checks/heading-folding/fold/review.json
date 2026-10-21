@@ -1,0 +1,50 @@
+{
+  "checkSha256" : "d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d",
+  "lines" : [
+    {
+      "faithful" : true,
+      "line" : "* Given a notebook with the lines \"# Tasks\", \"## Fix the reaper\", \"It leaks.\" and \"# Notes\" is open",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And the selection is in \"## Fix the reaper\"",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* When the user chooses View > Fold Heading",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* Then \"It leaks.\" is hidden",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And \"## Fix the reaper\" shows the folded marker",
+      "problems" : [
+
+      ]
+    },
+    {
+      "faithful" : true,
+      "line" : "* And \"# Tasks\" and \"# Notes\" are visible",
+      "problems" : [
+
+      ]
+    }
+  ],
+  "rule" : "req~heading-folding.fold~1",
+  "summary" : "The actions establish the example and invoke the specified command. Expectations check the required hiding, folded marker and visible headings using observed layout and offsets. No blocking or advisory problems found.",
+  "verdict" : "faithful"
+}

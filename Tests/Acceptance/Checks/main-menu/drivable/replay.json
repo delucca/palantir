@@ -1,0 +1,96 @@
+{
+  "app" : "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/r10-drivable/checks/b3c82bac0d9094c24290e10f96cb2ad22b74d5d4ef390ec1fe4cd6987ef55701.json",
+  "checkSha256" : "b3c82bac0d9094c24290e10f96cb2ad22b74d5d4ef390ec1fe4cd6987ef55701",
+  "cliSha256" : {
+    "palantir-drive" : "5b81ba0541ee445e5cc487da6ab6b28074a152d1b49c9c5b5ee2bf7ff10a6cbd",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "releaseAppSha256" : "2ed9ccb7d5c2fe467f5fdecddb089ba562cfd75da3b7526661cdf362171c2983",
+  "rule" : "req~main-menu.drivable~1",
+  "seconds" : 1.2422459125518799,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "name" : "launched",
+          "seconds" : 0.39528894424438477
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When palantir launches",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "activate"
+          ],
+          "exit" : 0,
+          "seconds" : 0.482092022895813,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menus"
+          ],
+          "exit" : 0,
+          "name" : "menus",
+          "seconds" : 0.11113405227661133,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "restore"
+          ],
+          "exit" : 0,
+          "seconds" : 0.04660797119140625,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not)] | length > 0",
+          "value" : "true"
+        },
+        {
+          "that" : "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not) | titles | all(blank | not)] | all",
+          "value" : "true"
+        },
+        {
+          "that" : "def titles: (if (.path | type) == \"array\" then .path | map(. // \"\") else .path // \"\" | sub(\"^>\"; \" >\") | sub(\" >$\"; \" > \") | split(\" > \") end) | if . == [] then [\"\"] else . end; def blank: test(\"\\\\S\") | not; def separator: (titles | last | blank) and .key == \"-\" and (.enabled == false or .enabled == \"disabled\"); [.menus.items[] | select(separator | not) | .press == true or .press == \"press\"] | all",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then every menu bar item except separators shows in the accessibility tree with its title and a press action",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

@@ -1,0 +1,216 @@
+{
+  "app" : "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/palantir.app",
+  "appSha256" : "d2c9c39a4d35d3620d00a8ad8ef532a56bf26cb6fa4272185795e26adb0d1a5f",
+  "check" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/checks/d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d.json",
+  "checkSha256" : "d0337d8f8cb9562692039c4295153ec10e242cd01c8bbbc630e5e79b1478359d",
+  "cliSha256" : {
+    "palantir-drive" : "bd9dcd2c85bc66c938271412f7180976f917fc837901948272e2ecf215ff1d19",
+    "palantir-inspect" : "11b805a98681f45f4c693faa14360e9fbe3dde5aa7a2db9000204087835c6685"
+  },
+  "jq" : "jq-1.7.1-apple",
+  "machine" : {
+    "host" : "rivendell.local",
+    "macos" : "Version 27.0.1 (Build 26A434)"
+  },
+  "modelCalls" : 0,
+  "releaseApp" : "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/release/palantir.app",
+  "rule" : "req~heading-folding.fold~1",
+  "seconds" : 8.386386036872864,
+  "steps" : [
+    {
+      "actions" : [
+        {
+          "action" : "launch",
+          "arguments" : [
+            "debug",
+            "--inspector"
+          ],
+          "seconds" : 0.393172025680542
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "File > Open…"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5506500005722046,
+          "stderr" : ""
+        },
+        {
+          "action" : "drive",
+          "arguments" : [
+            "choose",
+            "/Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/replays/base-1/files/tasks.md"
+          ],
+          "exit" : 0,
+          "seconds" : 6.280225992202759,
+          "stderr" : "palantir-drive: chose /Users/delucca/Library/Caches/palantir-acceptance/acceptance/runs/fold-1-impl1/replays/base-1/files/tasks.md: path by keys, Go to Folder by Return, Open by accessibility\n"
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06513500213623047,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.010184049606323242,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : ".opened.json.sections.notebook | [.drawn[].text | rtrimstr(\"\\n\") | select(. != \"\")] == [\"# Tasks\", \"## Fix the reaper\", \"It leaks.\", \"# Notes\"]",
+          "value" : "true"
+        },
+        {
+          "that" : ".opened.json.sections.notebook.length == (\"# Tasks\\n## Fix the reaper\\nIt leaks.\\n# Notes\\n\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Given a notebook with the lines \"# Tasks\", \"## Fix the reaper\", \"It leaks.\" and \"# Notes\" is open",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "click",
+            "93.30712890625",
+            "24"
+          ],
+          "exit" : 0,
+          "seconds" : 0.5824780464172363,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06729602813720703,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.010838985443115234,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"## Fix the reaper\") | .offset) as $h | .selected.json.sections.notebook.selection | .location >= $h and .location + .length <= $h + (\"## Fix the reaper\" | length)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And the selection is in \"## Fix the reaper\"",
+      "phase" : "given"
+    },
+    {
+      "actions" : [
+        {
+          "action" : "drive",
+          "arguments" : [
+            "menu",
+            "View > Fold Heading"
+          ],
+          "exit" : 0,
+          "seconds" : 0.12949609756469727,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "wait"
+          ],
+          "exit" : 0,
+          "seconds" : 0.06533896923065186,
+          "stderr" : ""
+        },
+        {
+          "action" : "inspect",
+          "arguments" : [
+            "state"
+          ],
+          "exit" : 0,
+          "seconds" : 0.011637091636657715,
+          "stderr" : ""
+        }
+      ],
+      "expect" : [
+
+      ],
+      "line" : "* When the user chooses View > Fold Heading",
+      "phase" : "when"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"It leaks.\") | .offset) as $l | .afterFold.json.sections.notebook.drawn | all(.[]; ((.text | contains(\"It leaks.\")) | not) and (.offset > $l or .offset + (.text | length) <= $l))",
+          "value" : "true"
+        },
+        {
+          "that" : ".afterFold.json.sections.notebook.length == .opened.json.sections.notebook.length",
+          "value" : "true"
+        }
+      ],
+      "line" : "* Then \"It leaks.\" is hidden",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"## Fix the reaper\") | .offset) as $h | .afterFold.json.sections.notebook | any(.folded[]; .offset == $h and (.line | rtrimstr(\"\\n\")) == \"## Fix the reaper\")",
+          "value" : "true"
+        },
+        {
+          "that" : "(.opened.json.sections.notebook.drawn[] | select((.text | rtrimstr(\"\\n\")) == \"## Fix the reaper\") | .offset) as $h | .afterFold.json.sections.notebook as $n | ($n.drawn[] | select(.offset == $h and (.text | rtrimstr(\"\\n\")) == \"## Fix the reaper\") | .rect) as $d | any($n.markers[]; .heading == $h and .rect.width > 0 and .rect.height > 0 and .rect.y < $d.y + $d.height and .rect.y + .rect.height > $d.y)",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And \"## Fix the reaper\" shows the folded marker",
+      "phase" : "then"
+    },
+    {
+      "actions" : [
+
+      ],
+      "expect" : [
+        {
+          "that" : ".afterFold.json as $s | [\"# Tasks\", \"# Notes\"] | all(.[]; . as $t | any($s.sections.notebook.drawn[]; (.text | rtrimstr(\"\\n\")) == $t and .rect.width > 0 and .rect.height > 0 and .rect.y < $s.window.content.height and .rect.y + .rect.height > 0 and .rect.x < $s.window.content.width and .rect.x + .rect.width > 0))",
+          "value" : "true"
+        }
+      ],
+      "line" : "* And \"# Tasks\" and \"# Notes\" are visible",
+      "phase" : "then"
+    }
+  ],
+  "subprocesses" : [
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-drive",
+    "/Users/delucca/Developer/delucca/.worktrees/palantir.agents-check-features-against-the-spec/.build/debug/palantir-inspect",
+    "/usr/bin/jq",
+    "/usr/bin/lsappinfo",
+    "/usr/bin/open"
+  ],
+  "verdict" : "pass"
+}

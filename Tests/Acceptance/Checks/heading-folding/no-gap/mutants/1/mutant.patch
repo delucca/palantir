@@ -1,0 +1,14 @@
+diff --git a/Sources/Notebook/UI/NotebookTextView.swift b/Sources/Notebook/UI/NotebookTextView.swift
+index 9c0914f..b2c82b5 100644
+--- a/Sources/Notebook/UI/NotebookTextView.swift
++++ b/Sources/Notebook/UI/NotebookTextView.swift
+@@ -160,6 +160,9 @@ package final class NotebookTextView: NSTextView {
+         top = max(0, y - screenY)
+       }
+     }
++    if folds.foldedHeadings.count > previous.foldedHeadings.count {
++      top += 24
++    }
+     // Room below the last line, or a fold near the end lets the clip view scroll the text down.
+     let textBottom = layout.usageBoundsForTextContainer.maxY + textContainerOrigin.y
+     foldedTop = top > 0 && top + scroll.contentSize.height > textBottom ? top : nil

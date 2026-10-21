@@ -1,0 +1,13 @@
+diff --git a/Sources/App/MainMenu.swift b/Sources/App/MainMenu.swift
+index 78ca79d..d9bb8e3 100644
+--- a/Sources/App/MainMenu.swift
++++ b/Sources/App/MainMenu.swift
+@@ -33,7 +33,7 @@ enum MainMenu {
+     menu.addSubmenu("File", NotebookWindowController.makeFileMenuItems())
+ 
+     menu.addSubmenu(
+-      "Edit",
++      "",
+       [
+         item("Undo", Selector(("undo:")), "z"),
+         item("Redo", Selector(("redo:")), "z", [.command, .shift]),
