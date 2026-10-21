@@ -45,7 +45,8 @@ your input. Each command below does the whole of it: takes the front, sends its 
 palantir to take it, and gives the front back to the app that had it, also when it fails.
 
 - `drive menus` lists every menu item, one per line and tab-separated: its path, `enabled` or
-  `disabled`, and `press` or `no-press`. Every palantir command is a menu item, so
+  `disabled`, `press` or `no-press`, and its key equivalent in chord notation (`cmd+o`) or `-`.
+  Every palantir command is a menu item, so
   `drive menu "View > Fold All"` runs it; a disabled item fails with exit 1.
 - `drive key <chord>...` presses keys: `cmd+a`, `shift+down`, `pagedown`, `opt+left`.
 - `drive type <text>` types text, one key event per character.
