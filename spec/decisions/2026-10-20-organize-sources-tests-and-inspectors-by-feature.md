@@ -1,9 +1,9 @@
 ---
-status: accepted
+status: superseded
 date: 2026-10-20
 from: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 supersedes: decisions/2026-10-20-organize-sources-and-tests-by-feature
-superseded-by:
+superseded-by: decisions/2026-10-20-organize-sources-tests-inspectors-and-the-driver-by-feature
 ---
 # Organize the code and its tests by feature, with model, UI and inspector targets per feature
 
