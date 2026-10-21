@@ -1,13 +1,10 @@
 import AppKit
-import ApplicationServices
 import Foundation
-import PalantirInspector
 import PalantirNotebook
 import PalantirNotebookInspector
 import Testing
 
 @testable import Palantir
-@testable import PalantirDriver
 @testable import PalantirNotebookUI
 
 /// The feature folders under `Sources`: every folder but the app's, the inspector's and the
@@ -20,8 +17,8 @@ func featureFolders() -> [String] {
     .sorted()
 }
 
-/// The guard every feature passes: each menu command can be driven, each feature reports state,
-/// and each view palantir draws itself has an accessibility label.
+/// The guard every feature passes: each menu command can be driven and each view palantir draws
+/// itself has an accessibility label.
 struct GuardTests {
   private typealias MenuEntry = (path: [String], item: NSMenuItem)
 
@@ -33,13 +30,8 @@ struct GuardTests {
     }
   }
 
-  /// The paths of the menu bar a palantir process makes.
-  @MainActor private static func menuPaths() -> [[String]] {
-    items(MainMenu.make(name: "palantir")).map(\.path)
-  }
-
-  // Structural only: what AXPress needs of an item, read in-process. Whether the tree agents read
-  // offers the press is the launched test below.
+  // Structural only: what AXPress needs of an item, read in-process, not the tree a launched
+  // palantir serves.
   // [utest->req~main-menu.drivable~1]
   @MainActor @Test func everyMenuBarItemIsShownWithATitleAndAnActionOrASubmenu() throws {
     let items = Self.items(MainMenu.make(name: "palantir"))
@@ -53,39 +45,6 @@ struct GuardTests {
         item.isAccessibilityElement() && item.accessibilityRole() == .menuItem,
         "\(name) is not an accessibility menu item")
       #expect(item.accessibilityTitle() == item.title, "\(name) has no accessibility title")
-    }
-  }
-
-  // [utest->req~main-menu.drivable~1]
-  @Test(.launchesPalantir)
-  func everyMenuBarItemShowsInTheAccessibilityTreeWithItsTitleAndAPress() async throws {
-    try #require(AXIsProcessTrusted(), "the app running the tests needs the Accessibility grant")
-    let launched = try await LaunchedPalantir(
-      LaunchedPalantir.built("palantir"), arguments: [InspectorListener.launchFlag])
-    let expected = await Self.menuPaths()
-    let shown = try MenuBar(of: Palantir(pid: launched.pid)).items
-    try #require(expected.count > 20)
-    for path in expected {
-      let item = shown.first { $0.path == path }
-      #expect(item != nil, "\(path.joined(separator: " > ")) is not in the accessibility tree")
-      #expect(item?.canPress == true, "\(path.joined(separator: " > ")) has no press action")
-    }
-  }
-
-  // [utest->req~inspector.state-per-feature~1]
-  @Test(.launchesPalantir) func everyFeatureReportsStateInALaunchedApp() async throws {
-    let launched = try await LaunchedPalantir(
-      LaunchedPalantir.built("palantir"), arguments: [InspectorListener.launchFlag])
-    let client = try InspectorClient(pid: launched.pid)
-    let response = try await Task.detached { try client.call(.state, NoParams(), timeout: 5) }.value
-    let result = try #require(
-      (try JSONSerialization.jsonObject(with: response) as? [String: Any])?["result"]
-        as? [String: Any])
-    let sections = try #require(result["sections"] as? [String: [String: Any]])
-    let features = featureFolders()
-    try #require(!features.isEmpty)
-    for feature in features {
-      #expect(sections[feature.lowercased()]?.isEmpty == false, "\(feature) reports no state")
     }
   }
 

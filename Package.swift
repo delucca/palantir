@@ -105,8 +105,8 @@ let package = Package(
     .testTarget(
       name: "PalantirTests",
       dependencies: [
-        "Palantir", "PalantirDriver", "PalantirInspector", "PalantirNotebook",
-        "PalantirNotebookInspector", "PalantirNotebookUI",
+        "Palantir", "PalantirInspector", "PalantirNotebook", "PalantirNotebookInspector",
+        "PalantirNotebookUI",
       ],
       path: "Tests/App",
       swiftSettings: upcomingFeatures
