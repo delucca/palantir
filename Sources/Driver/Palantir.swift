@@ -133,7 +133,7 @@ struct Palantir {
   func requireFrontmost() throws {
     guard isFrontmost else {
       throw DriverError(
-        "palantir \(pid) is not in front; run `palantir-drive activate` first, and `palantir-drive restore` after"
+        "palantir \(pid) is not in front, so the rest of the input was not sent; read the state and run the command again"
       )
     }
   }
