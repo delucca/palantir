@@ -10,7 +10,7 @@ import Testing
 struct HeadingFoldingTests {
   private let tasksAndNotes = "# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n"
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func foldHeadingHidesTheTextItOwnsAndMarksIt() throws {
     let controller = try openNotebook(tasksAndNotes)
     let view = controller.textView
@@ -20,7 +20,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: heading))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func markerIsShownAfterTheLastLineOfAWrappingHeading() throws {
     let title = "## " + String(repeating: "Fix the reaper again and again ", count: 12)
     let controller = try openNotebook("# Tasks\n\(title)\nIt leaks.\n# Notes\n")
@@ -30,7 +30,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: heading))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test(arguments: 100...130)
   func markerFitsWhenTheHeadingEndsAtTheRightEdge(length: Int) throws {
     let controller = try openNotebook(
@@ -40,7 +40,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: try view.heading(startingWith: "## ")))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test(arguments: [
     "# Notes", "# " + String(repeating: "Fix the reaper again and again ", count: 12),
   ])
@@ -52,7 +52,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: last))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test(arguments: ["=====", "-----"])
   func markerSitsAfterASetextHeadingsUnderline(underline: String) throws {
     let controller = try openNotebook("Tasks\n\(underline)\nIt leaks.\n# Notes\n")
@@ -63,7 +63,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: tasks))
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func foldHeadingWithTheCaretAtTheEndOfTheText() throws {
     let text = "# Tasks\nIt leaks.\n# Notes\nDone."
     let controller = try openNotebook(text)
@@ -74,7 +74,7 @@ struct HeadingFoldingTests {
     #expect(try view.visibleParagraphs() == ["# Tasks", "It leaks.", "# Notes"])
   }
 
-  // [utest->req~heading-folding.fold~1]
+  // req~heading-folding.fold~1
   @Test func headingThatOwnsNothingGetsAMarkerAndLosesIt() throws {
     let controller = try openNotebook("# Tasks\n## Ship bilbo\n# Notes\n")
     let view = controller.textView
@@ -120,7 +120,7 @@ struct HeadingFoldingTests {
     #expect(view.selectedRange() == all)
   }
 
-  // [utest->req~heading-folding.unfold~1]
+  // req~heading-folding.unfold~1
   @Test func unfoldHeadingShowsTheSameTextAndClearsTheMarker() throws {
     let controller = try openNotebook(tasksAndNotes)
     let view = controller.textView
@@ -134,7 +134,7 @@ struct HeadingFoldingTests {
     #expect(view.markerViews().isEmpty)
   }
 
-  // [utest->req~heading-folding.unfold~1]
+  // req~heading-folding.unfold~1
   @Test func unfoldingAParentKeepsAFoldedChildFolded() throws {
     let controller = try openNotebook(
       "# Tasks\n## Fix the reaper\nIt leaks.\n## Ship bilbo\n# Notes\n")
@@ -150,7 +150,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: try view.heading(startingWith: "## Fix the reaper")))
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [(before: 60, owned: 3, after: 200), (60, 40, 5), (600, 20, 600)])
   func foldingLeavesNoGapAndKeepsTheHeadingInPlace(before: Int, owned: Int, after: Int) throws {
     let text = longNotebook(before: before, owned: owned, after: after)
@@ -198,7 +198,7 @@ struct HeadingFoldingTests {
     #expect(view.frame.height >= textHeight)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test func foldAllKeepsTheTopLineInPlace() throws {
     let controller = try openNotebook(sectionsNotebook())
     let view = controller.textView
@@ -209,7 +209,7 @@ struct HeadingFoldingTests {
     #expect(try view.visibleParagraphs().count == 11)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test func unfoldAllKeepsTheTopLineInPlace() throws {
     let text = sectionsNotebook()
     let controller = try openNotebook(text)
@@ -227,7 +227,7 @@ struct HeadingFoldingTests {
     #expect(try view.visibleText() == text)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [0, 5] as [CGFloat])
   func foldingAHeadingAboveTheWindowKeepsTheTopLineInPlace(partly: CGFloat) throws {
     let controller = try openNotebook(sectionsNotebook())
@@ -242,7 +242,7 @@ struct HeadingFoldingTests {
     try expectInPlace(view, five.range.location, at: -partly)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test func foldingAfterAScrollWithoutLayoutKeepsTheTopLineInPlace() throws {
     let controller = try openNotebook(sectionsNotebook())
     let view = controller.textView
@@ -255,7 +255,7 @@ struct HeadingFoldingTests {
     try expectInPlace(view, five.range.location)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [0, 5] as [CGFloat])
   func foldingTheTopLinesHeadingPutsItAtTheTop(partly: CGFloat) throws {
     let controller = try openNotebook(sectionsNotebook())
@@ -268,7 +268,7 @@ struct HeadingFoldingTests {
     try expectInPlace(view, five.range.location)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: WidthChange.all)
   func aCommandAfterTheWindowChangesWidthKeepsTheTopLineInPlace(change: WidthChange) throws {
     if change.command == "inside a child" { return try foldInsideAChild(width: change.width) }
@@ -377,7 +377,7 @@ struct HeadingFoldingTests {
     #expect(view.frame.height >= textHeight)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [600, 1400] as [CGFloat])
   func aFoldedNotebookStaysFoldedWhenTheWindowChangesWidth(width: CGFloat) throws {
     let text = wrappingSectionsNotebook() as NSString
@@ -397,7 +397,7 @@ struct HeadingFoldingTests {
     #expect(try view.markerIsShown(heading: heading))
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: ResizeAfterAFold.all)
   func aResizeAfterFoldingTheLastSectionKeepsTheTopLineInPlace(resize: ResizeAfterAFold) throws {
     let text = (resize.wraps ? wrappingSectionsNotebook() : sectionsNotebook()) as NSString
@@ -427,7 +427,7 @@ struct HeadingFoldingTests {
     try expectInPlace(view, after.offset, at: after.screenY)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [600, 1400] as [CGFloat])
   func aFoldThatLeavesAWindowOfTextBelowSetsNoFloor(width: CGFloat) throws {
     let text = wrappingSectionsNotebook() as NSString
@@ -447,7 +447,7 @@ struct HeadingFoldingTests {
     #expect(view.foldedTop == nil)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test(arguments: [true, false])
   func aResizeAfterScrollingUpFromAFloorDropsIt(toTheTop: Bool) throws {
     let text = wrappingSectionsNotebook() as NSString
@@ -474,7 +474,7 @@ struct HeadingFoldingTests {
     try expectInPlace(view, before.offset, at: before.screenY)
   }
 
-  // [utest->req~heading-folding.no-gap~1]
+  // req~heading-folding.no-gap~1
   @Test func aResizeLaysOutTheWindowBeforeFindingTheTopLine() throws {
     let text = wrappingSectionsNotebook() as NSString
     let controller = try openNotebook(text as String)
@@ -517,7 +517,7 @@ struct HeadingFoldingTests {
     #expect(fold < .seconds(2))
   }
 
-  // [utest->req~heading-folding.fold-all~1]
+  // req~heading-folding.fold-all~1
   @Test func foldAllLeavesTheTopLevelHeadingsAndTheTextBeforeThem() throws {
     let controller = try openNotebook(
       "Intro.\n# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\nDone.")
@@ -533,7 +533,7 @@ struct HeadingFoldingTests {
       ])
   }
 
-  // [utest->req~heading-folding.unfold-all~1]
+  // req~heading-folding.unfold-all~1
   @Test func unfoldAllShowsTheWholeFile() throws {
     let text = "Intro.\n# Tasks\n## Fix the reaper\nIt leaks.\n## Ship bilbo\n# Notes\nDone."
     let controller = try openNotebook(text)
@@ -550,7 +550,7 @@ struct HeadingFoldingTests {
     #expect(view.markerViews().isEmpty)
   }
 
-  // [utest->req~heading-folding.disabled-without-heading~1]
+  // req~heading-folding.disabled-without-heading~1
   @Test func foldCommandsAreDisabledWithoutAHeadingAtTheSelection() throws {
     let controller = try openNotebook("Intro.\n# Tasks\n")
     let view = controller.textView
@@ -564,7 +564,7 @@ struct HeadingFoldingTests {
     #expect(view.validateMenuItem(unfold))
   }
 
-  // [utest->req~heading-folding.disabled-without-heading~1]
+  // req~heading-folding.disabled-without-heading~1
   @Test func appKitMenuValidationDisablesTheFoldCommandsWithoutAHeading() throws {
     let controller = try openNotebook("Intro.\n# Tasks\n")
     let view = controller.textView
@@ -584,7 +584,7 @@ struct HeadingFoldingTests {
     #expect(menu.items.map(\.isEnabled) == [false, false, false, false])
   }
 
-  // [utest->req~heading-folding.file-untouched~1]
+  // req~heading-folding.file-untouched~1
   @Test func foldingNeverWritesTheFile() throws {
     let url = try writeTemporaryNotebook(tasksAndNotes)
     defer { removeTemporaryNotebook(url) }

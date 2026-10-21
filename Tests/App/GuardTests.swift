@@ -33,7 +33,7 @@ struct GuardTests {
 
   // Structural only: what AXPress needs of an item, read in-process, not the tree a launched
   // palantir serves.
-  // [utest->req~main-menu.drivable~1]
+  // req~main-menu.drivable~1
   @MainActor @Test func everyMenuBarItemIsShownWithATitleAndAnActionOrASubmenu() throws {
     let items = Self.items(MainMenu.make(name: "palantir"))
     try #require(items.count > 20)
@@ -83,7 +83,7 @@ struct GuardTests {
     }
   }
 
-  // [utest->req~accessibility.custom-view-labels~1]
+  // req~accessibility.custom-view-labels~1
   @MainActor @Test func everyViewPalantirDrawsHasAnAccessibilityLabel() throws {
     let features = featureFolders()
     try #require(!features.isEmpty)

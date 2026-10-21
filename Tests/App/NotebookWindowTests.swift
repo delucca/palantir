@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 @MainActor
 @Suite(.layer(.integration))
 struct NotebookWindowTests {
-  // [utest->req~notebook-window.open~1]
+  // req~notebook-window.open~1
   @Test func openingANotebookShowsItsWholeText() throws {
     let first =
       "# Tâsks 🎉\r\nNaïve 👩‍👩‍👧 line.\n```\n# code\n```\nEnd without newline\n"
@@ -63,7 +63,7 @@ struct NotebookWindowTests {
     #expect(alerts.isEmpty)
   }
 
-  // [utest->req~notebook-window.open~1]
+  // req~notebook-window.open~1
   @Test func fileOpenInTheNotebookWindowGoesToItsController() throws {
     let text = "# Tasks\nIt leaks.\n"
     let url = try writeTemporaryNotebook(text)
@@ -87,7 +87,7 @@ struct NotebookWindowTests {
     #expect(panels.map(\.allowedContentTypes) == [[.markdown]])
   }
 
-  // [utest->req~notebook-window.open~1]
+  // req~notebook-window.open~1
   @Test func reopeningAFoldedNotebookShowsItAll() throws {
     let text = "# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n"
     let url = try writeTemporaryNotebook(text)
@@ -102,7 +102,7 @@ struct NotebookWindowTests {
     #expect(view.foldedHeadingStarts.isEmpty && view.markerViews().isEmpty)
   }
 
-  // [utest->req~notebook-window.open~1]
+  // req~notebook-window.open~1
   @Test func openingAnotherNotebookShowsItFromItsFirstLine() throws {
     let controller = try openNotebook(sectionsNotebook())
     let view = controller.textView
@@ -187,7 +187,7 @@ struct NotebookWindowTests {
     #expect(window.frame == centered.frame)
   }
 
-  // [utest->req~notebook-window.read-only~1]
+  // req~notebook-window.read-only~1
   @Test func cutAndPasteStayDisabledOnASelection() throws {
     let controller = try openNotebook("# Tasks\nIt leaks.\n")
     let view = controller.textView
@@ -203,7 +203,7 @@ struct NotebookWindowTests {
     #expect(items.map(\.isEnabled) == [false, true, false])
   }
 
-  // [utest->req~notebook-window.read-only~1]
+  // req~notebook-window.read-only~1
   @Test func typingIntoTheNotebookChangesNothing() throws {
     let text = "# Tasks\nIt leaks.\n"
     let controller = try openNotebook(text)

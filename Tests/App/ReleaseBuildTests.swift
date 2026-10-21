@@ -11,7 +11,7 @@ struct ReleaseBuildTests {
     SocketDirectory.url.lastPathComponent,
   ]
 
-  // [utest->req~inspector.no-release-listener~1]
+  // req~inspector.no-release-listener~1
   @Test(.timeLimit(.minutes(10)))
   func aReleaseBuildHoldsNoInspectorCode() throws {
     let executable = try ReleaseBuild.executable()

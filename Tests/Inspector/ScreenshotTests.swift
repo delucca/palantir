@@ -37,7 +37,7 @@ struct ScreenshotTests {
     try #require(NSBitmapImageRep(data: result.png))
   }
 
-  // [utest->req~inspector.screenshots~1]
+  // req~inspector.screenshots~1
   @Test func aScreenshotHasThePixelsOfTheDisplay() async throws {
     let window = window()
     defer { window.orderOut(nil) }
@@ -62,7 +62,7 @@ struct ScreenshotTests {
     #expect(white.redComponent > 0.9 && white.greenComponent > 0.9 && white.blueComponent > 0.9)
   }
 
-  // [utest->req~inspector.screenshots~1]
+  // req~inspector.screenshots~1
   @Test func aRetinaWindowGivesTheExampleSizes() async throws {
     let window = window()
     defer { window.orderOut(nil) }
@@ -75,7 +75,7 @@ struct ScreenshotTests {
     #expect((corner.width, corner.height) == (200, 100))
   }
 
-  // [utest->req~inspector.screenshots~1]
+  // req~inspector.screenshots~1
   @Test(arguments: [NSScroller.Style.legacy, .overlay])
   func aScreenshotDrawsTheScrollerKnobWhereTheScrollerHasIt(style: NSScroller.Style) async throws {
     let window = NSWindow(
@@ -125,8 +125,8 @@ struct ScreenshotTests {
       "\(drawn) against \(expected)")
   }
 
-  // [utest->req~inspector.settled-layout~1]
-  // [utest->req~inspector.never-drives~1]
+  // req~inspector.settled-layout~1
+  // req~inspector.never-drives~1
   @Test func aHiddenWindowWithLayoutPendingIsNeitherSettledNorRendered() async throws {
     let window = NSWindow(
       contentRect: NSRect(x: 0, y: 0, width: 300, height: 200), styleMask: [.titled],

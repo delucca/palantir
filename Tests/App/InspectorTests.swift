@@ -52,7 +52,7 @@ struct InspectorTests {
     return (delegate, window)
   }
 
-  // [utest->req~inspector.settled-layout~1]
+  // req~inspector.settled-layout~1
   @Test func theWaitAfterFoldAllAnswersWithTheStateASecondLaterHas() async throws {
     let (delegate, window) = try showing(sectionsNotebook())
     defer { window.orderOut(nil) }
@@ -75,7 +75,7 @@ struct InspectorTests {
     #expect(notebook.gaps.isEmpty)
   }
 
-  // [utest->req~inspector.settled-layout~1]
+  // req~inspector.settled-layout~1
   @Test func aScrollThatDisplayHasNotLaidOutIsPendingLayout() async throws {
     let (delegate, window) = try showing(sectionsNotebook())
     defer { window.orderOut(nil) }
@@ -91,7 +91,7 @@ struct InspectorTests {
     #expect(laidOutOffsets(delegate.notebook.textView) != before)
   }
 
-  // [utest->req~inspector.never-drives~1]
+  // req~inspector.never-drives~1
   @Test func noInspectorCallChangesTheNotebookItsFoldsTheSelectionTheScrollOrTheWindow()
     async throws
   {
@@ -135,7 +135,7 @@ struct InspectorTests {
     }
   }
 
-  // [utest->req~inspector.state-per-feature~1]
+  // req~inspector.state-per-feature~1
   @Test func theStateHoldsASectionForEveryFeature() async throws {
     let (delegate, window) = try showing("# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n")
     defer { window.orderOut(nil) }
@@ -155,7 +155,7 @@ struct InspectorTests {
 /// The tests that launch palantir, one at a time: two launches at once hand the front to each other.
 @Suite(.serialized, .layer(.e2e))
 struct InspectorLaunchTests {
-  // [utest->req~inspector.debug-only~1]
+  // req~inspector.debug-only~1
   @Test func aDebugBuildListensOnlyWithTheLaunchFlag() async throws {
     let executable = LaunchedPalantir.built("palantir")
     let quiet = try await LaunchedPalantir(executable)
@@ -178,7 +178,7 @@ struct InspectorLaunchTests {
 
   // Only the socket the inspector would make; a listener elsewhere is what ReleaseBuildTests'
   // import check catches.
-  // [utest->req~inspector.no-release-listener~1]
+  // req~inspector.no-release-listener~1
   @Test(.timeLimit(.minutes(10)))
   func aReleaseBuildLaunchedWithTheFlagCreatesNoSocket() async throws {
     let launched = try await LaunchedPalantir(

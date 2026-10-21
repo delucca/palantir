@@ -25,7 +25,7 @@ struct ListenerTests {
     try await Task.detached { try client.call(method, NoParams(), timeout: 5) }.value
   }
 
-  // [utest->req~inspector.debug-only~1]
+  // req~inspector.debug-only~1
   @Test func theListenerAnswersOnASocketOnlyTheUserCanOpen() async throws {
     let directory = try directory()
     defer { try? FileManager.default.removeItem(at: directory) }
@@ -51,7 +51,7 @@ struct ListenerTests {
     #expect(!FileManager.default.fileExists(atPath: listener.socket.path))
   }
 
-  // [utest->req~inspector.debug-only~1]
+  // req~inspector.debug-only~1
   @Test(arguments: [0o755, 0o750, 0o701] as [mode_t])
   func theListenerRefusesADirectoryOthersCanOpen(mode: mode_t) throws {
     let directory = try directory()
@@ -65,7 +65,7 @@ struct ListenerTests {
         atPath: SocketDirectory.socket(for: getpid(), in: directory).path))
   }
 
-  // [utest->req~inspector.debug-only~1]
+  // req~inspector.debug-only~1
   @Test func theListenerRefusesASymlinkedDirectory() throws {
     let target = try directory()
     let link = try directory()
@@ -319,7 +319,7 @@ struct ListenerTests {
     }
   }
 
-  // [utest->req~inspector.settled-layout~1]
+  // req~inspector.settled-layout~1
   @Test func aStateThatKeepsChangingNeverSettlesAndTimesOut() async throws {
     let window = shownWindow()
     defer { window.orderOut(nil) }
