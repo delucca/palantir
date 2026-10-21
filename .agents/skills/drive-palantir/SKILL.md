@@ -1,6 +1,6 @@
 ---
 name: drive-palantir
-description: Launches a debug palantir, uses it like a person through its menus, keys and clicks, and reads what it shows (folded headings, drawn lines, gaps, selection, scroll, full-resolution screenshots) from its inspector. Use to check a change in the running app, or to find blank space or a scroller jump after folding. NOT for unit tests (swift test).
+description: Launches a debug palantir with just inspect, uses it like a person through its menus, keys and clicks with palantir-drive, and reads what it shows (folded headings, drawn lines, gaps, selection, scroll, full-resolution screenshots) with palantir-inspect. Use to try a change in the running app, to screenshot palantir, or to find blank space or a scroller jump after folding. NOT for the test suites (swift test, just test, just test-desktop).
 ---
 
 # Drive and inspect palantir
@@ -8,8 +8,9 @@ description: Launches a debug palantir, uses it like a person through its menus,
 Two tools, both built into `.build/debug/` with the app. Run everything from the repository root.
 
 - `palantir-drive` uses palantir from outside, the way a person does: it presses menu items through
-  the accessibility tree and sends keys, clicks and scrolls as system events, only while palantir is
-  the app in front. It reads nothing palantir reports.
+  the accessibility tree, posts keys and text to palantir's own event queue, and sends clicks and
+  scrolls through the system's event stream, all only while palantir is the app in front. It reads
+  nothing palantir reports.
 - `palantir-inspect` reads what palantir shows from the inspector inside a debug build: state as
   JSON, settled layout, and screenshots. It never clicks, types, scrolls or runs a command, and it
   works with palantir in the background, covered by other windows.
@@ -23,16 +24,19 @@ The app the shell runs under needs Accessibility, and Screen Recording for `pala
 ## Start and stop
 
 ```sh
-pid=$(just inspect)        # builds the debug app, launches it in the background, prints its pid
-drive() { .build/debug/palantir-drive --pid "$pid" "$@"; }
-inspect() { .build/debug/palantir-inspect --pid "$pid" "$@"; }
-# ... work ...
-drive menu "palantir > Quit palantir"
+just inspect      # builds the debug app, launches it in the background, prints its pid
 ```
 
-`just inspect` starts palantir behind the person's windows without taking focus. Quit only the
-palantir you launched, with its Quit menu item. Never send input to another app with any other
-tool.
+`just inspect` starts palantir behind the person's windows without taking focus. When it exits
+non-zero, read its stderr before using a pid it printed: a palantir that did not settle was
+terminated.
+
+Each shell command may start a fresh shell, so carry no variable or function from one to the next:
+write the pid into every command. Below, `drive` stands for `.build/debug/palantir-drive --pid
+<pid>` and `inspect` for `.build/debug/palantir-inspect --pid <pid>`; spell both out each time.
+
+Stop with `drive menu "palantir > Quit palantir"`. Quit only the palantir you launched, with its
+Quit menu item. Never send input to another app with any other tool.
 
 ## Act
 
@@ -40,14 +44,17 @@ The person at this machine keeps working while you drive, so palantir takes the 
 your input. Each command below does the whole of it: takes the front, sends its input, waits for
 palantir to take it, and gives the front back to the app that had it, also when it fails.
 
-- `drive menus` lists every menu item with `enabled` or `disabled`. Every palantir command is a
-  menu item, so `drive menu "View > Fold All"` runs it; a disabled item fails with exit 1.
+- `drive menus` lists every menu item, one per line and tab-separated: its path, `enabled` or
+  `disabled`, and `press` or `no-press`. Every palantir command is a menu item, so
+  `drive menu "View > Fold All"` runs it; a disabled item fails with exit 1.
 - `drive key <chord>...` presses keys: `cmd+a`, `shift+down`, `pagedown`, `opt+left`.
 - `drive type <text>` types text, one key event per character.
 - `drive click <x> <y> [--count 2]` clicks a point of the window's content; `drive scroll <lines>`
   scrolls it, down when positive.
 - `drive choose <absolute path>` answers the panel File > Open… shows.
-- `drive capture <out.png>` captures the window as the screen shows it, title bar included.
+- `drive capture <out.png>` captures the window as the screen shows it, title bar included. It
+  takes the front and needs Screen Recording, so use it only when the title bar or what the screen
+  really shows matters; take every other picture with `inspect screenshot`.
 
 If a command says the front did not go back, run `drive restore`: it gives the front back to the
 app the failed command recorded.
@@ -58,7 +65,9 @@ selection. Up, down, Page Up, Page Down, Home and End scroll without moving the 
 changes nothing.
 
 To put the selection in a heading, click its line: take the line's `rect` from the state and click
-`rect.x + 10`, `rect.y + rect.height / 2`. Then check `selection` in the state.
+`rect.x + 10`, `rect.y + rect.height / 2`. Then check that `selection.location` in the state is in
+that line, from its `offset` up to the next drawn line's. The fold commands read only the location,
+so a `length` of 1, which a click can leave, is fine.
 
 ### Opening a notebook
 
@@ -68,10 +77,9 @@ drive choose /absolute/path/to/notebook.md
 inspect wait
 ```
 
-`choose` opens the panel's Go to Folder sheet, types the path into its field and sends Return only
-once the field holds exactly the path, then presses the panel's Open button through the
-accessibility tree, checking each step there before the next. It prints its route on stderr. Then `inspect state` shows the notebook's `length`: check it is the
-file's.
+`choose` types the path into the panel's Go to Folder sheet and presses Open, checking each step in
+the accessibility tree, and prints its route on stderr. Then check that `length` in `inspect state`
+is the file's: it counts UTF-16 code units, like every offset, so for an ASCII file it is `wc -c`.
 
 ## Read
 
@@ -112,11 +120,13 @@ points from the top-left of the main display.
 - `folded`: the folded headings, by the UTF-16 offset of their first character.
 - `drawn`: the paragraphs the window shows, top to bottom; the first one may start above the
   window (a negative `y`). These are what the layout tests measure.
-- `gaps`: two drawn paragraphs with space between them (`height` > 0) or overlapping (< 0). Empty
-  when every paragraph starts where the one above it ends.
+- `gaps`: one entry per two drawn paragraphs in a row that do not touch, such as
+  `{"after": 8, "before": 36, "height": 12}`: the offsets of the paragraph above and the one below,
+  and the space between them, negative where they overlap. Empty when every paragraph starts where
+  the one above it ends.
 - `markers`: the folded marker beside each folded heading on screen.
-- `scroll.y`: how far the text is scrolled, in text points; `height` is the window's content
-  height; `documentHeight` is the height the scroller spans.
+- `scroll.y`: the top of the window in the text, in points from the text's top; `height` is the
+  window's content height; `documentHeight` is the height the scroller spans.
 
 ## Checking a fold
 
@@ -131,24 +141,29 @@ above it. Save the state and a crop around the anchor before and after the comma
 - Blank space below the text needs three numbers:
   - The text's extent: the last paragraph's bottom, `rect.y + rect.height + scroll.y` of the last
     drawn line when that line ends the text.
-  - The fold floor, which palantir keeps on purpose. A fold or unfold command (or a width change)
-    that leaves the text ending above the window's bottom, with the anchor below the document's
-    top, stores the anchor's top: the `scroll.y` right after that command. The document then stays
-    at least that top plus `height` tall, so the anchor stays put. Scrolling does not change the
-    stored top; the next fold command or width change sets it again, and opening a notebook drops
-    it. So note `scroll.y` and the text's extent right after every fold command: when the text
-    ended above `scroll.y + height` then, the floor is that `scroll.y + height`, whatever the window
-    shows later; otherwise there is none.
+  - The fold floor, which palantir keeps on purpose so the anchor stays put. A fold or unfold
+    command that leaves the window below the text's top (`scroll.y` above 0) and the text ending
+    above the window's bottom (`scroll.y + height`) stores the window's top: the `scroll.y` right
+    after that command. The floor is that stored top plus `height`, and the document stays at least
+    that tall. Scrolling keeps the stored top. The next fold command sets it again or drops it, a
+    width change moves or drops it but never sets one, and opening a notebook drops it. So note
+    `scroll.y` and the text's extent right after every fold command; with no stored top there is
+    no floor.
   - The upper bound: `documentHeight` is never more than the text's extent plus one `height`.
-  Blank space below the text is a defect only when `documentHeight` is more than both the text's
-  extent and the floor, or more than the upper bound, which holds even when you did not see the
-  command that set the floor.
+  The document is never shorter than the window either. So blank space below the text is a defect
+  only when `documentHeight` is more than the largest of the text's extent, `height` and the floor,
+  or more than the upper bound, which holds even when you did not see the command that set the
+  floor.
 
 Back each claim with the state values and a screenshot crop of the lines around it.
 
 ## When something fails
 
 - `palantir-drive` exit 1 names the problem, such as a disabled menu item, another window covering
-  the point of a click, or the front not going back. Exit 64 is a usage error.
-- `palantir-inspect` exit 2 means no palantir is listening: launch one with `just inspect`. Exit 1
-  is an inspector error, such as layout that did not settle within the timeout and what was pending.
+  the point of a click, or the front not going back. Exit 64 is a usage error, for both tools.
+- When `palantir-drive` fails because palantir left the front during the input, the person switched
+  apps and part of the input may not have been sent: read the state, then run the command again.
+  Leave `palantir-drive activate` alone: it keeps the front until a `restore`.
+- `palantir-inspect` exit 2 is a socket problem, which its message names: most often no palantir
+  listening, so launch one with `just inspect`. Exit 1 is an inspector error, such as layout that
+  did not settle within the timeout and what was pending.
