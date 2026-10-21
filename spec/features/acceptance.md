@@ -5,6 +5,7 @@ Checks palantir against its feature rules through the running app, with checks t
 ## Rule: When a rule has no check, or a newer version than its check, the acceptance layer shall generate a check for it from the rule's text and example alone
 `req~acceptance.generate~1`
 From: one-pagers/2026-10-21-agents-check-features-against-the-spec
+Decided in: decisions/2026-10-21-generate-checks-from-the-spec-and-decide-in-code
 
 ### Example: a bumped rule
 * Given the check of heading-folding.fold was generated for version 1
@@ -17,6 +18,7 @@ From: one-pagers/2026-10-21-agents-check-features-against-the-spec
 `req~acceptance.replay~1`
 From: one-pagers/2026-10-21-agents-check-features-against-the-spec
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
+Decided in: decisions/2026-10-21-generate-checks-from-the-spec-and-decide-in-code
 
 ### Example: replaying the fold check
 * Given an accepted check for heading-folding.fold
@@ -37,6 +39,7 @@ From: one-pagers/2026-10-21-agents-check-features-against-the-spec
 ## Rule: A generated check shall be accepted only after a judge from another model family than the generating agent's finds it faithful to its rule, and a mutant of palantir that breaks the rule makes the check fail
 `req~acceptance.gate~1`
 From: one-pagers/2026-10-21-agents-check-features-against-the-spec
+Decided in: decisions/2026-10-21-generate-checks-from-the-spec-and-decide-in-code
 
 ### Example: the gap check
 * Given a check generated for heading-folding.no-gap
@@ -49,6 +52,7 @@ From: one-pagers/2026-10-21-agents-check-features-against-the-spec
 ## Rule: When a check fails, triage shall report either that palantir breaks the rule or that the check is wrong, and a check it puts in place shall pass the gate and fail every mutant the old check failed
 `req~acceptance.triage~1`
 From: one-pagers/2026-10-21-agents-check-features-against-the-spec
+Decided in: decisions/2026-10-21-generate-checks-from-the-spec-and-decide-in-code
 
 ### Example: a broken fold
 * Given an accepted check for heading-folding.fold
@@ -60,6 +64,7 @@ From: one-pagers/2026-10-21-agents-check-features-against-the-spec
 ## Rule: An exploration run shall try variations around each rule and report what it finds as candidate spec changes, and shall never fail
 `req~acceptance.exploration~1`
 From: one-pagers/2026-10-21-agents-check-features-against-the-spec
+Decided in: decisions/2026-10-21-generate-checks-from-the-spec-and-decide-in-code
 
 ### Example: a behavior no rule defines
 * Given a click on a heading leaves a one-character selection, which no rule defines
