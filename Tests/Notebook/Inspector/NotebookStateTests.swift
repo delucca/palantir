@@ -8,6 +8,7 @@ import Testing
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.integration))
 struct NotebookStateTests {
   private struct State: Decodable {
     struct Sections: Decodable { var notebook: NotebookState }

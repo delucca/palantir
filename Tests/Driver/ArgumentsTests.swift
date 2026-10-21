@@ -2,6 +2,7 @@ import Testing
 
 @testable import PalantirDriver
 
+@Suite(.layer(.unit))
 struct ArgumentsTests {
   @Test(arguments: ["-2147483648", "2147483647", "1001", "-1001", "x", ""])
   func aScrollOutOfBoundsIsAUsageError(text: String) {

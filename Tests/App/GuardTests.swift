@@ -19,6 +19,7 @@ func featureFolders() -> [String] {
 
 /// The guard every feature passes: each menu command can be driven and each view palantir draws
 /// itself has an accessibility label.
+@Suite(.layer(.integration))
 struct GuardTests {
   private typealias MenuEntry = (path: [String], item: NSMenuItem)
 

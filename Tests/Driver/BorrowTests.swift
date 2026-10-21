@@ -3,6 +3,7 @@ import Testing
 
 @testable import PalantirDriver
 
+@Suite(.layer(.unit))
 struct BorrowTests {
   private let previous: pid_t = 4_242
 

@@ -3,6 +3,7 @@ import Testing
 
 @testable import PalantirNotebook
 
+@Suite(.layer(.unit))
 struct OutlineTests {
   private let introTasksNotes = "Intro.\n# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\nDone."
 

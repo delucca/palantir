@@ -1,6 +1,6 @@
 ---
 name: drive-palantir
-description: Launches a debug palantir with just inspect, uses it like a person through its menus, keys and clicks with palantir-drive, and reads what it shows (folded headings, drawn lines, gaps, selection, scroll, full-resolution screenshots) with palantir-inspect. Use to try a change in the running app, to screenshot palantir, or to find blank space or a scroller jump after folding. NOT for the test suites (swift test, just test, just test-desktop).
+description: Launches a debug palantir with just inspect, uses it like a person through its menus, keys and clicks with palantir-drive, and reads what it shows (folded headings, drawn lines, gaps, selection, scroll, full-resolution screenshots) with palantir-inspect. Use to try a change in the running app, to screenshot palantir, or to find blank space or a scroller jump after folding. NOT for the test suites (swift test, just test, and its test-unit, test-integration, test-e2e and test-release recipes).
 ---
 
 # Drive and inspect palantir

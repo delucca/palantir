@@ -3,6 +3,7 @@ import Testing
 
 @testable import PalantirDriver
 
+@Suite(.layer(.unit))
 struct ClickTests {
   private struct Failed: Error {}
 

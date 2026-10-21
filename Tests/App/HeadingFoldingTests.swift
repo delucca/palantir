@@ -6,6 +6,7 @@ import Testing
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.integration))
 struct HeadingFoldingTests {
   private let tasksAndNotes = "# Tasks\n## Fix the reaper\nIt leaks.\n# Notes\n"
 

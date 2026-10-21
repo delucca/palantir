@@ -5,13 +5,22 @@ app := ".build/palantir.app"
 build:
     swift build
 
+# Every layer. The e2e tests launch palantir, which can take the front for about a second each, so
+# a bare `swift test` runs every layer but e2e.
 test:
-    swift test
+    PALANTIR_TEST_LAYERS=unit,integration,e2e,release swift test
 
-# Also run the tests that launch palantir. Each puts a palantir window behind the person's for
-# about a second, so run them only when the desktop is free.
-test-desktop:
-    PALANTIR_DESKTOP_TESTS=1 swift test
+test-unit:
+    PALANTIR_TEST_LAYERS=unit swift test
+
+test-integration:
+    PALANTIR_TEST_LAYERS=integration swift test
+
+test-e2e:
+    PALANTIR_TEST_LAYERS=e2e swift test
+
+test-release:
+    PALANTIR_TEST_LAYERS=release swift test
 
 fmt:
     swift format --in-place --recursive --parallel Package.swift Sources Tests
@@ -72,11 +81,3 @@ inspect:
       exit 1
     fi
     echo "$pid"
-
-# Check that a release palantir.app holds no inspector code: no inspector symbol or string, and no
-# import of the calls a listener needs. That its launch with the flag opens no socket is checked
-# by `just test-desktop`.
-release-check: (bundle "release")
-    symbols="$(nm {{app}}/Contents/MacOS/palantir)"; [ -n "$symbols" ]; ! grep -E 'PalantirInspector|NotebookInspector' <<< "$symbols"
-    text="$(strings -a {{app}}/Contents/MacOS/palantir)"; ! grep -E 'PalantirInspector|NotebookInspector|--inspector|jsonrpc|palantir-inspector' <<< "$text"
-    imports="$(nm -u {{app}}/Contents/MacOS/palantir)"; ! grep -xE '_(socket|bind|listen|accept)' <<< "$imports"

@@ -4,6 +4,7 @@ import Testing
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.unit))
 struct FoldedParagraphsTests {
   // [utest->req~heading-folding.fold~1]
   @Test(

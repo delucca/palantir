@@ -4,13 +4,6 @@ import Foundation
 import PalantirInspector
 import Testing
 
-extension Trait where Self == ConditionTrait {
-  /// Runs a test that launches palantir only when `LaunchedPalantir.allowed`.
-  static var launchesPalantir: Self {
-    .enabled(if: LaunchedPalantir.allowed, "it launches palantir; run it with just test-desktop")
-  }
-}
-
 /// A palantir executable started by a test in the background, so that it takes no focus, and
 /// quit when the test ends.
 final class LaunchedPalantir {
@@ -21,14 +14,15 @@ final class LaunchedPalantir {
   /// How long a launch may take to show its window.
   static let launchTimeout = 10.0
 
-  /// Whether tests may launch palantir: only under `just test-desktop`, which sets
-  /// `PALANTIR_DESKTOP_TESTS=1`, since each launch puts a palantir window on the person's desktop.
-  static var allowed: Bool { ProcessInfo.processInfo.environment["PALANTIR_DESKTOP_TESTS"] == "1" }
-
-  /// Launches `executable` from an app bundle of its own, with `arguments`.
-  init(_ executable: URL, arguments: [String] = []) async throws {
-    guard Self.allowed else {
-      throw LaunchError("a test that launches palantir needs the .launchesPalantir trait")
+  /// Launches `executable` from an app bundle of its own, with `arguments`, when `environment`
+  /// selects the e2e layer.
+  init(
+    _ executable: URL, arguments: [String] = [],
+    environment: [String: String] = ProcessInfo.processInfo.environment
+  ) async throws {
+    // Each launch puts a palantir window on the person's desktop.
+    guard try Layer.selected(in: environment).contains(.e2e) else {
+      throw LaunchError("a test that launches palantir needs the e2e layer")
     }
     let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
       .deletingLastPathComponent().deletingLastPathComponent()

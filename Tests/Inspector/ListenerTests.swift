@@ -6,6 +6,7 @@ import Testing
 @testable import PalantirInspector
 
 @MainActor
+@Suite(.layer(.integration))
 struct ListenerTests {
   /// A fresh directory for sockets, short enough for `sun_path`.
   private func directory() throws -> URL {

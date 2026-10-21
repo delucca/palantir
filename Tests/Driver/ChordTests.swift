@@ -3,6 +3,7 @@ import Testing
 
 @testable import PalantirDriver
 
+@Suite(.layer(.unit))
 struct ChordTests {
   @Test func aChordIsModifiersAndOneKey() throws {
     #expect(try Chord("cmd+shift+g") == Chord(key: 5, flags: [.maskCommand, .maskShift]))

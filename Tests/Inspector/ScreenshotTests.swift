@@ -5,6 +5,7 @@ import Testing
 @testable import PalantirInspector
 
 @MainActor
+@Suite(.layer(.integration))
 struct ScreenshotTests {
   /// `window` on the screen, transparent, so its display cycle runs: a hidden window never
   /// settles.

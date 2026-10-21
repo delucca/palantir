@@ -8,6 +8,7 @@ import UniformTypeIdentifiers
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.integration))
 struct NotebookWindowTests {
   // [utest->req~notebook-window.open~1]
   @Test func openingANotebookShowsItsWholeText() throws {

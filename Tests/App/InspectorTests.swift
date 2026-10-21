@@ -10,6 +10,7 @@ import Testing
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.integration))
 struct InspectorTests {
   /// What an inspector call could change: the text, the folds, the selection, the scroll
   /// position, the window, and what the last layout drew.
@@ -149,9 +150,13 @@ struct InspectorTests {
     #expect(sections.keys.sorted() == features)
     #expect(sections.values.allSatisfy { !$0.isEmpty })
   }
+}
 
+/// The tests that launch palantir, one at a time: two launches at once hand the front to each other.
+@Suite(.serialized, .layer(.e2e))
+struct InspectorLaunchTests {
   // [utest->req~inspector.debug-only~1]
-  @Test(.launchesPalantir) func aDebugBuildListensOnlyWithTheLaunchFlag() async throws {
+  @Test func aDebugBuildListensOnlyWithTheLaunchFlag() async throws {
     let executable = LaunchedPalantir.built("palantir")
     let quiet = try await LaunchedPalantir(executable)
     #expect(!FileManager.default.fileExists(atPath: quiet.socket.path))
@@ -171,6 +176,17 @@ struct InspectorTests {
     #expect(directory.st_uid == getuid())
   }
 
+  // Only the socket the inspector would make; a listener elsewhere is what ReleaseBuildTests'
+  // import check catches.
+  // [utest->req~inspector.no-release-listener~1]
+  @Test(.timeLimit(.minutes(10)))
+  func aReleaseBuildLaunchedWithTheFlagCreatesNoSocket() async throws {
+    let launched = try await LaunchedPalantir(
+      try ReleaseBuild.executable(), arguments: [InspectorListener.launchFlag])
+    try await Task.sleep(for: .seconds(1))
+    #expect(kill(launched.pid, 0) == 0)
+    #expect(!FileManager.default.fileExists(atPath: launched.socket.path))
+  }
 }
 
 /// The offset of each paragraph the last viewport layout drew.

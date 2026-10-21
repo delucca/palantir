@@ -4,6 +4,7 @@ import Testing
 
 @testable import PalantirInspectorCLI
 
+@Suite(.layer(.unit))
 struct InvocationTests {
   @Test func eachCommandReadsItsOptions() throws {
     #expect(try Invocation(["state"]) == Invocation(pid: nil, command: .state))

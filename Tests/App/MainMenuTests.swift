@@ -5,6 +5,7 @@ import Testing
 @testable import PalantirNotebookUI
 
 @MainActor
+@Suite(.layer(.integration))
 struct MainMenuTests {
   // [utest->req~main-menu.hig-order~1]
   @Test func menusFollowTheHIGOrder() {
