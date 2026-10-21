@@ -17,7 +17,7 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 `req~inspector.no-release-listener~1`
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
-Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-feature
+Decided in: decisions/2026-10-20-organize-sources-tests-inspectors-and-the-driver-by-feature
 
 ### Example: a release build
 * When palantir is built for release
@@ -42,7 +42,7 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 `req~inspector.state-per-feature~1`
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
-Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-feature
+Decided in: decisions/2026-10-20-organize-sources-tests-inspectors-and-the-driver-by-feature
 
 ### Example: today's features
 * Given palantir wires in the notebook feature
