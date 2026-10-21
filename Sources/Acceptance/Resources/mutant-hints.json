@@ -1,0 +1,23 @@
+{
+  "heading-folding.fold": "Fold Heading calls unfold, or folds nothing",
+  "heading-folding.unfold": "Unfold Heading leaves one line hidden",
+  "heading-folding.no-gap": "folding leaves blank space where the text was",
+  "heading-folding.fold-all": "Fold All folds only the first top heading",
+  "heading-folding.unfold-all": "Unfold All unfolds all but the last heading",
+  "heading-folding.disabled-without-heading": "the fold items are always enabled",
+  "heading-folding.file-untouched": "folding writes the notebook file",
+  "heading-outline.owned-range": "a heading owns one line too many",
+  "heading-outline.fenced-code": "a # line inside a fenced code block counts as a heading",
+  "main-menu.hig-order": "the View and Window menus swap places",
+  "main-menu.view-fold-commands": "Fold All gets a key equivalent",
+  "main-menu.drivable": "a menu item has an empty title",
+  "notebook-window.open": "the opened notebook drops its last line",
+  "notebook-window.read-only": "the notebook view becomes editable",
+  "inspector.debug-only": "the inspector listens without the launch flag, or on a socket in a directory others can open",
+  "inspector.no-release-listener": "one inspector source file loses its debug-only guard",
+  "inspector.state-per-feature": "the notebook section is renamed",
+  "inspector.settled-layout": "the wait answers before layout settles",
+  "inspector.screenshots": "screenshots are rendered at scale 1",
+  "inspector.never-drives": "taking a screenshot scrolls the notebook to the top",
+  "accessibility.custom-view-labels": "the folded marker loses its accessibility label"
+}

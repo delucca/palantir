@@ -1,0 +1,12 @@
+{"type": "object", "additionalProperties": false,
+ "required": ["rule", "blame", "line", "expectation", "observed", "reason"],
+ "properties": {
+   "rule": {"type": "string"},
+   "blame": {"type": "string", "enum": ["palantir", "check"]},
+   "line": {"type": "string", "description": "the example line whose step failed, verbatim"},
+   "expectation": {"type": "string", "description": "the failing expectation, verbatim"},
+   "observed": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+     "required": ["path", "value"],
+     "properties": {"path": {"type": "string", "description": "a jq path into record.json"},
+                    "value": {"type": "string", "description": "its value, as compact JSON"}}}},
+   "reason": {"type": "string"}}}

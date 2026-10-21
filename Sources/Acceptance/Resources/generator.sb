@@ -1,0 +1,68 @@
+(version 1)
+; The sandbox around a drafting generator, which never launches palantir. Parameters: HOME, RUN (the
+; run's folder: rule, references, bin/, work/, tmp/) and CLAUDE (claude's resolved executable).
+; Later rules win over earlier ones.
+(allow default)
+
+; Files: nothing under the home folder but what claude itself needs and the run's folder. That
+; keeps out palantir's source in every checkout and cache, the spec, tests and other checks, the
+; team's notebooks, bilbo's notes, and every agent's transcripts, memory, skills and instructions.
+(deny file-read* file-write* (subpath (param "HOME")))
+(allow file-read-metadata (literal (param "HOME")))
+(allow file-read* (subpath (string-append (param "HOME") "/.local/share/claude/versions")))
+(allow file-read* (literal (string-append (param "HOME") "/.local/bin/claude")))
+(allow file-read* file-write* (regex (string-append "^" (param "HOME") "/\\.claude\\.json")))
+(allow file-read* file-write* (subpath (string-append (param "HOME") "/.claude")))
+(deny file-read* file-write*
+  (subpath (string-append (param "HOME") "/.claude/projects"))
+  (subpath (string-append (param "HOME") "/.claude/file-history"))
+  (subpath (string-append (param "HOME") "/.claude/teams"))
+  (subpath (string-append (param "HOME") "/.claude/tasks"))
+  (subpath (string-append (param "HOME") "/.claude/plans"))
+  (subpath (string-append (param "HOME") "/.claude/todos"))
+  (subpath (string-append (param "HOME") "/.claude/paste-cache"))
+  (subpath (string-append (param "HOME") "/.claude/sessions"))
+  (subpath (string-append (param "HOME") "/.claude/skills"))
+  (subpath (string-append (param "HOME") "/.claude/agents"))
+  (subpath (string-append (param "HOME") "/.claude/plugins"))
+  (subpath (string-append (param "HOME") "/.claude/backups"))
+  (subpath (string-append (param "HOME") "/.claude/shell-snapshots"))
+  (literal (string-append (param "HOME") "/.claude/history.jsonl"))
+  (literal (string-append (param "HOME") "/.claude/CLAUDE.md")))
+(allow file-read* (subpath (string-append (param "HOME") "/Library/Keychains")))
+(allow file-read* (subpath (string-append (param "HOME") "/Library/Preferences")))
+(allow file-read* file-write* (subpath (param "RUN")))
+(deny file-read* (regex #"^/nix/store/[^/]+-home-manager-files/"))
+
+; Shared temporary folders: other runs' scratch, mutant builds and sessions' files can sit there.
+; TMPDIR and CLAUDE_CODE_TMPDIR point into the run's folder instead, so none is needed.
+(deny file-read* file-write* (subpath "/private/tmp") (subpath "/private/var/tmp")
+  (subpath "/private/var/folders"))
+(allow file-read-metadata (literal "/private/tmp") (literal "/private/var/folders"))
+(allow file-read* file-write* (subpath (param "RUN")))
+
+; Programs: claude, bash, the run's bin/ (palantir-drive, palantir-inspect, palantir-accept) and
+; plain readers. No other shell, interpreter, compiler, AppleScript or network tool, so nothing
+; but the two CLIs reaches palantir: no AX client, no socket client.
+(deny process-exec*)
+(allow process-exec*
+  (literal (param "CLAUDE"))
+  (literal "/bin/bash") (literal "/bin/sh") (literal "/usr/bin/env")
+  (literal "/usr/bin/security")
+  (subpath (string-append (param "RUN") "/bin"))
+  (literal "/usr/bin/jq") (literal "/bin/cat") (literal "/usr/bin/head") (literal "/usr/bin/tail")
+  (literal "/bin/ls") (literal "/bin/sleep") (literal "/usr/bin/wc") (literal "/usr/bin/grep")
+  (literal "/usr/bin/sed") (literal "/usr/bin/awk") (literal "/usr/bin/sort") (literal "/usr/bin/uniq")
+  (literal "/usr/bin/tr") (literal "/usr/bin/cut") (literal "/usr/bin/diff") (literal "/usr/bin/stat")
+  (literal "/bin/echo") (literal "/bin/mkdir") (literal "/bin/date") (literal "/usr/bin/printf")
+  (literal "/usr/bin/nm") (literal "/usr/bin/xcrun")
+  (literal "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/nm")
+  (literal "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/llvm-nm"))
+
+; These configure later, unsandboxed Claude sessions, including their command hooks.
+(deny file-write*
+  (regex (string-append "^" (param "HOME") "/\\.claude\\.json"))
+  (subpath (string-append (param "HOME") "/.claude")))
+
+; The host supplies these executables; a model may neither replace them nor add another.
+(deny file-write* (subpath (string-append (param "RUN") "/bin")))

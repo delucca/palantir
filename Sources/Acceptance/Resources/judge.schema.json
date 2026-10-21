@@ -1,0 +1,13 @@
+{"type": "object", "additionalProperties": false,
+ "required": ["rule", "verdict", "lines", "summary"],
+ "properties": {
+   "rule": {"type": "string"},
+   "verdict": {"type": "string", "enum": ["faithful", "unfaithful"]},
+   "lines": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+     "required": ["line", "faithful", "problems"],
+     "properties": {"line": {"type": "string"}, "faithful": {"type": "boolean"},
+                    "problems": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+                      "required": ["severity", "at", "problem"],
+                      "properties": {"severity": {"type": "string", "enum": ["blocking", "advisory"]},
+                                     "at": {"type": "string"}, "problem": {"type": "string"}}}}}}},
+   "summary": {"type": "string"}}}

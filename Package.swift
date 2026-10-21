@@ -16,6 +16,7 @@ let package = Package(
     .executable(name: "palantir", targets: ["Palantir"]),
     .executable(name: "palantir-inspect", targets: ["PalantirInspectorCLI"]),
     .executable(name: "palantir-drive", targets: ["PalantirDriver"]),
+    .executable(name: "palantir-accept", targets: ["PalantirAcceptance"]),
   ],
   dependencies: [
     .package(url: "https://github.com/swiftlang/swift-markdown.git", exact: "0.9.0")
@@ -54,6 +55,12 @@ let package = Package(
     .executableTarget(
       name: "PalantirDriver",
       path: "Sources/Driver",
+      swiftSettings: upcomingFeatures
+    ),
+    .executableTarget(
+      name: "PalantirAcceptance",
+      path: "Sources/Acceptance",
+      resources: [.copy("Resources")],
       swiftSettings: upcomingFeatures
     ),
     .executableTarget(
@@ -100,6 +107,13 @@ let package = Package(
       name: "PalantirDriverTests",
       dependencies: ["PalantirDriver"],
       path: "Tests/Driver",
+      swiftSettings: upcomingFeatures
+    ),
+    .testTarget(
+      name: "PalantirAcceptanceTests",
+      dependencies: ["PalantirAcceptance"],
+      path: "Tests/Acceptance",
+      exclude: ["Checks", "Fixtures"],
       swiftSettings: upcomingFeatures
     ),
     .testTarget(

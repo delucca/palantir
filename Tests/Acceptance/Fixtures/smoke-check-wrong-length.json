@@ -1,0 +1,22 @@
+{
+  "format": 1,
+  "rule": "req~smoke.wrong~1",
+  "example": "reading a notebook",
+  "files": {"notebook.md": "# Smoke\nHello.\n"},
+  "steps": [
+    {"line": "* Given a notebook is open",
+     "do": [{"launch": {"build": "debug", "inspector": true}},
+            {"drive": ["menu", "File > Open…"]},
+            {"drive": ["choose", {"file": "notebook.md"}]},
+            {"inspect": ["wait"]},
+            {"inspect": ["state"], "as": "opened"},
+            {"file": "notebook.md", "as": "fixture"}],
+     "expect": []},
+    {"line": "* Then the view holds the whole file",
+     "do": [],
+     "expect": [{"that": ".opened.json.sections.notebook.length == .fixture.size + 1", "why": "the notebook is the whole file"}]},
+    {"line": "* And the layer quits palantir",
+     "do": [{"quit": true}],
+     "expect": [{"that": ".pid > 0", "why": "a palantir was launched"}]}
+  ]
+}

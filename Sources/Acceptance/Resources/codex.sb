@@ -1,0 +1,30 @@
+(version 1)
+; The sandbox around a codex exec of the layer (a mutant writer or a judge). Parameters: HOME, RUN
+; (its workspace) and CODEX_HOME (a fresh home holding only the auth link and a two-line config,
+; so no AGENTS.md, memory, skill, plugin or hook of the user's loads). Later rules win.
+(allow default)
+(deny file-read* file-write* (subpath (param "HOME")))
+(allow file-read-metadata (subpath (param "HOME")))
+(allow file-read* file-write* (subpath (param "RUN")))
+(allow file-read* file-write* (subpath (param "CODEX_HOME")))
+(allow file-read* file-write* (literal (string-append (param "HOME") "/.codex/auth.json")))
+(allow file-read* (subpath (string-append (param "HOME") "/Library/Keychains")))
+(allow file-read* (subpath (string-append (param "HOME") "/Library/Preferences")))
+(deny file-read* (regex #"^/nix/store/[^/]+-home-manager-files/"))
+(deny file-read* file-write* (subpath "/private/tmp") (subpath "/private/var/tmp")
+  (subpath "/private/var/folders"))
+(allow file-read-metadata (literal "/private/tmp") (literal "/private/var/folders"))
+(allow file-read* file-write* (subpath (param "RUN")))
+(allow file-read* file-write* (subpath (param "CODEX_HOME")))
+; It never starts palantir or reaches it: no app launch, no AppleScript, no driver or inspector.
+(deny process-exec*
+  (literal "/usr/bin/open") (literal "/usr/bin/osascript")
+  (regex #"/palantir$") (regex #"/palantir-drive$") (regex #"/palantir-inspect$"))
+; It never builds either (ruling A5): the layer builds a mutant's patch itself, outside any
+; sandbox, in the cache.
+(deny process-exec*
+  (literal "/usr/bin/swift") (literal "/usr/bin/swiftc") (literal "/usr/bin/xcrun")
+  (literal "/usr/bin/xcodebuild") (regex #"/swift-build$") (regex #"/swift-frontend$"))
+
+; The host reads Git metadata after the writer exits. A model must not install hooks or filters.
+(deny file-read* file-write* (regex #"/\.git(/|$)"))
