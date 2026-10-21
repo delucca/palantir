@@ -4,7 +4,6 @@ Shows a Markdown notebook from disk in the palantir window, read-only.
 
 ## Rule: When the user chooses a Markdown file in File > Open, palantir shall show its whole text in the palantir window
 `req~notebook-window.open~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 Decided in: decisions/2026-10-17-build-the-notebook-editor-on-textkit-2
 
@@ -15,7 +14,6 @@ Decided in: decisions/2026-10-17-build-the-notebook-editor-on-textkit-2
 
 ## Rule: The notebook view shall let the user select text and shall not let the user change it
 `req~notebook-window.read-only~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: typing into an open notebook

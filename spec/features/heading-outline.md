@@ -4,7 +4,6 @@ Finds each heading in a Markdown notebook and the text it owns, without a window
 
 ## Rule: Each heading shall own the lines after it, up to the next heading of the same or a higher level or the end of the file
 `req~heading-outline.owned-range~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 Decided in: decisions/2026-10-17-parse-markdown-with-swift-markdown
 
@@ -29,7 +28,6 @@ Decided in: decisions/2026-10-17-parse-markdown-with-swift-markdown
 
 ## Rule: A line starting with "#" inside a fenced code block shall not count as a heading
 `req~heading-outline.fenced-code~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 Decided in: decisions/2026-10-17-parse-markdown-with-swift-markdown
 

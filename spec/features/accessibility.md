@@ -4,7 +4,6 @@ What palantir exposes in the accessibility tree, which assistive tools and the a
 
 ## Rule: Every view palantir draws itself shall have an accessibility label
 `req~accessibility.custom-view-labels~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 

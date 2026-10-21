@@ -4,7 +4,6 @@ Hides and shows the text a heading owns in the notebook view, without touching t
 
 ## Rule: Fold Heading shall hide the text owned by the innermost heading at the selection and mark that heading as folded
 `req~heading-folding.fold~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 Decided in: decisions/2026-10-17-build-the-notebook-editor-on-textkit-2
 Decided in: decisions/2026-10-17-require-macos-27
@@ -19,7 +18,6 @@ Decided in: decisions/2026-10-17-require-macos-27
 
 ## Rule: Unfold Heading shall show again exactly the text the heading's fold hid and clear its folded marker
 `req~heading-folding.unfold~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: unfolding a task
@@ -30,7 +28,6 @@ From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ## Rule: A folded heading shall leave no blank space where its text was, and folding or unfolding shall not move the heading on screen
 `req~heading-folding.no-gap~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 Decided in: decisions/2026-10-17-build-the-notebook-editor-on-textkit-2
 
@@ -42,7 +39,6 @@ Decided in: decisions/2026-10-17-build-the-notebook-editor-on-textkit-2
 
 ## Rule: Fold All shall fold every heading that no other heading owns, leaving only those headings and any text before the first heading visible
 `req~heading-folding.fold-all~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: folding a whole notebook
@@ -52,7 +48,6 @@ From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ## Rule: Unfold All shall unfold every heading, showing the whole file
 `req~heading-folding.unfold-all~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: unfolding a whole notebook
@@ -62,7 +57,6 @@ From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ## Rule: Fold Heading and Unfold Heading shall be disabled when no heading is at the selection
 `req~heading-folding.disabled-without-heading~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: the selection before the first heading
@@ -73,7 +67,6 @@ From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ## Rule: Folding and unfolding shall never write the notebook file
 `req~heading-folding.file-untouched~1`
-Needs: utest
 From: one-pagers/2026-10-16-open-notebook-fold-headings
 
 ### Example: many folds

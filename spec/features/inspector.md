@@ -4,7 +4,6 @@ Reports what palantir shows to an agent that drives it from outside, in debug bu
 
 ## Rule: The inspector shall listen only in a debug build started with the inspector launch flag, on a socket in a directory only the user can open
 `req~inspector.debug-only~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
@@ -16,7 +15,6 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
 ## Rule: A release build of palantir shall contain no inspector code and no listener
 `req~inspector.no-release-listener~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-feature
@@ -28,7 +26,6 @@ Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-featur
 
 ## Rule: The inspector shall report the notebook's folded headings, the lines drawn in the window with their positions, the gaps between drawn lines, the selection and the scroll position, as the layout tests measure them
 `req~inspector.notebook-state~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
@@ -43,7 +40,6 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
 ## Rule: The inspector's state shall hold a section for every feature palantir wires in
 `req~inspector.state-per-feature~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-feature
@@ -55,7 +51,6 @@ Decided in: decisions/2026-10-20-organize-sources-tests-and-inspectors-by-featur
 
 ## Rule: When an agent waits for settled layout, the inspector shall answer only once the window has no layout or display pending
 `req~inspector.settled-layout~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
@@ -67,7 +62,6 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
 ## Rule: The inspector shall render the window's content at the display's full resolution, whole or cropped to a rectangle given in window points
 `req~inspector.screenshots~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
@@ -79,7 +73,6 @@ Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
 ## Rule: No inspector call shall change the notebook, its folds, the selection, the scroll position or the window
 `req~inspector.never-drives~1`
-Needs: utest
 From: one-pagers/2026-10-20-agents-drive-and-inspect-the-app
 Decided in: decisions/2026-10-20-test-the-running-app-gray-box
 
